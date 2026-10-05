@@ -17,7 +17,7 @@ from database import get_db, init_db
 from hardware import hardware
 
 app = Flask(__name__)
-app.secret_key = os.environ.get('SECRET_KEY', 'smart_locker_secure_deployment_key_vit_eee')
+app.secret_key = os.environ.get('SECRET_KEY', 'smart_locker_enterprise_secure_key')
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.jinja_env.auto_reload = True
 
@@ -45,7 +45,7 @@ def inject_global_data():
 
 @app.before_request
 def enforce_inactivity_timeout():
-    """Enforces 30-second inactivity session timeout across authenticated pages (Students only; Host has no timeout)."""
+    """Enforces 30-second inactivity session timeout across authenticated pages (Employees only; Host has no timeout)."""
     if 'member_id' in session:
         # Host / Staff accounts have NO TIMEOUT
         if session.get('role') in ('staff', 'admin', 'host'):
@@ -70,7 +70,7 @@ def enforce_inactivity_timeout():
 
 @app.route('/')
 def auth_page():
-    """RFID Card Tap / Student Login Portal."""
+    """RFID Card Tap / Employee Login Portal."""
     if 'member_id' in session:
         return redirect(url_for('dashboard_page'))
     return render_template('auth.html')

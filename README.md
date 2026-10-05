@@ -78,13 +78,28 @@ Install Python dependencies:
 pip install -r requirements.txt
 ```
 
-### 3. Initialize the Database (Optional)
-If running for the first time or resetting data:
+### 3. Database Configuration (Supabase or SQLite)
+
+#### Option A: Supabase Cloud Database (PostgreSQL)
+1. In your Supabase project, execute `supabase_schema.sql` in the **SQL Editor**.
+2. Copy `.env.example` to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+3. Set your Supabase connection string in `.env`:
+   ```env
+   DATABASE_URL=postgresql://postgres.[PROJECT-REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:5432/postgres?sslmode=require
+   ```
+
+#### Option B: Local SQLite (Offline / Standalone)
+Simply leave `DATABASE_URL` unset in `.env`. The system will automatically use the built-in `smart_locker.db`.
+
+### 4. Initialize Database (Optional)
 ```bash
 python database.py
 ```
 
-### 4. Run the Application
+### 5. Run the Application
 ```bash
 python app.py
 ```
