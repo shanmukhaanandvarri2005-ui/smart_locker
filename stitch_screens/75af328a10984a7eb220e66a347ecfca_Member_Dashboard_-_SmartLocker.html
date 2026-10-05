@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"primary-container":"#123b67","on-primary-container":"#84a6d8","on-secondary-container":"#fefcff","primary-fixed-dim":"#a6c8fd","tertiary-fixed":"#7ffc97","surface-variant":"#d3e4fe","secondary-container":"#316bf3","on-primary-fixed-variant":"#224875","on-primary-fixed":"#001c39","on-secondary-fixed-variant":"#003ea8","on-tertiary-container":"#3aba5e","surface-bright":"#f8f9ff","on-surface-variant":"#43474f","surface-dim":"#cbdbf5","surface-container-high":"#dce9ff","on-tertiary":"#ffffff","surface-tint":"#3d608e","surface":"#f8f9ff","primary-fixed":"#d4e3ff","error":"#ba1a1a","on-primary":"#ffffff","outline-variant":"#c3c6d0","on-error-container":"#93000a","tertiary":"#002b0e","primary":"#002549","error-container":"#ffdad6","on-tertiary-fixed":"#002109","tertiary-container":"#004419","surface-container-lowest":"#ffffff","on-secondary":"#ffffff","on-error":"#ffffff","on-surface":"#0b1c30","on-tertiary-fixed-variant":"#005320","secondary":"#0051d5","background":"#f8f9ff","surface-container-highest":"#d3e4fe","outline":"#737780","secondary-fixed-dim":"#b4c5ff","secondary-fixed":"#dbe1ff","on-secondary-fixed":"#00174b","surface-container":"#e5eeff","tertiary-fixed-dim":"#62df7d","surface-container-low":"#eff4ff","inverse-on-surface":"#eaf1ff","inverse-surface":"#213145","inverse-primary":"#a6c8fd","on-background":"#0b1c30"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"gutter":"1.5rem","margin":"2rem","gutter-sm":"1rem","space-lg":"1.5rem","space-sm":"0.5rem","space-md":"1rem","space-xs":"0.25rem","margin-sm":"1rem","space-xl":"2rem"},"fontFamily":{"code-telemetry":["JetBrains Mono"],"label-lg":["Inter"],"headline-xl-mobile":["Plus Jakarta Sans"],"body-lg":["Inter"],"label-md":["Inter"],"headline-md":["Plus Jakarta Sans"],"code-badge":["JetBrains Mono"],"body-md":["Inter"],"body-sm":["Inter"],"headline-lg-mobile":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"]},"fontSize":{"code-telemetry":["13px",{"lineHeight":"18px","letterSpacing":"-0.01em","fontWeight":"500"}],"label-lg":["14px",{"lineHeight":"20px","fontWeight":"600"}],"headline-xl-mobile":["30px",{"lineHeight":"38px","letterSpacing":"-0.02em","fontWeight":"700"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"label-md":["12px",{"lineHeight":"16px","fontWeight":"500"}],"headline-md":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"code-badge":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-xl":["40px",{"lineHeight":"48px","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-sm":["18px",{"lineHeight":"26px","fontWeight":"600"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="p-space-lg flex items-start gap-space-sm bg-surface-container-low"><img alt="SmartLocker Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Vtr0xI_75roQQIg48y0OFsfC--krHwc-8XspQRvXiep1aST1iPZ35PdojCz7qtCld8DfvzuGlEqHlsB5Ze-EvP7utqz0H2e_-bZe5UPncdLV3ulBxHRWcg4kdL3ACIOJLr51Rs8qI3z0RvHcFgGwoyjoUZSz5c76PS-GQXiIvMaURPljN2YYeJUy1x37BvfKvvrNmscPSst70T463I12TDnEW7HqRcRxV8BykY22OmAaA4iHNGGlYMK_zZ"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary leading-tight">SmartLocker</span><span class="font-body-sm text-body-sm text-on-surface-variant leading-tight">Vishnu Inst. of Tech • EEE</span></div></div><div class="px-space-md py-space-sm"><span class="font-code-badge text-code-badge text-outline uppercase tracking-wider px-space-sm">Operations & Telemetry</span></div><nav class="flex flex-col gap-space-xs px-space-md" data-active-classes="bg-primary-container text-on-secondary-container font-label-lg text-label-lg rounded-lg"><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm transition-colors bg-primary-container text-on-secondary-container font-label-lg text-label-lg rounded-lg" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[20px]">dashboard</span><span>Dashboard</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface rounded-lg transition-colors" data-path="borrow-a-book" href="#"><span class="material-symbols-outlined text-[20px]">book</span><span>Borrow a Book</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface rounded-lg transition-colors" data-path="return-a-book" href="#"><span class="material-symbols-outlined text-[20px]">assignment_return</span><span>Return a Book</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface rounded-lg transition-colors" data-path="account-history" href="#"><span class="material-symbols-outlined text-[20px]">history</span><span>Account History</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface rounded-lg transition-colors" data-path="system-status" href="#"><span class="material-symbols-outlined text-[20px]">memory</span><span>System Status</span></a><a class="flex items-center justify-between px-space-md py-space-sm font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface rounded-lg transition-colors" data-path="user-management" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">manage_accounts</span><span>User Management</span></div><span class="font-code-badge text-code-badge bg-surface-container-high text-primary px-1.5 py-0.5 rounded-sm">ADMIN</span></a></nav></div><div class="p-space-md flex flex-col gap-space-sm"><a class="flex items-center gap-space-sm px-space-md py-space-sm font-label-md text-label-md text-error hover:bg-error-container hover:text-on-error-container rounded-lg transition-colors" href="#logout-dialog"><span class="material-symbols-outlined text-[20px]">logout</span><span>Logout</span></a><div class="p-space-md bg-surface-container-low rounded-xl flex flex-col gap-space-xs shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center justify-between"><span class="font-code-badge text-code-badge text-tertiary-container bg-tertiary-fixed px-1.5 py-0.5 rounded-full flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span>SECURE HW</span><span class="material-symbols-outlined text-[18px] text-outline">lock</span></div><div class="flex flex-col"><span class="font-label-md text-label-md text-on-surface font-semibold">Student Member</span><span class="font-code-telemetry text-code-telemetry text-secondary font-medium tracking-tight">RFID: 04:A2:8F:C9</span></div></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-xl"><div class="flex items-center gap-space-md"><div class="flex items-center gap-1.5 px-space-sm py-1 bg-surface-container-lowest rounded-full shadow-[0_1px_3px_rgba(18,59,103,0.04)]"><span class="w-2 h-2 rounded-full bg-on-tertiary-container animate-pulse"></span><span class="font-code-badge text-code-badge text-on-surface">RPi 3B+ Online</span></div><div class="hidden xl:flex items-center gap-1.5 px-space-sm py-1 bg-surface-container rounded-full"><span class="material-symbols-outlined text-[14px] text-secondary">tune</span><span class="font-code-badge text-code-badge text-on-surface-variant">Demo Hardware: Active</span></div><div class="hidden md:flex items-center gap-1.5 px-space-sm py-1 bg-surface-container-lowest rounded-full shadow-[0_1px_3px_rgba(18,59,103,0.04)]"><span class="material-symbols-outlined text-[14px] text-on-tertiary-container">bolt</span><span class="font-code-badge text-code-badge text-on-surface-variant">12V Solenoid: Secured</span></div></div><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm text-outline hover:text-on-surface cursor-pointer bg-surface-container-lowest px-space-sm py-1.5 rounded-lg shadow-[0_1px_3px_rgba(18,59,103,0.04)]"><span class="material-symbols-outlined text-[18px]">search</span><span class="font-body-sm text-body-sm text-outline">Quick Search</span><span class="font-code-badge text-code-badge bg-surface-container px-1 py-0.5 rounded text-on-surface-variant">⌘K</span></div><div class="relative flex items-center justify-center p-1.5 rounded-full hover:bg-surface-container text-on-surface-variant hover:text-on-surface cursor-pointer"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1 right-1 w-4 h-4 bg-error text-on-error font-code-badge text-[9px] flex items-center justify-center rounded-full font-bold">2</span></div><div class="flex items-center gap-space-sm pl-space-sm"><div class="hidden lg:flex flex-col text-right"><span class="font-label-md text-label-md text-on-surface leading-tight">Ananya Sharma</span><span class="font-body-sm text-body-sm text-on-surface-variant leading-tight">21BEE1048 • Scholar</span></div><img alt="Profile" class="w-8 h-8 rounded-full object-cover shadow-[0_1px_3px_rgba(18,59,103,0.08)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHiD6ZO8blrXIWf-0_upB1pMpsESF3AhCjbOXl4LguyhZpTYatg60MGi7bijePsUZ3ggqDkdCqET_D4Q_OK1kYZecjgGwAMvqS_SH6rYZly1wx2swzZ33J7hURInKEIg_B9-sXJyvxRgikJ93j62recEQFpCOsTDUJWDMWVTZkG5yLAKXgH-Z0UoFGabu21u0p4qiIAjnGTA62kEWZgbe3bU-sB1V6Lal3k4vT48RNBOqSNp6zJoS9Kg"/></div></div></header><main class="relative pt-16 bg-surface min-h-screen w-full px-space-xl"><div class="flex flex-col w-full pb-space-xl gap-space-lg">
+<!-- Welcome & Profile Identity Strip -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container-lowest p-space-lg shadow-sm">
+<div class="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-gradient-to-br from-secondary/10 via-primary-container/5 to-transparent blur-2xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col xl:flex-row xl:items-center justify-between gap-space-md">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-xs">
+<span class="font-code-badge text-code-badge text-secondary bg-surface-container-high px-2 py-0.5 rounded uppercase tracking-wider">EEE Department Kiosk Terminal</span>
+<span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span>
+<span class="font-code-badge text-code-badge text-outline">Node: VIT-LH-04</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Welcome back, Ananya Sharma</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">
+          Reg No: <span class="font-code-telemetry text-code-telemetry font-semibold text-on-surface">21BEE1048</span> • Department of Electrical & Electronics Engineering
+        </p>
+</div>
+<div class="flex flex-wrap items-center gap-space-sm bg-surface-container-low px-space-md py-space-sm rounded-lg self-start xl:self-auto">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">contactless</span>
+<div class="flex flex-col">
+<span class="font-code-badge text-code-badge text-outline uppercase">RFID Card UID</span>
+<span class="font-code-telemetry text-code-telemetry text-primary font-bold">04:A2:8F:C9</span>
+</div>
+</div>
+<div class="h-6 w-px bg-surface-container-highest mx-2 hidden sm:block"></div>
+<div class="flex flex-col">
+<span class="font-code-badge text-code-badge text-outline uppercase">Access Status</span>
+<span class="font-label-md text-label-md text-on-tertiary-container font-semibold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span> Valid till May 2025
+          </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Real-time Hardware Telemetry Bar -->
+<div class="rounded-xl bg-surface-container-high p-space-md shadow-sm">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container-lowest flex items-center justify-center text-secondary shadow-sm">
+<span class="material-symbols-outlined text-[20px]">sensors</span>
+</div>
+<div class="flex flex-col">
+<span class="font-code-badge text-code-badge text-outline uppercase tracking-wider">Active Dispenser Telemetry</span>
+<span class="font-label-lg text-label-lg text-primary">Locker Compartment #04 Designated</span>
+</div>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-space-sm pt-2 lg:pt-0">
+<div class="flex items-center gap-2 bg-surface-container-lowest px-space-sm py-1.5 rounded-lg shadow-sm">
+<span class="w-2 h-2 rounded-full bg-on-tertiary-container animate-pulse"></span>
+<div class="flex flex-col">
+<span class="font-code-badge text-[10px] text-outline uppercase leading-none">Solenoid Lock</span>
+<span class="font-code-telemetry text-code-telemetry text-on-surface font-semibold">12V Secured</span>
+</div>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-lowest px-space-sm py-1.5 rounded-lg shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-on-tertiary-container">meeting_room</span>
+<div class="flex flex-col">
+<span class="font-code-badge text-[10px] text-outline uppercase leading-none">MC-38 Magnetic</span>
+<span class="font-code-telemetry text-code-telemetry text-on-surface font-semibold">Door Closed</span>
+</div>
+</div>
+<div class="col-span-2 sm:col-span-1 flex items-center gap-2 bg-surface-container-lowest px-space-sm py-1.5 rounded-lg shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-secondary">memory</span>
+<div class="flex flex-col">
+<span class="font-code-badge text-[10px] text-outline uppercase leading-none">Controller Bus</span>
+<span class="font-code-telemetry text-code-telemetry text-secondary font-semibold">RPi 3B+ Online</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Metric Summary Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<!-- Metric 1 -->
+<div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm flex flex-col justify-between gap-space-md hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface-variant">Available Books</span>
+<span class="font-headline-xl text-headline-xl text-primary font-bold mt-1">18</span>
+</div>
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[24px]">local_library</span>
+</div>
+</div>
+<div class="flex items-center gap-2 pt-space-xs">
+<span class="font-code-badge text-code-badge text-tertiary-container bg-tertiary-fixed px-2 py-0.5 rounded font-semibold">9 READY</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">In active dispensing bays</span>
+</div>
+</div>
+<!-- Metric 2 -->
+<div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm flex flex-col justify-between gap-space-md hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface-variant">Currently Borrowed</span>
+<span class="font-headline-xl text-headline-xl text-primary font-bold mt-1">1</span>
+</div>
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[24px]">import_contacts</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 pt-space-xs truncate">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium truncate">Microelectronic Circuits</span>
+</div>
+</div>
+<!-- Metric 3 -->
+<div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm flex flex-col justify-between gap-space-md hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface-variant">Due in</span>
+<span class="font-headline-xl text-headline-xl text-on-error-container font-bold mt-1">3 Days</span>
+</div>
+<div class="w-10 h-10 rounded-lg bg-error-container flex items-center justify-center text-error">
+<span class="material-symbols-outlined text-[24px]">schedule</span>
+</div>
+</div>
+<div class="flex items-center gap-2 pt-space-xs">
+<span class="font-code-badge text-code-badge text-on-error-container bg-error-container px-2 py-0.5 rounded font-semibold">DUE 18 OCT</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Solenoid #03 reserved</span>
+</div>
+</div>
+<!-- Metric 4 -->
+<div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm flex flex-col justify-between gap-space-md hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface-variant">Completed Transactions</span>
+<span class="font-headline-xl text-headline-xl text-primary font-bold mt-1">14</span>
+</div>
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-on-tertiary-container">
+<span class="material-symbols-outlined text-[24px]">task_alt</span>
+</div>
+</div>
+<div class="flex items-center gap-2 pt-space-xs">
+<span class="font-code-badge text-code-badge text-on-tertiary-container bg-surface-container px-2 py-0.5 rounded font-semibold">100% OK</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">No sensor faults logged</span>
+</div>
+</div>
+</div>
+<!-- Quick Action Command Strip -->
+<div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm">
+<div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[22px] text-secondary">bolt</span>
+<span class="font-label-lg text-label-lg text-primary">Dispenser Station Fast-Actions</span>
+</div>
+<div class="flex flex-wrap items-center gap-space-sm">
+<button class="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-secondary text-on-secondary hover:bg-secondary-container px-space-lg py-2.5 rounded shadow-sm font-label-md text-label-md transition-all active:scale-[0.98]" type="button">
+<span class="material-symbols-outlined text-[20px]">book</span>
+<span>Borrow a Book (18 Available)</span>
+</button>
+<button class="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-surface-container-low text-tertiary hover:bg-surface-container px-space-lg py-2.5 rounded shadow-sm font-label-md text-label-md transition-all active:scale-[0.98]" type="button">
+<span class="material-symbols-outlined text-[20px] text-on-tertiary-container">assignment_return</span>
+<span class="text-on-surface font-semibold">Return a Book</span>
+</button>
+<button class="w-full sm:w-auto flex items-center justify-center gap-2 bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container hover:text-on-surface px-space-md py-2.5 rounded font-label-md text-label-md transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">terminal</span>
+<span>Check Sensor Telemetry</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Main Split Architecture: Data Grid + Notification Rail -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg items-start">
+<!-- Left Column: Active Loans & Recent Transactions (8 cols) -->
+<div class="xl:col-span-8 flex flex-col gap-space-lg">
+<!-- Current Active Loans Table Card -->
+<div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[22px] text-primary">bookmark</span>
+<h2 class="font-headline-sm text-headline-sm text-primary">Current Active Loans</h2>
+</div>
+<span class="font-code-badge text-code-badge bg-surface-container text-on-surface-variant px-2 py-0.5 rounded">1 ITEM RECORDED</span>
+</div>
+<div class="overflow-x-auto -mx-space-lg px-space-lg">
+<table class="w-full text-left border-collapse min-w-[650px]">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant font-label-md text-label-md">
+<th class="py-space-sm px-space-md rounded-l">Book Title & Details</th>
+<th class="py-space-sm px-space-md">Locker</th>
+<th class="py-space-sm px-space-md">Borrowed</th>
+<th class="py-space-sm px-space-md">Due Date</th>
+<th class="py-space-sm px-space-md">Standing</th>
+<th class="py-space-sm px-space-md text-right rounded-r">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y-0">
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<img class="w-12 h-16 rounded object-cover shadow-sm bg-surface-container flex-shrink-0" data-alt="Technical textbook cover for Microelectronic Circuits by Sedra and Smith, high resolution professional academic textbook artwork with clean blue engineering geometry" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDN6Y-5T-j2vbmM1Ue50tq0GeyrUdck_Uplati8epS6jkQbFt8WAgAcXZjxs8-yegOo4ZI-bJpu3VIYjiETy5k-ooin_JJWXPL2x-HSW2jOiU7SJ1g-t3g6s2IEeV6k76hsW6Y1wzLlmapXBXVMrXL-RpkD5ewLCOty_Q5AGaR5EtsZpjmZPGYTL90cms-i-XX3Rdb2-NZVEEd5Ki0_jH6di2j2LFZELUE3hr2NPKpgEQCF0CSRvMeqMg"/>
+<div class="flex flex-col min-w-0">
+<span class="font-label-lg text-label-lg text-primary truncate">Microelectronic Circuits (8th Edition)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Sedra & Smith</span>
+<span class="font-code-badge text-code-badge text-outline">ISBN: 978-0190853464</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="font-code-telemetry text-code-telemetry text-primary font-bold bg-surface-container px-2 py-1 rounded">#03</span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface font-medium">11 Oct 2024</span>
+<span class="font-code-badge text-code-badge text-outline">11:30 AM</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-error-container font-semibold">18 Oct 2024</span>
+<span class="font-code-badge text-code-badge text-error">In 3 days</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1 font-code-badge text-code-badge text-tertiary-container bg-tertiary-fixed px-2 py-0.5 rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span> Good Standing
+                  </span>
+</td>
+<td class="py-space-md px-space-md text-right">
+<button class="bg-primary text-on-primary hover:bg-primary-container px-3 py-1.5 rounded font-label-md text-label-md shadow-sm transition-all whitespace-nowrap" type="button">
+                    Initiate Return
+                  </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Recent Transaction History Feed -->
+<div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[22px] text-primary">receipt_long</span>
+<h2 class="font-headline-sm text-headline-sm text-primary">Recent Dispenser Transactions</h2>
+</div>
+<span class="font-body-sm text-body-sm text-secondary hover:underline cursor-pointer">View full audit log</span>
+</div>
+<div class="flex flex-col gap-space-sm">
+<!-- Event 1 -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between p-space-md rounded-lg bg-surface-container-low gap-space-sm hover:bg-surface-container transition-colors">
+<div class="flex items-start gap-space-sm">
+<div class="w-9 h-9 rounded-full bg-tertiary-fixed flex items-center justify-center text-on-tertiary-container shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[20px]">assignment_turned_in</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="font-label-lg text-label-lg text-primary">Electric Power Systems</span>
+<span class="font-code-badge text-code-badge text-tertiary-container bg-tertiary-fixed px-1.5 py-0.5 rounded">RETURNED</span>
+<span class="font-code-badge text-code-badge text-outline bg-surface-container-lowest px-1.5 py-0.5 rounded">BAY #01</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                  Door closed • IR presence verified • Solenoid engaged
+                </span>
+</div>
+</div>
+<div class="flex flex-col sm:text-right shrink-0">
+<span class="font-code-telemetry text-code-telemetry text-on-surface">10 Oct 2024</span>
+<span class="font-code-badge text-code-badge text-outline">04:15 PM</span>
+</div>
+</div>
+<!-- Event 2 -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between p-space-md rounded-lg bg-surface-container-low gap-space-sm hover:bg-surface-container transition-colors">
+<div class="flex items-start gap-space-sm">
+<div class="w-9 h-9 rounded-full bg-surface-container-high flex items-center justify-center text-secondary shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[20px]">file_download</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="font-label-lg text-label-lg text-primary">Microelectronic Circuits</span>
+<span class="font-code-badge text-code-badge text-secondary bg-surface-container-high px-1.5 py-0.5 rounded">BORROWED</span>
+<span class="font-code-badge text-code-badge text-outline bg-surface-container-lowest px-1.5 py-0.5 rounded">BAY #03</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                  Solenoid unlocked • Weight differential 840g confirmed
+                </span>
+</div>
+</div>
+<div class="flex flex-col sm:text-right shrink-0">
+<span class="font-code-telemetry text-code-telemetry text-on-surface">11 Oct 2024</span>
+<span class="font-code-badge text-code-badge text-outline">11:30 AM</span>
+</div>
+</div>
+<!-- Event 3 -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between p-space-md rounded-lg bg-surface-container-low gap-space-sm hover:bg-surface-container transition-colors">
+<div class="flex items-start gap-space-sm">
+<div class="w-9 h-9 rounded-full bg-tertiary-fixed flex items-center justify-center text-on-tertiary-container shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[20px]">assignment_turned_in</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="font-label-lg text-label-lg text-primary">Signals and Systems</span>
+<span class="font-code-badge text-code-badge text-tertiary-container bg-tertiary-fixed px-1.5 py-0.5 rounded">RETURNED</span>
+<span class="font-code-badge text-code-badge text-outline bg-surface-container-lowest px-1.5 py-0.5 rounded">BAY #02</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                  RFID session completed • Authenticated by card 04:A2:8F:C9
+                </span>
+</div>
+</div>
+<div class="flex flex-col sm:text-right shrink-0">
+<span class="font-code-telemetry text-code-telemetry text-on-surface">04 Oct 2024</span>
+<span class="font-code-badge text-code-badge text-outline">02:20 PM</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Notifications & Hardware Diagnostics Rail (4 cols) -->
+<div class="xl:col-span-4 flex flex-col gap-space-lg">
+<!-- Real-time Alerts Panel -->
+<div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-secondary">notifications_active</span>
+<h2 class="font-headline-sm text-headline-sm text-primary">Locker Alerts</h2>
+</div>
+<span class="w-2 h-2 rounded-full bg-secondary animate-ping"></span>
+</div>
+<div class="flex flex-col gap-space-sm">
+<!-- Verification Alert (Green) -->
+<div class="p-space-md rounded-lg bg-surface-container-low flex flex-col gap-1.5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-on-tertiary-container">verified</span>
+<span class="font-label-md text-label-md text-on-tertiary-container font-semibold">Previous Return Verified</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Locker #01 IR sensor detected book presence and magnetic door secured. Check-in completed.
+            </p>
+<span class="font-code-badge text-code-badge text-outline self-end">10 Oct, 04:16 PM</span>
+</div>
+<!-- Schedule Alert (Info/Primary) -->
+<div class="p-space-md rounded-lg bg-surface-container flex flex-col gap-1.5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">build</span>
+<span class="font-label-md text-label-md text-primary font-semibold">Scheduled Locker Maintenance</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Tomorrow 08:00 AM – 09:00 AM for solenoid calibration. Bays #01-#06 temporarily offline.
+            </p>
+<span class="font-code-badge text-code-badge text-outline self-end">Notice ID: LAB-2401</span>
+</div>
+<!-- Due Reminder Alert (Amber) -->
+<div class="p-space-md rounded-lg bg-surface-container-high flex flex-col gap-1.5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-error">notification_important</span>
+<span class="font-label-md text-label-md text-on-error-container font-semibold">Due Date Reminder</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              1 book due in 3 days. Return to any active locker cubicle before 5:00 PM on 18 Oct 2024 to avoid overdue lockouts.
+            </p>
+<div class="pt-1 flex items-center justify-between">
+<span class="font-code-badge text-code-badge text-error font-medium">Overdue penalty: 5 INR/day</span>
+<button class="text-secondary font-label-md text-label-md hover:underline" type="button">Locate Cubicle</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Live Bay Matrix Visualizer -->
+<div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-primary">grid_view</span>
+<h3 class="font-label-lg text-label-lg text-primary">Station Matrix (Bay Status)</h3>
+</div>
+<span class="font-code-badge text-code-badge text-outline">EEE-WEST-K01</span>
+</div>
+<div class="grid grid-cols-3 gap-2">
+<!-- Bay 1 -->
+<div class="p-2 rounded bg-surface-container-low flex flex-col items-center justify-center text-center gap-1">
+<span class="font-code-badge text-code-badge text-outline">BAY 01</span>
+<span class="w-2 h-2 rounded-full bg-on-tertiary-container"></span>
+<span class="font-code-badge text-[10px] text-on-surface">Available</span>
+</div>
+<!-- Bay 2 -->
+<div class="p-2 rounded bg-surface-container-low flex flex-col items-center justify-center text-center gap-1">
+<span class="font-code-badge text-code-badge text-outline">BAY 02</span>
+<span class="w-2 h-2 rounded-full bg-on-tertiary-container"></span>
+<span class="font-code-badge text-[10px] text-on-surface">Available</span>
+</div>
+<!-- Bay 3 (Current Loan) -->
+<div class="p-2 rounded bg-surface-container-high flex flex-col items-center justify-center text-center gap-1">
+<span class="font-code-badge text-code-badge text-secondary font-bold">BAY 03</span>
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-code-badge text-[10px] text-primary font-semibold">Your Loan</span>
+</div>
+<!-- Bay 4 (Designated) -->
+<div class="p-2 rounded bg-surface-container-highest flex flex-col items-center justify-center text-center gap-1">
+<span class="font-code-badge text-code-badge text-primary font-bold">BAY 04</span>
+<span class="w-2 h-2 rounded-full bg-secondary animate-ping"></span>
+<span class="font-code-badge text-[10px] text-secondary font-bold">Ready</span>
+</div>
+<!-- Bay 5 -->
+<div class="p-2 rounded bg-surface-container-low flex flex-col items-center justify-center text-center gap-1">
+<span class="font-code-badge text-code-badge text-outline">BAY 05</span>
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<span class="font-code-badge text-[10px] text-outline">Reserved</span>
+</div>
+<!-- Bay 6 -->
+<div class="p-2 rounded bg-surface-container-low flex flex-col items-center justify-center text-center gap-1">
+<span class="font-code-badge text-code-badge text-outline">BAY 06</span>
+<span class="w-2 h-2 rounded-full bg-on-tertiary-container"></span>
+<span class="font-code-badge text-[10px] text-on-surface">Available</span>
+</div>
+</div>
+<div class="pt-2 flex items-center justify-between text-on-surface-variant font-code-badge text-code-badge">
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-on-tertiary-container"></span> Empty</span>
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-secondary"></span> Active Target</span>
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-outline"></span> Occupied</span>
+</div>
+</div>
+<!-- Campus Library Contact & Support -->
+<div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm flex items-center gap-space-sm">
+<img class="w-16 h-16 rounded-lg object-cover bg-surface-container shrink-0" data-alt="Modern high-tech university campus library engineering lab at Vishnu Institute of Technology with automated book lockers and bright natural illumination" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAe8VBSaml-ipmRMa5YxLsud9RutbkSTVOf1mOwbqZdXzFvf4XUu1Xrqi8-PjhtS-CAys0TYZnWeU2Cy6-FImrzFUEIMbYfxM-bAH3sIwXCqOtmMAjXZyPSyE8tqUb87ggySJv1CjhOL3sgsJ422iwHJRMIa3qvsCQIYi4TH--6MNiREeN_jt7vOqiAjx1-X2jdrhbsmbwZKmIdZkWmioddAA3oIryMs31c5K3EJu_i-qyM2IMJgojj6A"/>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-primary font-semibold">Central EEE Library Node</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Ground Floor, Academic Block B</span>
+<span class="font-code-badge text-code-badge text-secondary mt-0.5">Ext: 4421 • Helpdesk Online</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Simple interactive feedback for locker operation demo buttons
+  document.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const text = btn.innerText.trim();
+      if(text.includes('Borrow') || text.includes('Return')) {
+        const originalText = btn.innerHTML;
+        btn.innerHTML = `<span class="material-symbols-outlined text-[18px] animate-spin">refresh</span> Reading RFID Tag...`;
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+        }, 1200);
+      }
+    });
+  });
+</script></main></div><div class="fixed inset-0 z-50 bg-primary/40 backdrop-blur-sm hidden target:flex items-center justify-center p-space-md" id="logout-dialog"><div class="bg-surface-container-lowest rounded-xl max-w-md w-full p-space-xl shadow-[0_20px_25px_-5px_rgba(18,59,103,0.1)] flex flex-col gap-space-md"><div class="flex items-center gap-space-sm text-error"><span class="material-symbols-outlined text-[28px]">warning</span><span class="font-headline-sm text-headline-sm text-on-surface">Confirm Termination</span></div><p class="font-body-md text-body-md text-on-surface-variant">Are you sure you want to end your current session? Any open solenoid unlocks or active dispenser locks will be automatically secured.</p><div class="flex items-center justify-end gap-space-sm pt-space-sm"><a class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" href="#">Cancel</a><a class="px-space-md py-space-sm rounded-lg font-label-md text-label-md bg-error text-on-error hover:bg-on-error-container transition-colors" data-path="login" href="#">Disconnect & Logout</a></div></div></div></body></html>

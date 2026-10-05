@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"primary-container":"#123b67","on-primary-container":"#84a6d8","on-secondary-container":"#fefcff","primary-fixed-dim":"#a6c8fd","tertiary-fixed":"#7ffc97","surface-variant":"#d3e4fe","secondary-container":"#316bf3","on-primary-fixed-variant":"#224875","on-primary-fixed":"#001c39","on-secondary-fixed-variant":"#003ea8","on-tertiary-container":"#3aba5e","surface-bright":"#f8f9ff","on-surface-variant":"#43474f","surface-dim":"#cbdbf5","surface-container-high":"#dce9ff","on-tertiary":"#ffffff","surface-tint":"#3d608e","surface":"#f8f9ff","primary-fixed":"#d4e3ff","error":"#ba1a1a","on-primary":"#ffffff","outline-variant":"#c3c6d0","on-error-container":"#93000a","tertiary":"#002b0e","primary":"#002549","error-container":"#ffdad6","on-tertiary-fixed":"#002109","tertiary-container":"#004419","surface-container-lowest":"#ffffff","on-secondary":"#ffffff","on-error":"#ffffff","on-surface":"#0b1c30","on-tertiary-fixed-variant":"#005320","secondary":"#0051d5","background":"#f8f9ff","surface-container-highest":"#d3e4fe","outline":"#737780","secondary-fixed-dim":"#b4c5ff","secondary-fixed":"#dbe1ff","on-secondary-fixed":"#00174b","surface-container":"#e5eeff","tertiary-fixed-dim":"#62df7d","surface-container-low":"#eff4ff","inverse-on-surface":"#eaf1ff","inverse-surface":"#213145","inverse-primary":"#a6c8fd","on-background":"#0b1c30"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"gutter":"1.5rem","margin":"2rem","gutter-sm":"1rem","space-lg":"1.5rem","space-sm":"0.5rem","space-md":"1rem","space-xs":"0.25rem","margin-sm":"1rem","space-xl":"2rem"},"fontFamily":{"code-telemetry":["JetBrains Mono"],"label-lg":["Inter"],"headline-xl-mobile":["Plus Jakarta Sans"],"body-lg":["Inter"],"label-md":["Inter"],"headline-md":["Plus Jakarta Sans"],"code-badge":["JetBrains Mono"],"body-md":["Inter"],"body-sm":["Inter"],"headline-lg-mobile":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"]},"fontSize":{"code-telemetry":["13px",{"lineHeight":"18px","letterSpacing":"-0.01em","fontWeight":"500"}],"label-lg":["14px",{"lineHeight":"20px","fontWeight":"600"}],"headline-xl-mobile":["30px",{"lineHeight":"38px","letterSpacing":"-0.02em","fontWeight":"700"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"label-md":["12px",{"lineHeight":"16px","fontWeight":"500"}],"headline-md":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"code-badge":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-xl":["40px",{"lineHeight":"48px","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-sm":["18px",{"lineHeight":"26px","fontWeight":"600"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="p-space-lg flex items-start gap-space-sm bg-surface-container-low"><img alt="SmartLocker Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Vtr0xI_75roQQIg48y0OFsfC--krHwc-8XspQRvXiep1aST1iPZ35PdojCz7qtCld8DfvzuGlEqHlsB5Ze-EvP7utqz0H2e_-bZe5UPncdLV3ulBxHRWcg4kdL3ACIOJLr51Rs8qI3z0RvHcFgGwoyjoUZSz5c76PS-GQXiIvMaURPljN2YYeJUy1x37BvfKvvrNmscPSst70T463I12TDnEW7HqRcRxV8BykY22OmAaA4iHNGGlYMK_zZ"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary leading-tight">SmartLocker</span><span class="font-body-sm text-body-sm text-on-surface-variant leading-tight">Vishnu Inst. of Tech • EEE</span></div></div><div class="px-space-md py-space-sm"><span class="font-code-badge text-code-badge text-outline uppercase tracking-wider px-space-sm">Operations &amp; Telemetry</span></div><nav class="flex flex-col gap-space-xs px-space-md" data-active-classes="bg-primary-container text-on-secondary-container font-label-lg text-label-lg rounded-lg"><a class="flex items-center gap-space-sm px-space-md py-space-sm font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface rounded-lg transition-colors" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[20px]">dashboard</span><span>Dashboard</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface rounded-lg transition-colors" data-path="borrow-a-book" href="#"><span class="material-symbols-outlined text-[20px]">book</span><span>Borrow a Book</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface rounded-lg transition-colors" data-path="return-a-book" href="#"><span class="material-symbols-outlined text-[20px]">assignment_return</span><span>Return a Book</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface rounded-lg transition-colors" data-path="account-history" href="#"><span class="material-symbols-outlined text-[20px]">history</span><span>Account History</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface rounded-lg transition-colors" data-path="system-status" href="#"><span class="material-symbols-outlined text-[20px]">memory</span><span>System Status</span></a><a class="flex items-center justify-between px-space-md py-space-sm font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface rounded-lg transition-colors" data-path="user-management" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">manage_accounts</span><span>User Management</span></div><span class="font-code-badge text-code-badge bg-surface-container-high text-primary px-1.5 py-0.5 rounded-sm">ADMIN</span></a></nav></div><div class="p-space-md flex flex-col gap-space-sm"><a class="flex items-center gap-space-sm px-space-md py-space-sm font-label-md text-label-md text-error hover:bg-error-container hover:text-on-error-container rounded-lg transition-colors" href="#logout-dialog"><span class="material-symbols-outlined text-[20px]">logout</span><span>Logout</span></a><div class="p-space-md bg-surface-container-low rounded-xl flex flex-col gap-space-xs shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center justify-between"><span class="font-code-badge text-code-badge text-tertiary-container bg-tertiary-fixed px-1.5 py-0.5 rounded-full flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span>SECURE HW</span><span class="material-symbols-outlined text-[18px] text-outline">lock</span></div><div class="flex flex-col"><span class="font-label-md text-label-md text-on-surface font-semibold">Student Member</span><span class="font-code-telemetry text-code-telemetry text-secondary font-medium tracking-tight">RFID: 04:A2:8F:C9</span></div></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-xl"><div class="flex items-center gap-space-md"><div class="flex items-center gap-1.5 px-space-sm py-1 bg-surface-container-lowest rounded-full shadow-[0_1px_3px_rgba(18,59,103,0.04)]"><span class="w-2 h-2 rounded-full bg-on-tertiary-container animate-pulse"></span><span class="font-code-badge text-code-badge text-on-surface">RPi 3B+ Online</span></div><div class="hidden xl:flex items-center gap-1.5 px-space-sm py-1 bg-surface-container rounded-full"><span class="material-symbols-outlined text-[14px] text-secondary">tune</span><span class="font-code-badge text-code-badge text-on-surface-variant">Demo Hardware: Active</span></div><div class="hidden md:flex items-center gap-1.5 px-space-sm py-1 bg-surface-container-lowest rounded-full shadow-[0_1px_3px_rgba(18,59,103,0.04)]"><span class="material-symbols-outlined text-[14px] text-on-tertiary-container">bolt</span><span class="font-code-badge text-code-badge text-on-surface-variant">12V Solenoid: Secured</span></div></div><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm text-outline hover:text-on-surface cursor-pointer bg-surface-container-lowest px-space-sm py-1.5 rounded-lg shadow-[0_1px_3px_rgba(18,59,103,0.04)]"><span class="material-symbols-outlined text-[18px]">search</span><span class="font-body-sm text-body-sm text-outline">Quick Search</span><span class="font-code-badge text-code-badge bg-surface-container px-1 py-0.5 rounded text-on-surface-variant">⌘K</span></div><div class="relative flex items-center justify-center p-1.5 rounded-full hover:bg-surface-container text-on-surface-variant hover:text-on-surface cursor-pointer"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1 right-1 w-4 h-4 bg-error text-on-error font-code-badge text-[9px] flex items-center justify-center rounded-full font-bold">2</span></div><div class="flex items-center gap-space-sm pl-space-sm"><div class="hidden lg:flex flex-col text-right"><span class="font-label-md text-label-md text-on-surface leading-tight">Ananya Sharma</span><span class="font-body-sm text-body-sm text-on-surface-variant leading-tight">21BEE1048 • Scholar</span></div><img alt="Profile" class="w-8 h-8 rounded-full object-cover shadow-[0_1px_3px_rgba(18,59,103,0.08)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHiD6ZO8blrXIWf-0_upB1pMpsESF3AhCjbOXl4LguyhZpTYatg60MGi7bijePsUZ3ggqDkdCqET_D4Q_OK1kYZecjgGwAMvqS_SH6rYZly1wx2swzZ33J7hURInKEIg_B9-sXJyvxRgikJ93j62recEQFpCOsTDUJWDMWVTZkG5yLAKXgH-Z0UoFGabu21u0p4qiIAjnGTA62kEWZgbe3bU-sB1V6Lal3k4vT48RNBOqSNp6zJoS9Kg"/></div></div></header><main class="relative pt-16 bg-surface min-h-screen w-full px-space-xl"><div class="flex flex-col w-full pb-space-xl">
+<!-- Dynamic Sidebar Activator Script -->
+<script>
+    (function() {
+      const navLinks = document.querySelectorAll('aside nav a[data-path="user-management"]');
+      navLinks.forEach(link => {
+        link.classList.remove('text-on-surface-variant', 'hover:bg-surface-container');
+        link.classList.add('bg-primary-container', 'text-on-secondary-container', 'font-label-lg', 'text-label-lg', 'rounded-lg');
+      });
+    })();
+  </script>
+<!-- Page Header Area with Academic Hardware Subtext -->
+<section class="flex flex-col xl:flex-row xl:items-end justify-between gap-space-md py-space-lg">
+<div class="flex flex-col gap-space-xs max-w-3xl">
+<div class="flex items-center gap-2">
+<span class="font-code-badge text-code-badge bg-surface-container-high text-primary px-2 py-0.5 rounded-full uppercase tracking-wider font-semibold">IEEE Instrumentation Node #03</span>
+<span class="text-outline text-body-sm">•</span>
+<span class="font-code-telemetry text-code-telemetry text-secondary">RC522 SPI Bridge @ 13.56 MHz</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl text-primary tracking-tight">Administrator &amp; Member Management</h1>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+        Department administrative console for RFID card enrollment, locker compartment assignment, loan audit logs, and hardware policy overrides.
+      </p>
+</div>
+<!-- Quick Action Toolbelt -->
+<div class="flex items-center flex-wrap gap-space-sm">
+<button class="flex items-center gap-1.5 px-space-md py-2.5 bg-secondary text-on-secondary hover:bg-primary transition-all rounded-lg shadow-sm font-label-lg text-label-lg" onclick="document.getElementById('enrollModal').classList.remove('hidden')">
+<span class="material-symbols-outlined text-[18px]">person_add</span>
+<span>+ Enroll New Member</span>
+</button>
+<button class="flex items-center gap-1.5 px-space-md py-2.5 bg-surface-container-low hover:bg-surface-container text-primary rounded-lg transition-colors font-label-lg text-label-lg shadow-sm" onclick="triggerCsvExport()">
+<span class="material-symbols-outlined text-[18px]">download</span>
+<span>Export SQLite Audit CSV</span>
+</button>
+<button class="flex items-center gap-1.5 px-space-md py-2.5 bg-primary text-on-primary hover:bg-primary-container transition-colors rounded-lg font-label-lg text-label-lg shadow-sm" onclick="document.getElementById('hardwareOverrideDialog').classList.remove('hidden')">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+<span>Hardware Bay Override</span>
+</button>
+</div>
+</section>
+<!-- 1. Executive KPI Summary Cards -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md mb-space-lg">
+<!-- Card 1 -->
+<div class="relative overflow-hidden bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Enrolled Members</span>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-headline-xl text-headline-xl text-primary font-bold">142</span>
+<span class="font-code-badge text-code-badge text-on-tertiary-container bg-tertiary-fixed px-1.5 py-0.5 rounded-full font-bold">+4 this wk</span>
+</div>
+</div>
+<div class="p-2.5 bg-surface-container-low text-secondary rounded-lg">
+<span class="material-symbols-outlined text-[24px]">badge</span>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm bg-surface-container-low/50 px-3 py-2 rounded-lg">
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-secondary"></span> 128 Students</span>
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-primary-container"></span> 14 Faculty &amp; Staff</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="relative overflow-hidden bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Locker Compartments</span>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-headline-xl text-headline-xl text-primary font-bold">8 <span class="font-headline-sm text-headline-sm text-outline font-normal">Bays</span></span>
+<span class="font-code-badge text-code-badge text-secondary bg-surface-container px-1.5 py-0.5 rounded-full">100% Online</span>
+</div>
+</div>
+<div class="p-2.5 bg-surface-container-low text-primary rounded-lg">
+<span class="material-symbols-outlined text-[24px]">grid_view</span>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center gap-2 text-on-surface-variant font-body-sm text-body-sm bg-surface-container-low/50 px-3 py-2 rounded-lg">
+<span class="text-on-tertiary-container font-semibold">6 Active</span>
+<span>•</span>
+<span class="text-secondary font-semibold">1 Reserved</span>
+<span>•</span>
+<span class="text-error font-semibold">1 Maint.</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="relative overflow-hidden bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Active Checked-Out Loans</span>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-headline-xl text-headline-xl text-secondary font-bold">6</span>
+<span class="font-body-md text-body-md text-on-surface-variant">/ 8 Books</span>
+</div>
+</div>
+<div class="p-2.5 bg-surface-container-low text-secondary rounded-lg">
+<span class="material-symbols-outlined text-[24px]">auto_stories</span>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm bg-surface-container-low/50 px-3 py-2 rounded-lg">
+<div class="w-full bg-surface-container rounded-full h-2 overflow-hidden flex">
+<div class="bg-secondary h-full" style="width: 75%"></div>
+</div>
+<span class="ml-2 font-code-badge text-code-badge font-semibold text-primary">75%</span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="relative overflow-hidden bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Hardware Sensor Flags</span>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-headline-xl text-headline-xl text-on-tertiary-container font-bold">0</span>
+<span class="font-code-badge text-code-badge text-tertiary-container bg-tertiary-fixed px-1.5 py-0.5 rounded-full font-bold">Audit Clean</span>
+</div>
+</div>
+<div class="p-2.5 bg-tertiary-fixed text-tertiary-container rounded-lg">
+<span class="material-symbols-outlined text-[24px]">verified</span>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm bg-surface-container-low/50 px-3 py-2 rounded-lg">
+<span class="flex items-center gap-1.5 text-on-tertiary-container font-medium">
+<span class="material-symbols-outlined text-[16px]">sensors</span> IR &amp; Solenoid Loop Valid
+        </span>
+<span class="font-code-badge text-code-badge text-outline">0.08ms</span>
+</div>
+</div>
+</section>
+<!-- 2. Locker Bay Configuration & Book Mapping Matrix (Physical Hardware Digital Twin) -->
+<section class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm mb-space-lg">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between pb-space-md gap-2">
+<div>
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-on-tertiary-container animate-ping"></span>
+<h2 class="font-headline-md text-headline-md text-primary font-bold">Locker Bay Hardware Matrix (Bays #01 – #08)</h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+          Real-time infrared break-beam sensor telemetry, electronic solenoid statuses, and embedded book mapping.
+        </p>
+</div>
+<div class="flex items-center gap-2">
+<button class="flex items-center gap-1.5 px-3 py-1.5 bg-error text-on-error hover:bg-on-error-container rounded-lg transition-colors font-label-md text-label-md shadow-sm" onclick="emergencyMasterUnlock()">
+<span class="material-symbols-outlined text-[18px]">lock_open</span>
+<span>Emergency Master Unlock</span>
+</button>
+</div>
+</div>
+<!-- 8 Locker Compartments Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md pt-2">
+<!-- Bay 01: Occupied / Normal -->
+<div class="p-space-md bg-surface-container-low rounded-xl flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow relative">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm font-bold text-primary">#01</span>
+<span class="font-code-badge text-code-badge px-2 py-0.5 rounded-full bg-tertiary-fixed text-tertiary-container font-semibold">CLOSED • ARMED</span>
+</div>
+<span class="material-symbols-outlined text-[18px] text-on-tertiary-container">lock</span>
+</div>
+<div class="my-3 flex flex-col gap-1">
+<span class="font-label-md text-label-md text-primary font-bold truncate">Modern Control Engineering</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">K. Ogata • 5th Ed.</span>
+<div class="flex items-center justify-between pt-1">
+<span class="font-code-telemetry text-code-telemetry text-secondary">BC-EEE-0981</span>
+<span class="font-code-badge text-code-badge text-outline">Weight: 1.14 kg</span>
+</div>
+</div>
+<div class="pt-2 flex items-center justify-between text-body-sm font-body-sm bg-surface-container-lowest p-2 rounded-lg">
+<span class="text-on-surface-variant truncate">Assigned: 21BEE1048</span>
+<button class="text-secondary hover:text-primary font-label-md text-label-md font-semibold" onclick="triggerBayActuation('01')">Pulse</button>
+</div>
+</div>
+<!-- Bay 02: Occupied / Normal -->
+<div class="p-space-md bg-surface-container-low rounded-xl flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow relative">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm font-bold text-primary">#02</span>
+<span class="font-code-badge text-code-badge px-2 py-0.5 rounded-full bg-tertiary-fixed text-tertiary-container font-semibold">CLOSED • ARMED</span>
+</div>
+<span class="material-symbols-outlined text-[18px] text-on-tertiary-container">lock</span>
+</div>
+<div class="my-3 flex flex-col gap-1">
+<span class="font-label-md text-label-md text-primary font-bold truncate">Electric Machinery Fundamentals</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Stephen J. Chapman</span>
+<div class="flex items-center justify-between pt-1">
+<span class="font-code-telemetry text-code-telemetry text-secondary">BC-EEE-0442</span>
+<span class="font-code-badge text-code-badge text-outline">Weight: 0.98 kg</span>
+</div>
+</div>
+<div class="pt-2 flex items-center justify-between text-body-sm font-body-sm bg-surface-container-lowest p-2 rounded-lg">
+<span class="text-on-surface-variant truncate">Assigned: 21BEE1082</span>
+<button class="text-secondary hover:text-primary font-label-md text-label-md font-semibold" onclick="triggerBayActuation('02')">Pulse</button>
+</div>
+</div>
+<!-- Bay 03: Active Solenoid Open -->
+<div class="p-space-md bg-surface-container-lowest rounded-xl flex flex-col justify-between shadow-md relative ring-2 ring-secondary/50">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm font-bold text-secondary">#03</span>
+<span class="font-code-badge text-code-badge px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-bold animate-pulse">SOLENOID PULSED</span>
+</div>
+<span class="material-symbols-outlined text-[18px] text-secondary">lock_open</span>
+</div>
+<div class="my-3 flex flex-col gap-1">
+<span class="font-label-md text-label-md text-primary font-bold truncate">Power System Analysis</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Hadi Saadat</span>
+<div class="flex items-center justify-between pt-1">
+<span class="font-code-telemetry text-code-telemetry text-secondary">BC-EEE-1102</span>
+<span class="font-code-badge text-code-badge text-secondary font-bold">Door: AJAR</span>
+</div>
+</div>
+<div class="pt-2 flex items-center justify-between text-body-sm font-body-sm bg-surface-container-high p-2 rounded-lg">
+<span class="text-primary font-semibold truncate">Pickup in progress</span>
+<button class="text-error font-label-md text-label-md font-bold" onclick="triggerBayActuation('03', 'lock')">Secure</button>
+</div>
+</div>
+<!-- Bay 04: Occupied -->
+<div class="p-space-md bg-surface-container-low rounded-xl flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow relative">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm font-bold text-primary">#04</span>
+<span class="font-code-badge text-code-badge px-2 py-0.5 rounded-full bg-tertiary-fixed text-tertiary-container font-semibold">CLOSED • ARMED</span>
+</div>
+<span class="material-symbols-outlined text-[18px] text-on-tertiary-container">lock</span>
+</div>
+<div class="my-3 flex flex-col gap-1">
+<span class="font-label-md text-label-md text-primary font-bold truncate">Principles of Power Electronics</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Kassakian &amp; Verghese</span>
+<div class="flex items-center justify-between pt-1">
+<span class="font-code-telemetry text-code-telemetry text-secondary">BC-EEE-0773</span>
+<span class="font-code-badge text-code-badge text-outline">Weight: 1.45 kg</span>
+</div>
+</div>
+<div class="pt-2 flex items-center justify-between text-body-sm font-body-sm bg-surface-container-lowest p-2 rounded-lg">
+<span class="text-on-surface-variant truncate">Assigned: EEE-FAC-014</span>
+<button class="text-secondary hover:text-primary font-label-md text-label-md font-semibold" onclick="triggerBayActuation('04')">Pulse</button>
+</div>
+</div>
+<!-- Bay 05: Occupied -->
+<div class="p-space-md bg-surface-container-low rounded-xl flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow relative">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm font-bold text-primary">#05</span>
+<span class="font-code-badge text-code-badge px-2 py-0.5 rounded-full bg-tertiary-fixed text-tertiary-container font-semibold">CLOSED • ARMED</span>
+</div>
+<span class="material-symbols-outlined text-[18px] text-on-tertiary-container">lock</span>
+</div>
+<div class="my-3 flex flex-col gap-1">
+<span class="font-label-md text-label-md text-primary font-bold truncate">Microelectronic Circuits</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Sedra &amp; Smith</span>
+<div class="flex items-center justify-between pt-1">
+<span class="font-code-telemetry text-code-telemetry text-secondary">BC-EEE-1209</span>
+<span class="font-code-badge text-code-badge text-outline">Weight: 1.80 kg</span>
+</div>
+</div>
+<div class="pt-2 flex items-center justify-between text-body-sm font-body-sm bg-surface-container-lowest p-2 rounded-lg">
+<span class="text-on-surface-variant truncate">Assigned: 20BEE1120</span>
+<button class="text-secondary hover:text-primary font-label-md text-label-md font-semibold" onclick="triggerBayActuation('05')">Pulse</button>
+</div>
+</div>
+<!-- Bay 06: Reserved -->
+<div class="p-space-md bg-surface-container-low rounded-xl flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow relative">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm font-bold text-primary">#06</span>
+<span class="font-code-badge text-code-badge px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-semibold">RESERVED</span>
+</div>
+<span class="material-symbols-outlined text-[18px] text-secondary">bookmark_manager</span>
+</div>
+<div class="my-3 flex flex-col gap-1">
+<span class="font-label-md text-label-md text-primary font-bold truncate">Signals and Systems</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Oppenheim &amp; Willsky</span>
+<div class="flex items-center justify-between pt-1">
+<span class="font-code-telemetry text-code-telemetry text-secondary">BC-EEE-0331</span>
+<span class="font-code-badge text-code-badge text-outline">Exp: 18:00 IST</span>
+</div>
+</div>
+<div class="pt-2 flex items-center justify-between text-body-sm font-body-sm bg-surface-container-lowest p-2 rounded-lg">
+<span class="text-on-surface-variant truncate">Scholar: 22BEE1004</span>
+<button class="text-secondary hover:text-primary font-label-md text-label-md font-semibold" onclick="triggerBayActuation('06')">Pulse</button>
+</div>
+</div>
+<!-- Bay 07: Occupied -->
+<div class="p-space-md bg-surface-container-low rounded-xl flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow relative">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm font-bold text-primary">#07</span>
+<span class="font-code-badge text-code-badge px-2 py-0.5 rounded-full bg-tertiary-fixed text-tertiary-container font-semibold">CLOSED • ARMED</span>
+</div>
+<span class="material-symbols-outlined text-[18px] text-on-tertiary-container">lock</span>
+</div>
+<div class="my-3 flex flex-col gap-1">
+<span class="font-label-md text-label-md text-primary font-bold truncate">Automatic Control Systems</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Farid Golnaraghi</span>
+<div class="flex items-center justify-between pt-1">
+<span class="font-code-telemetry text-code-telemetry text-secondary">BC-EEE-0849</span>
+<span class="font-code-badge text-code-badge text-outline">Weight: 1.10 kg</span>
+</div>
+</div>
+<div class="pt-2 flex items-center justify-between text-body-sm font-body-sm bg-surface-container-lowest p-2 rounded-lg">
+<span class="text-on-surface-variant truncate">Assigned: EEE-LAB-003</span>
+<button class="text-secondary hover:text-primary font-label-md text-label-md font-semibold" onclick="triggerBayActuation('07')">Pulse</button>
+</div>
+</div>
+<!-- Bay 08: Maintenance Lockout -->
+<div class="p-space-md bg-error-container/40 rounded-xl flex flex-col justify-between shadow-sm relative">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm font-bold text-error">#08</span>
+<span class="font-code-badge text-code-badge px-2 py-0.5 rounded-full bg-error text-on-error font-semibold">MAINTENANCE</span>
+</div>
+<span class="material-symbols-outlined text-[18px] text-error">engineering</span>
+</div>
+<div class="my-3 flex flex-col gap-1">
+<span class="font-label-md text-label-md text-error font-bold truncate">Load-Cell Recalibration</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">HX711 Zero-Offset Drift</span>
+<div class="flex items-center justify-between pt-1">
+<span class="font-code-telemetry text-code-telemetry text-error">BAY-OFFLINE</span>
+<span class="font-code-badge text-code-badge text-error">Diff: +18g</span>
+</div>
+</div>
+<div class="pt-2 flex items-center justify-between text-body-sm font-body-sm bg-surface-container-lowest p-2 rounded-lg">
+<span class="text-error font-semibold truncate">Bay Disengaged</span>
+<button class="text-secondary hover:text-primary font-label-md text-label-md font-semibold" onclick="recalibrateBay('08')">Tare &amp; Arm</button>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. Member Management & RFID Enrollment Area -->
+<section class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm mb-space-lg">
+<div class="flex flex-col xl:flex-row xl:items-center justify-between gap-space-md pb-space-md">
+<div>
+<h2 class="font-headline-md text-headline-md text-primary font-bold">Enrolled Scholars &amp; RFID Credential Ledger</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+          Card index linked to 13.56MHz Mifare Classic 1K / NTAG213 encrypted smart identifiers.
+        </p>
+</div>
+<!-- Live Search & Instant Filtering -->
+<div class="flex flex-col sm:flex-row items-center gap-space-sm w-full xl:w-auto">
+<div class="relative w-full sm:w-80">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-[18px]">search</span>
+<input class="w-full bg-surface-container-low pl-9 pr-4 py-2 rounded-lg font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-secondary/40 transition-all shadow-inner" id="memberSearchInput" oninput="filterMemberTable()" placeholder="Search Name, Reg No, UID, Dept..." type="text"/>
+</div>
+<button class="w-full sm:w-auto px-space-md py-2 bg-secondary text-on-secondary hover:bg-primary transition-colors rounded-lg font-label-md text-label-md whitespace-nowrap shadow-sm" onclick="document.getElementById('enrollModal').classList.remove('hidden')">
+          + Add RFID
+        </button>
+</div>
+</div>
+<!-- Filter Segment Chips -->
+<div class="flex items-center gap-2 overflow-x-auto pb-space-sm mb-space-md">
+<button class="px-3 py-1 rounded-full font-label-md text-label-md bg-primary text-on-primary font-medium transition-colors filter-chip" onclick="setFilterRole('all', this)">All (142)</button>
+<button class="px-3 py-1 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors filter-chip" onclick="setFilterRole('Student Member', this)">Students (128)</button>
+<button class="px-3 py-1 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors filter-chip" onclick="setFilterRole('Faculty', this)">Faculty &amp; Staff (14)</button>
+<button class="px-3 py-1 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors filter-chip" onclick="setFilterRole('Overdue', this)">Overdue Loans (0)</button>
+<button class="px-3 py-1 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors filter-chip" onclick="setFilterRole('Suspended', this)">Suspended (1)</button>
+</div>
+<!-- Member Roster Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse" id="memberLedgerTable">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-md text-label-md uppercase tracking-wider">
+<th class="py-3 px-space-md rounded-l-lg">Scholar / Staff Name</th>
+<th class="py-3 px-space-md">Registration ID</th>
+<th class="py-3 px-space-md">RFID UID Card</th>
+<th class="py-3 px-space-md">Academic Role</th>
+<th class="py-3 px-space-md">Active Loans</th>
+<th class="py-3 px-space-md">Access State</th>
+<th class="py-3 px-space-md text-right rounded-r-lg">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-high/40 font-body-md text-body-md">
+<!-- Member Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors member-row" data-role="Student Member" data-status="Active">
+<td class="py-3 px-space-md flex items-center gap-space-sm">
+<img class="w-9 h-9 rounded-full object-cover shadow-sm" data-alt="Portrait of Ananya Sharma, an engineering scholar wearing academic attire, clean slate lab background with professional lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiiKahcoNx96RuMt7ua_zcITk6LA0EYH176eaLmTx0YPS8FQ0B4ZC7qwOaHy0QOUjusujN6bFC59bSLUIQQK4Aen0I8aB6znl-uGqO_iZtlhFR8yaYAzFI7OJioDyC71q-r7wxVlSO6Mk9XZwSB_11L69rYRnNZgcMQEQkbeaqA-c3I413CNVXQYPXIiZv46QXFQqMrvx-26qQITw77sXectmb96_8VyPHmf0E4UR7rYiohs_ZA8HFOg"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-semibold">Ananya Sharma</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">ananya.21bee@vishnu.edu.in</span>
+</div>
+</td>
+<td class="py-3 px-space-md font-code-telemetry text-code-telemetry text-primary font-bold">21BEE1048</td>
+<td class="py-3 px-space-md">
+<span class="font-code-telemetry text-code-telemetry bg-surface-container px-2 py-0.5 rounded font-bold text-secondary">04:A2:8F:C9</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="font-label-md text-label-md text-on-surface">Student Member (EEE)</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="font-code-badge text-code-badge bg-secondary-fixed text-on-secondary-fixed px-2 py-0.5 rounded-full font-bold">1 Book (Bay #01)</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="font-code-badge text-code-badge text-on-tertiary-container bg-tertiary-fixed px-2 py-0.5 rounded-full font-bold flex items-center gap-1 w-max">
+<span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span> ACTIVE
+              </span>
+</td>
+<td class="py-3 px-space-md text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 hover:bg-surface-container rounded text-outline hover:text-secondary" onclick="reassignRfid('21BEE1048')" title="Reassign Card UID"><span class="material-symbols-outlined text-[18px]">contactless</span></button>
+<button class="p-1 hover:bg-surface-container rounded text-outline hover:text-primary" onclick="showMemberLog('21BEE1048')" title="View Member Log"><span class="material-symbols-outlined text-[18px]">history</span></button>
+<button class="p-1 hover:bg-surface-container rounded text-outline hover:text-primary" title="Edit Member"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+</div>
+</td>
+</tr>
+<!-- Member Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors member-row" data-role="Student Member" data-status="Active">
+<td class="py-3 px-space-md flex items-center gap-space-sm">
+<img class="w-9 h-9 rounded-full object-cover shadow-sm" data-alt="Portrait of Rohan Varma, an electrical engineering student working in a high-voltage lab setting with precision instrumentation" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBT-QENzTo127AvXA090eGSruLMoctNXNIGJTabSfJUCot3C1W-FA6KnDS41lCNLWM9sHpuKx4WESfDFdfM0eQ413hOv5p4anj9JDks4eI2lrpegoQOVdVE2OQXYhvz56tZlYTK-5SJIznAYzS1oavtV-7NPe-3nCgo6yBoACTctg4r9QxBIAewMhOU8eUBg3e2E8bl4_QKN3gCia4Qr14rP05LhebuuZKzFZK_CaeRaUQjlj36hAB6hA"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-semibold">Rohan Varma</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">rohan.21bee@vishnu.edu.in</span>
+</div>
+</td>
+<td class="py-3 px-space-md font-code-telemetry text-code-telemetry text-primary font-bold">21BEE1082</td>
+<td class="py-3 px-space-md">
+<span class="font-code-telemetry text-code-telemetry bg-surface-container px-2 py-0.5 rounded font-bold text-secondary">5B:C1:99:32</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="font-label-md text-label-md text-on-surface">Student Member (EEE)</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="font-code-badge text-code-badge bg-secondary-fixed text-on-secondary-fixed px-2 py-0.5 rounded-full font-bold">1 Book (Bay #02)</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="font-code-badge text-code-badge text-on-tertiary-container bg-tertiary-fixed px-2 py-0.5 rounded-full font-bold flex items-center gap-1 w-max">
+<span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span> ACTIVE
+              </span>
+</td>
+<td class="py-3 px-space-md text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 hover:bg-surface-container rounded text-outline hover:text-secondary" onclick="reassignRfid('21BEE1082')" title="Reassign Card UID"><span class="material-symbols-outlined text-[18px]">contactless</span></button>
+<button class="p-1 hover:bg-surface-container rounded text-outline hover:text-primary" onclick="showMemberLog('21BEE1082')" title="View Member Log"><span class="material-symbols-outlined text-[18px]">history</span></button>
+<button class="p-1 hover:bg-surface-container rounded text-outline hover:text-primary" title="Edit Member"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+</div>
+</td>
+</tr>
+<!-- Member Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors member-row" data-role="Faculty" data-status="Active">
+<td class="py-3 px-space-md flex items-center gap-space-sm">
+<img class="w-9 h-9 rounded-full object-cover shadow-sm" data-alt="Portrait of Dr. K. Radhakrishnan, professor in electrical engineering department with books and research charts in background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPbnAnFmOOOPfdSQ94IwoD3z8Lfu-6MCe6uxDNV8QXEaJ71YknDr7sd3_bgdhUFUH20l6kn_KVi5Zr6JKVIjpgMcxxsgQ4frnhuTQW7q6Vo7fNgiEVsgGdtaYoNZEt1KEF4uU_3Gu4jxmv-JCsLD9Pdzw4hSGySLavDUlf1RGgrKBxRVpi2txCuABPG4YM43NbDQzg3crMnx8RT6HpCbEHeQFA5GrbBFZ1hc7nCOX-_nqjgguoI3Mrkw"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-semibold">Dr. K. Radhakrishnan</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">radhakrishnan.k@vishnu.edu.in</span>
+</div>
+</td>
+<td class="py-3 px-space-md font-code-telemetry text-code-telemetry text-primary font-bold">EEE-FAC-014</td>
+<td class="py-3 px-space-md">
+<span class="font-code-telemetry text-code-telemetry bg-surface-container px-2 py-0.5 rounded font-bold text-secondary">E2:44:81:AA</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="font-label-md text-label-md text-primary font-semibold">Faculty Supervisor</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="font-code-badge text-code-badge bg-secondary-fixed text-on-secondary-fixed px-2 py-0.5 rounded-full font-bold">1 Book (Bay #04)</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="font-code-badge text-code-badge text-on-tertiary-container bg-tertiary-fixed px-2 py-0.5 rounded-full font-bold flex items-center gap-1 w-max">
+<span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span> ACTIVE
+              </span>
+</td>
+<td class="py-3 px-space-md text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 hover:bg-surface-container rounded text-outline hover:text-secondary" onclick="reassignRfid('EEE-FAC-014')" title="Reassign Card UID"><span class="material-symbols-outlined text-[18px]">contactless</span></button>
+<button class="p-1 hover:bg-surface-container rounded text-outline hover:text-primary" onclick="showMemberLog('EEE-FAC-014')" title="View Member Log"><span class="material-symbols-outlined text-[18px]">history</span></button>
+<button class="p-1 hover:bg-surface-container rounded text-outline hover:text-primary" title="Edit Member"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+</div>
+</td>
+</tr>
+<!-- Member Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors member-row" data-role="Faculty" data-status="Active">
+<td class="py-3 px-space-md flex items-center gap-space-sm">
+<img class="w-9 h-9 rounded-full object-cover shadow-sm" data-alt="Portrait of M. Soundarya, Senior Lab Technician holding an electronic controller module in an embedded systems engineering lab" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6MujfcoQJccZYcIrrmJhPs3ny1n-L_VRmgYfgtMiWYR1I_a_BPS7sdP5wZnpUmXowNj6oCO5O4hRNAtAB3zT4o9cJiMK6omnRKh2QP77NDXQFBJPYjfBeWi0wUcgUY74NAF1dREUl45gIszcR3LLw_8kRJlYCzTDbEhQ1zKZC9do0RyocU_fUBOkS861erw5UpqMJG95yZfjZKj_k20_ngDIxm_4NfvYars_UlNvtkXoI9urpZFxavg"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-semibold">M. Soundarya</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">soundarya.m@vishnu.edu.in</span>
+</div>
+</td>
+<td class="py-3 px-space-md font-code-telemetry text-code-telemetry text-primary font-bold">EEE-LAB-003</td>
+<td class="py-3 px-space-md">
+<span class="font-code-telemetry text-code-telemetry bg-surface-container px-2 py-0.5 rounded font-bold text-secondary">3C:77:9B:10</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="font-label-md text-label-md text-primary font-semibold">EEE Lab Admin</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="font-code-badge text-code-badge bg-secondary-fixed text-on-secondary-fixed px-2 py-0.5 rounded-full font-bold">1 Book (Bay #07)</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="font-code-badge text-code-badge text-on-tertiary-container bg-tertiary-fixed px-2 py-0.5 rounded-full font-bold flex items-center gap-1 w-max">
+<span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span> ACTIVE
+              </span>
+</td>
+<td class="py-3 px-space-md text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 hover:bg-surface-container rounded text-outline hover:text-secondary" onclick="reassignRfid('EEE-LAB-003')" title="Reassign Card UID"><span class="material-symbols-outlined text-[18px]">contactless</span></button>
+<button class="p-1 hover:bg-surface-container rounded text-outline hover:text-primary" onclick="showMemberLog('EEE-LAB-003')" title="View Member Log"><span class="material-symbols-outlined text-[18px]">history</span></button>
+<button class="p-1 hover:bg-surface-container rounded text-outline hover:text-primary" title="Edit Member"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+</div>
+</td>
+</tr>
+<!-- Member Row 5: Pending Card Tap -->
+<tr class="hover:bg-surface-container-low transition-colors member-row" data-role="Student Member" data-status="Pending">
+<td class="py-3 px-space-md flex items-center gap-space-sm">
+<img class="w-9 h-9 rounded-full object-cover shadow-sm" data-alt="Portrait of Vikram Krishna, sophomore electrical engineering student, bright daylight campus background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBd_FTC6E_mZvsgcnccz5XH8YH_JaRqVKMd60cs2IDk8NPHaGPrlfmjCW3fQEh79TwcLitu4QHnglZteSFebcpGsDjOBkwMFCkDXFXzwJpb6KxF7eLjFAlwq1cmQRUc51-kh3nZ_JVpwYcuoyMe2Z6-49FXRhEc2QYWk-sHbnwExsRJCcDpNMO9HdqIRmjn8XEPoIh4_IkzIjOl4ZthIV4u9K76ttFFEIpIaqdopV3ksa00fkJsFKZRNw"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-semibold">Vikram Krishna</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">vikram.22bee@vishnu.edu.in</span>
+</div>
+</td>
+<td class="py-3 px-space-md font-code-telemetry text-code-telemetry text-primary font-bold">22BEE1004</td>
+<td class="py-3 px-space-md">
+<span class="font-code-telemetry text-code-telemetry bg-surface-container-high px-2 py-0.5 rounded font-bold text-outline italic">AWAITING_TAP</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="font-label-md text-label-md text-on-surface">Research Scholar</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="font-code-badge text-code-badge bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full font-bold">0 Active</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="font-code-badge text-code-badge text-secondary bg-surface-container-high px-2 py-0.5 rounded-full font-bold flex items-center gap-1 w-max animate-pulse">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> PENDING TAP
+              </span>
+</td>
+<td class="py-3 px-space-md text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="px-2 py-1 bg-secondary text-on-secondary rounded text-label-md font-semibold hover:bg-primary" onclick="initiateRfidListen('22BEE1004')" title="Initiate RFID Scan">Bind Card</button>
+</div>
+</td>
+</tr>
+<!-- Member Row 6: Suspended Card -->
+<tr class="hover:bg-surface-container-low transition-colors member-row" data-role="Suspended" data-status="Suspended">
+<td class="py-3 px-space-md flex items-center gap-space-sm">
+<img class="w-9 h-9 rounded-full object-cover shadow-sm grayscale opacity-70" data-alt="Portrait of Sandeep Reddy, collegiate engineering student, neutral expression, subtle blurred lab backdrop" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-9aK-N1NdEMsaI_YXy0-9gonFDFY77DymiX0_oRSjq6wdojNHQdKZKSWn4u84d19yT_ttemCk2ObeI5N9AHwTj1dU8JPkae1Fhuw6x0XakyGnr9ZvNvADE9YN-JklkgOjqNQsMXmubUaJULz111bonOsF-72svRfzRQyfiIJ5MLbPbiFbtKZFluHcI6440SI5eubYdfFAewl5n4PVIZ6c9AkzSeKdk0W2rrcZaDdcSKhJsA2e64mVbA"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface-variant font-semibold">Sandeep Reddy</span>
+<span class="font-body-sm text-body-sm text-outline">sandeep.20bee@vishnu.edu.in</span>
+</div>
+</td>
+<td class="py-3 px-space-md font-code-telemetry text-code-telemetry text-outline font-bold">20BEE1190</td>
+<td class="py-3 px-space-md">
+<span class="font-code-telemetry text-code-telemetry bg-error-container text-error px-2 py-0.5 rounded font-bold line-through">8A:19:44:02</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="font-label-md text-label-md text-outline">Student Member</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="font-code-badge text-code-badge bg-surface-container text-outline px-2 py-0.5 rounded-full font-bold">0 Active</span>
+</td>
+<td class="py-3 px-space-md">
+<span class="font-code-badge text-code-badge text-error bg-error-container px-2 py-0.5 rounded-full font-bold flex items-center gap-1 w-max">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span> SUSPENDED
+              </span>
+</td>
+<td class="py-3 px-space-md text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="px-2 py-1 bg-surface-container hover:bg-surface-container-high rounded text-label-md text-primary font-semibold" onclick="unfreezeCard('20BEE1190')" title="Re-enable Access">Unfreeze</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination & Count Sub-bar -->
+<div class="flex flex-col sm:flex-row items-center justify-between pt-space-md mt-space-sm text-body-sm font-body-sm text-on-surface-variant gap-2">
+<span>Showing <strong class="text-primary font-semibold">1 to 6</strong> of 142 enrolled accounts</span>
+<div class="flex items-center gap-1">
+<button class="px-2.5 py-1 bg-surface-container rounded hover:bg-surface-container-high text-primary disabled:opacity-50" disabled="">Previous</button>
+<button class="px-3 py-1 bg-primary text-on-primary rounded font-bold">1</button>
+<button class="px-3 py-1 bg-surface-container rounded hover:bg-surface-container-high text-primary">2</button>
+<button class="px-3 py-1 bg-surface-container rounded hover:bg-surface-container-high text-primary">3</button>
+<span class="px-1 text-outline">...</span>
+<button class="px-3 py-1 bg-surface-container rounded hover:bg-surface-container-high text-primary">24</button>
+<button class="px-2.5 py-1 bg-surface-container rounded hover:bg-surface-container-high text-primary">Next</button>
+</div>
+</div>
+</section>
+<!-- 4. System Audit & Physical Hardware Exception Log -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-space-md">
+<!-- Real-time Activity Telemetry Feed (2 Cols) -->
+<div class="lg:col-span-2 bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[22px]">receipt_long</span>
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold">Real-Time Access &amp; Hardware Telemetry Log</h3>
+</div>
+<span class="font-code-badge text-code-badge bg-surface-container px-2 py-0.5 rounded text-outline">Stream: /dev/spidev0.0</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant pb-space-md">
+          Continuous record of NFC/RFID scans, solenoid pulse timings, security alerts, and weight displacement sensor readings.
+        </p>
+<!-- Log entries stream -->
+<div class="flex flex-col gap-2 font-code-telemetry text-code-telemetry">
+<!-- Log entry 1 -->
+<div class="p-2.5 bg-surface-container-low rounded-lg flex items-center justify-between text-on-surface">
+<div class="flex items-center gap-2">
+<span class="text-secondary font-bold">11:42:18 AM</span>
+<span class="px-1.5 py-0.2 bg-tertiary-fixed text-tertiary-container font-semibold rounded text-[11px]">SOLENOID_FIRED</span>
+<span>Bay #03 opened for RFID <span class="text-secondary font-bold">04:A2:8F:C9</span> (Ananya S.)</span>
+</div>
+<span class="text-outline font-body-sm text-[12px]">Pulse: 320ms</span>
+</div>
+<!-- Log entry 2: Warning Exception -->
+<div class="p-2.5 bg-error-container/50 rounded-lg flex items-center justify-between text-on-error-container">
+<div class="flex items-center gap-2">
+<span class="text-error font-bold">11:38:04 AM</span>
+<span class="px-1.5 py-0.2 bg-error text-on-error font-semibold rounded text-[11px]">UNAUTHORIZED_TAP</span>
+<span>UID <span class="font-bold">FF:EE:DD:CC</span> rejected at Locker NFC Node. Unregistered card.</span>
+</div>
+<span class="text-error font-bold font-body-sm text-[12px]">AUTH_FAIL_0x04</span>
+</div>
+<!-- Log entry 3 -->
+<div class="p-2.5 bg-surface-container-low rounded-lg flex items-center justify-between text-on-surface">
+<div class="flex items-center gap-2">
+<span class="text-secondary font-bold">11:15:32 AM</span>
+<span class="px-1.5 py-0.2 bg-surface-container-high text-primary font-semibold rounded text-[11px]">BOOK_DISPENSED</span>
+<span>Barcode <span class="font-bold">BC-EEE-0773</span> checked out from Bay #04. HX711 delta: -1.45kg.</span>
+</div>
+<span class="text-on-tertiary-container font-semibold font-body-sm text-[12px]">VERIFIED</span>
+</div>
+<!-- Log entry 4 -->
+<div class="p-2.5 bg-surface-container-low rounded-lg flex items-center justify-between text-on-surface">
+<div class="flex items-center gap-2">
+<span class="text-secondary font-bold">10:54:10 AM</span>
+<span class="px-1.5 py-0.2 bg-surface-container-high text-primary font-semibold rounded text-[11px]">DOOR_SECURED</span>
+<span>Bay #02 microswitch closed. Optical break-beam sensor armed.</span>
+</div>
+<span class="text-outline font-body-sm text-[12px]">State: OK</span>
+</div>
+<!-- Log entry 5 -->
+<div class="p-2.5 bg-surface-container-low rounded-lg flex items-center justify-between text-on-surface">
+<div class="flex items-center gap-2">
+<span class="text-secondary font-bold">09:12:00 AM</span>
+<span class="px-1.5 py-0.2 bg-tertiary-fixed text-tertiary-container font-semibold rounded text-[11px]">SYS_HEALTH</span>
+<span>Raspberry Pi 3B+ watchdog heartbeat acknowledged. GPIO bus 12V solid.</span>
+</div>
+<span class="text-on-tertiary-container font-semibold font-body-sm text-[12px]">PING 12ms</span>
+</div>
+</div>
+</div>
+<div class="pt-4 flex items-center justify-between border-t-0 mt-3">
+<span class="font-body-sm text-body-sm text-outline">Synchronized with Vishnu IoT MQTT Broker (10.14.2.80)</span>
+<button class="text-outline hover:text-primary font-label-md text-label-md" onclick="clearAuditLog()">Clear Session Buffer</button>
+</div>
+</div>
+<!-- Administrative Diagnostics & Hardware Policy Override Quick Panel -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 pb-space-sm">
+<span class="material-symbols-outlined text-primary text-[22px]">security</span>
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold">Hardware Policy Overrides</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant pb-space-md">
+          Direct bus commands to controller relay boards. Actions are recorded in the immutable audit log.
+        </p>
+<div class="flex flex-col gap-3">
+<div class="p-3 bg-surface-container-low rounded-lg flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-semibold">Force Solenoid Release</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Pulse all 8 relay coils for 1000ms</span>
+</div>
+<button class="px-3 py-1.5 bg-primary text-on-primary rounded font-label-md text-label-md hover:bg-primary-container" onclick="triggerAllSolenoids()">Pulse All</button>
+</div>
+<div class="p-3 bg-surface-container-low rounded-lg flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-semibold">RC522 Antenna Sensitivity</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">RFCfgReg current: 48dB (Maximum)</span>
+</div>
+<span class="font-code-badge text-code-badge bg-surface-container-high px-2 py-1 rounded text-primary font-bold">48 dB</span>
+</div>
+<div class="p-3 bg-surface-container-low rounded-lg flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-semibold">Lockout Mode</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Disable reader for night cycle</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" id="lockoutToggle" onchange="toggleLockoutMode(this)" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+<div class="p-3 bg-surface-container-low rounded-lg flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-semibold">Tare Calibration</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Zero load-cell analog drift</span>
+</div>
+<button class="px-3 py-1.5 bg-surface-container hover:bg-surface-container-high text-primary font-label-md text-label-md rounded font-semibold" onclick="alert('All 8 compartment strain gauges successfully zeroed to 0.00g tare weight.')">Zero Tare</button>
+</div>
+</div>
+</div>
+<div class="pt-4 flex items-center justify-between text-body-sm font-body-sm text-outline">
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-on-tertiary-container"></span> Controller Relay BUS: 5V DC</span>
+<span class="font-code-badge text-code-badge text-primary font-bold">RELAY_ACK_OK</span>
+</div>
+</div>
+</section>
+<!-- MODAL 1: Enroll New Member Dialog -->
+<div class="hidden fixed inset-0 z-50 bg-primary/40 backdrop-blur-sm flex items-center justify-center p-space-md" id="enrollModal">
+<div class="bg-surface-container-lowest rounded-xl max-w-lg w-full p-space-xl shadow-xl flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[24px]">person_add</span>
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold">Enroll New Member</h3>
+</div>
+<button class="p-1 text-outline hover:text-on-surface rounded-full" onclick="document.getElementById('enrollModal').classList.add('hidden')">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<form class="flex flex-col gap-space-sm" id="enrollMemberForm" onsubmit="handleEnrollMember(event)">
+<div class="flex flex-col gap-1">
+<label class="font-label-md text-label-md text-on-surface font-semibold">Full Scholar / Faculty Name</label>
+<input class="p-2.5 bg-surface-container-low rounded-lg font-body-sm text-body-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary" placeholder="e.g. Priya Darshini" required="" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-space-sm">
+<div class="flex flex-col gap-1">
+<label class="font-label-md text-label-md text-on-surface font-semibold">Registration / Staff ID</label>
+<input class="p-2.5 bg-surface-container-low rounded-lg font-body-sm text-body-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary" placeholder="e.g. 21BEE1099" required="" type="text"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-md text-label-md text-on-surface font-semibold">Department Role</label>
+<select class="p-2.5 bg-surface-container-low rounded-lg font-body-sm text-body-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary">
+<option value="Student Member">Student Member (EEE)</option>
+<option value="Research Scholar">Research Scholar</option>
+<option value="Faculty Supervisor">Faculty Supervisor</option>
+<option value="EEE Lab Admin">EEE Lab Admin</option>
+</select>
+</div>
+</div>
+<!-- RFID Card Tap Listener Component -->
+<div class="p-space-md bg-surface-container-low rounded-xl flex flex-col gap-2 mt-1">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-primary font-semibold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-secondary">contactless</span>
+              RFID Hardware Reader Tap
+            </span>
+<span class="font-code-badge text-code-badge text-secondary bg-surface-container px-2 py-0.5 rounded animate-pulse" id="rfidScanBadge">Awaiting NFC Tap...</span>
+</div>
+<input class="p-2 font-code-telemetry text-code-telemetry bg-surface-container-lowest rounded border border-transparent focus:outline-none focus:ring-2 focus:ring-secondary text-primary font-bold" id="enrollRfidField" placeholder="Tap card on locker scanner (e.g. 7A:12:BC:44)" required="" type="text"/>
+<span class="font-body-sm text-body-sm text-outline">Listening on MFRC522 UART Serial Port (ttyS0). You can also type manual UID for simulation.</span>
+</div>
+<div class="flex items-center justify-end gap-space-sm pt-space-sm mt-2">
+<button class="px-space-md py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container transition-colors" onclick="document.getElementById('enrollModal').classList.add('hidden')" type="button">Cancel</button>
+<button class="px-space-md py-2 rounded-lg font-label-lg text-label-lg bg-secondary text-on-secondary hover:bg-primary transition-colors" type="submit">Complete Enrollment</button>
+</div>
+</form>
+</div>
+</div>
+<!-- MODAL 2: Hardware Bay Override Authorization Dialog -->
+<div class="hidden fixed inset-0 z-50 bg-primary/40 backdrop-blur-sm flex items-center justify-center p-space-md" id="hardwareOverrideDialog">
+<div class="bg-surface-container-lowest rounded-xl max-w-md w-full p-space-xl shadow-xl flex flex-col gap-space-md">
+<div class="flex items-center gap-space-sm text-primary">
+<span class="material-symbols-outlined text-[28px] text-secondary">admin_panel_settings</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Admin Hardware Policy Override</h3>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+        Execute administrative override on the physical GPIO multiplexer. Enter master credentials to confirm direct actuation.
+      </p>
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface font-semibold">Master Admin Passkey</label>
+<input class="p-2.5 bg-surface-container-low rounded-lg font-code-telemetry text-code-telemetry text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary" id="masterOverridePass" placeholder="Enter EEE Lab Master PIN" type="password"/>
+</div>
+<div class="flex items-center justify-end gap-space-sm pt-space-sm">
+<button class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container transition-colors" onclick="document.getElementById('hardwareOverrideDialog').classList.add('hidden')">Cancel</button>
+<button class="px-space-md py-space-sm rounded-lg font-label-md text-label-md bg-secondary text-on-secondary hover:bg-primary transition-colors" onclick="executeOverrideAuth()">Authorize Override</button>
+</div>
+</div>
+</div>
+<!-- Micro-interactions & Hardware Control Script -->
+<script>
+    // Role filter functionality
+    function setFilterRole(role, buttonElement) {
+      document.querySelectorAll('.filter-chip').forEach(btn => {
+        btn.classList.remove('bg-primary', 'text-on-primary');
+        btn.classList.add('bg-surface-container', 'text-on-surface-variant');
+      });
+      buttonElement.classList.remove('bg-surface-container', 'text-on-surface-variant');
+      buttonElement.classList.add('bg-primary', 'text-on-primary');
+
+      const rows = document.querySelectorAll('.member-row');
+      rows.forEach(row => {
+        if (role === 'all') {
+          row.style.display = '';
+        } else if (role === 'Overdue') {
+          row.style.display = 'none'; // 0 overdue in system
+        } else {
+          const rowRole = row.getAttribute('data-role');
+          const rowStatus = row.getAttribute('data-status');
+          if (rowRole.includes(role) || rowStatus === role) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        }
+      });
+    }
+
+    // Instant table live search
+    function filterMemberTable() {
+      const query = document.getElementById('memberSearchInput').value.toLowerCase();
+      const rows = document.querySelectorAll('.member-row');
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(query) ? '' : 'none';
+      });
+    }
+
+    // Solenoid bay actuation simulation
+    function triggerBayActuation(bayNumber, forceAction) {
+      const action = forceAction || 'open';
+      const promptConfirm = confirm(`Confirm electronic command: Send 12V 500ms pulse to Solenoid Relay Compartment #${bayNumber}?`);
+      if (promptConfirm) {
+        alert(`Hardware Command Dispatched: Relay coil for Compartment #${bayNumber} fired. Physical microswitch state updated.`);
+      }
+    }
+
+    // Emergency Master Unlock
+    function emergencyMasterUnlock() {
+      const pass = prompt("EMERGENCY SAFETY OVERRIDE:\nEnter 6-digit Department Head Master PIN to release all solenoid pins:");
+      if (pass === "998877" || pass === "admin") {
+        alert("CRITICAL COMMAND EXECUTED: All 8 bay solenoids de-energized. All doors unlocked for emergency inventory inspection.");
+      } else if (pass !== null) {
+        alert("AUTHENTICATION REJECTED: Invalid master clearance PIN. Telemetry alert logged to Vishnu campus security.");
+      }
+    }
+
+    // Recalibrate bay load-cell
+    function recalibrateBay(bay) {
+      alert(`Initiating tare calibration for Bay #${bay} HX711 analog-to-digital sensor. Offset set to zero. Compartment restored to ARMED state.`);
+    }
+
+    // Reassign card UID
+    function reassignRfid(regId) {
+      const newUid = prompt(`Enter new 13.56MHz Mifare UID for scholar ${regId}:`, "4B:88:99:A1");
+      if (newUid) {
+        alert(`Scholar ${regId} successfully paired with new RFID UID [${newUid}]. Hardware sync active.`);
+      }
+    }
+
+    // Show member audit history
+    function showMemberLog(regId) {
+      alert(`Displaying SQLite audit logs for ${regId}:\n- 2025-05-12 11:42 AM: Dispense Bay #01 [Modern Control Engineering]\n- 2025-05-02 09:14 AM: Return Bay #03 [Electric Machinery]\nAll sensor weight delta checks passed.`);
+    }
+
+    // Unfreeze suspended card
+    function unfreezeCard(regId) {
+      if (confirm(`Remove security freeze from scholar ${regId}?`)) {
+        alert(`Scholar ${regId} status changed to ACTIVE. RFID tag reactivated in reader whitelist.`);
+      }
+    }
+
+    // Bind card tap
+    function initiateRfidListen(regId) {
+      const uid = prompt(`Waiting for hardware tap on scanner...\n(Or enter simulated RFID UID):`, "7C:99:11:AB");
+      if (uid) {
+        alert(`Smart Card [${uid}] successfully bound to Scholar ${regId}. Access status: ACTIVE.`);
+      }
+    }
+
+    // Lockout toggle switch
+    function toggleLockoutMode(checkbox) {
+      if (checkbox.checked) {
+        alert("LOCKOUT MODE ENABLED: SmartLocker NFC reader de-energized. Night security policy engaged.");
+      } else {
+        alert("LOCKOUT MODE DISABLED: Reader back online. Ready for student RFID tap interaction.");
+      }
+    }
+
+    // Master Solenoid Pulse
+    function triggerAllSolenoids() {
+      if (confirm("Send sequential pulse command to all 8 relay solenoids? (Current draw: 2.4A)")) {
+        alert("Sequential actuation complete. All 8 compartment locks verified free from mechanical binding.");
+      }
+    }
+
+    // Clear session buffer
+    function clearAuditLog() {
+      if (confirm("Clear local console telemetry log buffer? Database SQLite logs remain intact.")) {
+        alert("Local buffer cleared.");
+      }
+    }
+
+    // Export CSV
+    function triggerCsvExport() {
+      alert("Generating Vishnu_SmartLocker_EEE_AuditLog_" + new Date().toISOString().slice(0,10) + ".csv\n\nDownloaded 1,420 rows of RFID telemetry data.");
+    }
+
+    // Handle Member Enrollment Form
+    function handleEnrollMember(e) {
+      e.preventDefault();
+      alert("New Scholar successfully registered and synced with Hardware EEPROM!");
+      document.getElementById('enrollModal').classList.add('hidden');
+    }
+
+    // Override Auth
+    function executeOverrideAuth() {
+      const pin = document.getElementById('masterOverridePass').value;
+      if (pin) {
+        alert("Master authorization granted. Hardware policy console unlocked.");
+        document.getElementById('hardwareOverrideDialog').classList.add('hidden');
+      } else {
+        alert("Please enter authorization PIN.");
+      }
+    }
+  </script>
+</div></main></div><div class="fixed inset-0 z-50 bg-primary/40 backdrop-blur-sm hidden target:flex items-center justify-center p-space-md" id="logout-dialog"><div class="bg-surface-container-lowest rounded-xl max-w-md w-full p-space-xl shadow-[0_20px_25px_-5px_rgba(18,59,103,0.1)] flex flex-col gap-space-md"><div class="flex items-center gap-space-sm text-error"><span class="material-symbols-outlined text-[28px]">warning</span><span class="font-headline-sm text-headline-sm text-on-surface">Confirm Termination</span></div><p class="font-body-md text-body-md text-on-surface-variant">Are you sure you want to end your current session? Any open solenoid unlocks or active dispenser locks will be automatically secured.</p><div class="flex items-center justify-end gap-space-sm pt-space-sm"><a class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" href="#">Cancel</a><a class="px-space-md py-space-sm rounded-lg font-label-md text-label-md bg-error text-on-error hover:bg-on-error-container transition-colors" data-path="login" href="#">Disconnect &amp; Logout</a></div></div></div></body></html>

@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"primary-container":"#123b67","on-primary-container":"#84a6d8","on-secondary-container":"#fefcff","primary-fixed-dim":"#a6c8fd","tertiary-fixed":"#7ffc97","surface-variant":"#d3e4fe","secondary-container":"#316bf3","on-primary-fixed-variant":"#224875","on-primary-fixed":"#001c39","on-secondary-fixed-variant":"#003ea8","on-tertiary-container":"#3aba5e","surface-bright":"#f8f9ff","on-surface-variant":"#43474f","surface-dim":"#cbdbf5","surface-container-high":"#dce9ff","on-tertiary":"#ffffff","surface-tint":"#3d608e","surface":"#f8f9ff","primary-fixed":"#d4e3ff","error":"#ba1a1a","on-primary":"#ffffff","outline-variant":"#c3c6d0","on-error-container":"#93000a","tertiary":"#002b0e","primary":"#002549","error-container":"#ffdad6","on-tertiary-fixed":"#002109","tertiary-container":"#004419","surface-container-lowest":"#ffffff","on-secondary":"#ffffff","on-error":"#ffffff","on-surface":"#0b1c30","on-tertiary-fixed-variant":"#005320","secondary":"#0051d5","background":"#f8f9ff","surface-container-highest":"#d3e4fe","outline":"#737780","secondary-fixed-dim":"#b4c5ff","secondary-fixed":"#dbe1ff","on-secondary-fixed":"#00174b","surface-container":"#e5eeff","tertiary-fixed-dim":"#62df7d","surface-container-low":"#eff4ff","inverse-on-surface":"#eaf1ff","inverse-surface":"#213145","inverse-primary":"#a6c8fd","on-background":"#0b1c30"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"gutter":"1.5rem","margin":"2rem","gutter-sm":"1rem","space-lg":"1.5rem","space-sm":"0.5rem","space-md":"1rem","space-xs":"0.25rem","margin-sm":"1rem","space-xl":"2rem"},"fontFamily":{"code-telemetry":["JetBrains Mono"],"label-lg":["Inter"],"headline-xl-mobile":["Plus Jakarta Sans"],"body-lg":["Inter"],"label-md":["Inter"],"headline-md":["Plus Jakarta Sans"],"code-badge":["JetBrains Mono"],"body-md":["Inter"],"body-sm":["Inter"],"headline-lg-mobile":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"]},"fontSize":{"code-telemetry":["13px",{"lineHeight":"18px","letterSpacing":"-0.01em","fontWeight":"500"}],"label-lg":["14px",{"lineHeight":"20px","fontWeight":"600"}],"headline-xl-mobile":["30px",{"lineHeight":"38px","letterSpacing":"-0.02em","fontWeight":"700"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"label-md":["12px",{"lineHeight":"16px","fontWeight":"500"}],"headline-md":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"code-badge":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-xl":["40px",{"lineHeight":"48px","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-sm":["18px",{"lineHeight":"26px","fontWeight":"600"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="p-space-lg flex items-start gap-space-sm bg-surface-container-low"><img alt="SmartLocker Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Vtr0xI_75roQQIg48y0OFsfC--krHwc-8XspQRvXiep1aST1iPZ35PdojCz7qtCld8DfvzuGlEqHlsB5Ze-EvP7utqz0H2e_-bZe5UPncdLV3ulBxHRWcg4kdL3ACIOJLr51Rs8qI3z0RvHcFgGwoyjoUZSz5c76PS-GQXiIvMaURPljN2YYeJUy1x37BvfKvvrNmscPSst70T463I12TDnEW7HqRcRxV8BykY22OmAaA4iHNGGlYMK_zZ"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary leading-tight">SmartLocker</span><span class="font-body-sm text-body-sm text-on-surface-variant leading-tight">Vishnu Inst. of Tech • EEE</span></div></div><div class="px-space-md py-space-sm"><span class="font-code-badge text-code-badge text-outline uppercase tracking-wider px-space-sm">Operations & Telemetry</span></div><nav class="flex flex-col gap-space-xs px-space-md" data-active-classes="bg-primary-container text-on-secondary-container font-label-lg text-label-lg rounded-lg"><a class="flex items-center gap-space-sm px-space-md py-space-sm font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface rounded-lg transition-colors" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[20px]">dashboard</span><span>Dashboard</span></a><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm transition-colors bg-primary-container text-on-secondary-container font-label-lg text-label-lg rounded-lg" data-path="borrow-a-book" href="#"><span class="material-symbols-outlined text-[20px]">book</span><span>Borrow a Book</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface rounded-lg transition-colors" data-path="return-a-book" href="#"><span class="material-symbols-outlined text-[20px]">assignment_return</span><span>Return a Book</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface rounded-lg transition-colors" data-path="account-history" href="#"><span class="material-symbols-outlined text-[20px]">history</span><span>Account History</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface rounded-lg transition-colors" data-path="system-status" href="#"><span class="material-symbols-outlined text-[20px]">memory</span><span>System Status</span></a><a class="flex items-center justify-between px-space-md py-space-sm font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface rounded-lg transition-colors" data-path="user-management" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">manage_accounts</span><span>User Management</span></div><span class="font-code-badge text-code-badge bg-surface-container-high text-primary px-1.5 py-0.5 rounded-sm">ADMIN</span></a></nav></div><div class="p-space-md flex flex-col gap-space-sm"><a class="flex items-center gap-space-sm px-space-md py-space-sm font-label-md text-label-md text-error hover:bg-error-container hover:text-on-error-container rounded-lg transition-colors" href="#logout-dialog"><span class="material-symbols-outlined text-[20px]">logout</span><span>Logout</span></a><div class="p-space-md bg-surface-container-low rounded-xl flex flex-col gap-space-xs shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center justify-between"><span class="font-code-badge text-code-badge text-tertiary-container bg-tertiary-fixed px-1.5 py-0.5 rounded-full flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span>SECURE HW</span><span class="material-symbols-outlined text-[18px] text-outline">lock</span></div><div class="flex flex-col"><span class="font-label-md text-label-md text-on-surface font-semibold">Student Member</span><span class="font-code-telemetry text-code-telemetry text-secondary font-medium tracking-tight">RFID: 04:A2:8F:C9</span></div></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-xl"><div class="flex items-center gap-space-md"><div class="flex items-center gap-1.5 px-space-sm py-1 bg-surface-container-lowest rounded-full shadow-[0_1px_3px_rgba(18,59,103,0.04)]"><span class="w-2 h-2 rounded-full bg-on-tertiary-container animate-pulse"></span><span class="font-code-badge text-code-badge text-on-surface">RPi 3B+ Online</span></div><div class="hidden xl:flex items-center gap-1.5 px-space-sm py-1 bg-surface-container rounded-full"><span class="material-symbols-outlined text-[14px] text-secondary">tune</span><span class="font-code-badge text-code-badge text-on-surface-variant">Demo Hardware: Active</span></div><div class="hidden md:flex items-center gap-1.5 px-space-sm py-1 bg-surface-container-lowest rounded-full shadow-[0_1px_3px_rgba(18,59,103,0.04)]"><span class="material-symbols-outlined text-[14px] text-on-tertiary-container">bolt</span><span class="font-code-badge text-code-badge text-on-surface-variant">12V Solenoid: Secured</span></div></div><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm text-outline hover:text-on-surface cursor-pointer bg-surface-container-lowest px-space-sm py-1.5 rounded-lg shadow-[0_1px_3px_rgba(18,59,103,0.04)]"><span class="material-symbols-outlined text-[18px]">search</span><span class="font-body-sm text-body-sm text-outline">Quick Search</span><span class="font-code-badge text-code-badge bg-surface-container px-1 py-0.5 rounded text-on-surface-variant">⌘K</span></div><div class="relative flex items-center justify-center p-1.5 rounded-full hover:bg-surface-container text-on-surface-variant hover:text-on-surface cursor-pointer"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1 right-1 w-4 h-4 bg-error text-on-error font-code-badge text-[9px] flex items-center justify-center rounded-full font-bold">2</span></div><div class="flex items-center gap-space-sm pl-space-sm"><div class="hidden lg:flex flex-col text-right"><span class="font-label-md text-label-md text-on-surface leading-tight">Ananya Sharma</span><span class="font-body-sm text-body-sm text-on-surface-variant leading-tight">21BEE1048 • Scholar</span></div><img alt="Profile" class="w-8 h-8 rounded-full object-cover shadow-[0_1px_3px_rgba(18,59,103,0.08)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHiD6ZO8blrXIWf-0_upB1pMpsESF3AhCjbOXl4LguyhZpTYatg60MGi7bijePsUZ3ggqDkdCqET_D4Q_OK1kYZecjgGwAMvqS_SH6rYZly1wx2swzZ33J7hURInKEIg_B9-sXJyvxRgikJ93j62recEQFpCOsTDUJWDMWVTZkG5yLAKXgH-Z0UoFGabu21u0p4qiIAjnGTA62kEWZgbe3bU-sB1V6Lal3k4vT48RNBOqSNp6zJoS9Kg"/></div></div></header><main class="relative pt-16 bg-surface min-h-screen w-full px-space-xl"><div class="flex flex-col w-full pb-space-xl">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md py-space-lg">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="font-code-badge text-code-badge text-secondary bg-surface-container px-2 py-0.5 rounded-full font-semibold uppercase tracking-wider">Automated Dispenser Unit #01</span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
+<span class="font-code-telemetry text-code-telemetry text-on-surface-variant">NODE_ID: VIT-EEE-BAY-RACK-A</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Borrow a Book</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+        Select your allocated academic title, authenticate locker release, and safely collect from the automated dispenser.
+      </p>
+</div>
+<!-- Quick Hardware State Chip -->
+<div class="flex items-center gap-space-md bg-surface-container-lowest p-space-sm rounded-xl shadow-sm self-start md:self-auto">
+<div class="flex items-center gap-2 px-space-sm py-1 bg-surface-container-low rounded-lg">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-on-tertiary-container opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-on-tertiary-container"></span>
+</span>
+<span class="font-code-badge text-code-badge text-on-surface font-semibold">BUS READY</span>
+</div>
+<div class="h-4 w-[1px] bg-surface-variant"></div>
+<span class="font-code-telemetry text-code-telemetry text-on-surface-variant pr-space-xs">12.2V / 2.1A</span>
+</div>
+</div>
+<!-- Step-by-Step Transaction Progress Stepper -->
+<div class="w-full bg-surface-container-lowest rounded-xl p-space-lg shadow-sm mb-space-lg">
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider font-semibold">Dispensing Telemetry Sequence</span>
+<span class="font-code-telemetry text-code-telemetry text-secondary font-semibold" id="stepper-stage-indicator">STAGE: 2 OF 5 • ALLOCATION ACTIVE</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-space-sm relative">
+<!-- Step 1: Authentication (Completed) -->
+<div class="flex flex-col gap-space-xs p-space-sm rounded-lg bg-surface-container-low transition-all">
+<div class="flex items-center gap-space-xs">
+<div class="w-6 h-6 rounded-full bg-tertiary-container text-tertiary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface font-semibold">1. Authentication</span>
+</div>
+<div class="flex flex-col pl-8">
+<span class="font-body-sm text-body-sm text-on-surface font-medium truncate">Ananya Sharma</span>
+<span class="font-code-telemetry text-[11px] text-on-surface-variant tracking-tight">UID: 04:A2:8F:C9</span>
+</div>
+</div>
+<!-- Step 2: Locker Allocation (Active) -->
+<div class="flex flex-col gap-space-xs p-space-sm rounded-lg bg-primary-container text-on-secondary-container shadow-sm transition-all" id="step-node-2">
+<div class="flex items-center gap-space-xs">
+<div class="w-6 h-6 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-code-badge text-code-badge font-bold">
+            2
+          </div>
+<span class="font-label-md text-label-md font-semibold text-on-secondary-container">2. Allocation</span>
+</div>
+<div class="flex flex-col pl-8">
+<span class="font-body-sm text-body-sm text-on-secondary-container font-medium">Locker #04 Reserved</span>
+<span class="font-code-telemetry text-[11px] text-on-primary-container">Bay Verified Safe</span>
+</div>
+</div>
+<!-- Step 3: Solenoid Unlock (Pending) -->
+<div class="flex flex-col gap-space-xs p-space-sm rounded-lg bg-surface-container-low text-on-surface-variant transition-all" id="step-node-3">
+<div class="flex items-center gap-space-xs">
+<div class="w-6 h-6 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-code-badge text-code-badge font-bold" id="step-icon-3">
+            3
+          </div>
+<span class="font-label-md text-label-md font-semibold text-on-surface" id="step-title-3">3. Solenoid Unlock</span>
+</div>
+<div class="flex flex-col pl-8">
+<span class="font-body-sm text-body-sm text-on-surface-variant" id="step-desc-3">Awaiting Trigger</span>
+<span class="font-code-telemetry text-[11px] text-outline">GPIO 17 Pulse [10s]</span>
+</div>
+</div>
+<!-- Step 4: Book Removal (Pending) -->
+<div class="flex flex-col gap-space-xs p-space-sm rounded-lg bg-surface-container-low text-on-surface-variant transition-all" id="step-node-4">
+<div class="flex items-center gap-space-xs">
+<div class="w-6 h-6 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-code-badge text-code-badge font-bold" id="step-icon-4">
+            4
+          </div>
+<span class="font-label-md text-label-md font-semibold text-on-surface" id="step-title-4">4. Book Removal</span>
+</div>
+<div class="flex flex-col pl-8">
+<span class="font-body-sm text-body-sm text-on-surface-variant" id="step-desc-4">IR Optical Sensing</span>
+<span class="font-code-telemetry text-[11px] text-outline">FC-51 Clearance</span>
+</div>
+</div>
+<!-- Step 5: Door Closure (Pending) -->
+<div class="flex flex-col gap-space-xs p-space-sm rounded-lg bg-surface-container-low text-on-surface-variant transition-all" id="step-node-5">
+<div class="flex items-center gap-space-xs">
+<div class="w-6 h-6 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-code-badge text-code-badge font-bold" id="step-icon-5">
+            5
+          </div>
+<span class="font-label-md text-label-md font-semibold text-on-surface" id="step-title-5">5. Door Closure</span>
+</div>
+<div class="flex flex-col pl-8">
+<span class="font-body-sm text-body-sm text-on-surface-variant" id="step-desc-5">Reed Switch Latch</span>
+<span class="font-code-telemetry text-[11px] text-outline">MC-38 Verification</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Two-Column Layout -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg items-start">
+<!-- LEFT COLUMN: Book Details & Locker Cubicle status card (7 cols) -->
+<div class="xl:col-span-7 flex flex-col gap-space-lg">
+<!-- Primary Locker & Book Detail Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
+<!-- Status Banner -->
+<div class="flex items-center gap-space-sm p-space-md bg-tertiary-container text-tertiary-fixed rounded-lg transition-all" id="status-banner">
+<span class="material-symbols-outlined text-[24px]">verified</span>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg font-semibold leading-tight text-on-secondary">Book is Available and Ready for Automated Dispensing.</span>
+<span class="font-body-sm text-body-sm text-tertiary-fixed-dim leading-tight">Physical compartment hardware initialized and awaiting solenoid trigger.</span>
+</div>
+</div>
+<!-- Book Mockup & Details Block -->
+<div class="flex flex-col sm:flex-row gap-space-lg items-start pt-space-xs">
+<!-- Book Cover Representation -->
+<div class="relative w-full sm:w-44 h-60 rounded-lg overflow-hidden bg-primary shadow-md flex-shrink-0 group">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Editorial close-up of a premium textbook cover titled Modern Control Engineering 5th Edition by Katsuhiko Ogata. Academic deep navy cover with gold and crisp cyan mechanical control loop diagram, clean minimalist engineering publication style, soft studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuC6ziUaDhs_pNPx30Nxg39ZNR-4FMZBsb89rYwB9UHUOX__LwomajKAVCNqPxnG40k_AGqKjuWvmQ62JpoxcRKF9XWvLpynUDaGNKDl1llXIAFJzLGRy7qC9JFg2scudFugWYkIhy1PXk36suPTRUQ92cb2od2pjBZ9ImMGYlUW9A9zxiIZe5Yr6pj1kpig6M1KNzfFjGYTsDMcgjSeQ83EfOx74GbSgcqj9dsjo7oqk5Nq9ScD4s5Q"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary via-transparent to-transparent opacity-80"></div>
+<div class="absolute bottom-2 left-2 right-2 p-1.5 bg-surface-container-lowest/90 backdrop-blur-md rounded flex items-center justify-between">
+<span class="font-code-badge text-code-badge text-primary font-bold">VIT LENDING</span>
+<span class="material-symbols-outlined text-[14px] text-secondary">qr_code_2</span>
+</div>
+</div>
+<!-- Academic Metadata -->
+<div class="flex flex-col justify-between h-full w-full gap-space-sm">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-sm flex-wrap">
+<span class="font-code-badge text-code-badge bg-surface-container-high text-primary px-2 py-0.5 rounded font-semibold uppercase">EEE-CORE-202</span>
+<span class="font-code-badge text-code-badge bg-tertiary-fixed text-on-tertiary-fixed px-2 py-0.5 rounded font-semibold uppercase">Clean Condition</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-primary font-bold leading-tight">Modern Control Engineering (5th Edition)</h2>
+<span class="font-body-lg text-body-lg text-on-surface-variant font-medium">Katsuhiko Ogata</span>
+</div>
+<!-- Metadata Specs Bento -->
+<div class="grid grid-cols-2 gap-space-sm bg-surface-container-low p-space-md rounded-lg">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-outline font-medium">Identifier Barcode</span>
+<span class="font-code-telemetry text-code-telemetry text-on-surface font-semibold tracking-tight">VIT-EEE-BK-2024-089</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-outline font-medium">Subject Category</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Control Systems & Automation</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-outline font-medium">Due Duration</span>
+<span class="font-label-md text-label-md text-secondary font-semibold">14 Days (Standard Loan)</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-outline font-medium">Optical Tag</span>
+<span class="font-code-telemetry text-code-telemetry text-on-surface-variant">RFID-UHF-88241</span>
+</div>
+</div>
+<!-- Compartment Pill -->
+<div class="flex items-center gap-space-sm p-space-sm bg-surface-container rounded-lg">
+<span class="material-symbols-outlined text-[20px] text-secondary">grid_view</span>
+<span class="font-label-md text-label-md text-primary font-semibold">
+                Designated Compartment: <span class="text-secondary font-bold">Locker Bay #04</span> (Ground Level)
+              </span>
+</div>
+</div>
+</div>
+<!-- Sensor State Indicators Strip -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-sm pt-space-xs">
+<!-- Sensor 1: Shelf IR -->
+<div class="flex items-center gap-space-sm p-space-sm bg-surface-container-low rounded-lg">
+<div class="w-3 h-3 rounded-full bg-on-tertiary-container shadow-sm flex-shrink-0 animate-pulse" id="sensor-ir-led"></div>
+<div class="flex flex-col min-w-0">
+<span class="font-code-badge text-code-badge text-outline uppercase truncate">Shelf IR Sensor</span>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface truncate" id="sensor-ir-text">Book Present</span>
+</div>
+</div>
+<!-- Sensor 2: Door Magnetic Reed -->
+<div class="flex items-center gap-space-sm p-space-sm bg-surface-container-low rounded-lg">
+<div class="w-3 h-3 rounded-full bg-secondary shadow-sm flex-shrink-0" id="sensor-door-led"></div>
+<div class="flex flex-col min-w-0">
+<span class="font-code-badge text-code-badge text-outline uppercase truncate">Magnetic Switch</span>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface truncate" id="sensor-door-text">Securely Closed</span>
+</div>
+</div>
+<!-- Sensor 3: 12V Lock -->
+<div class="flex items-center gap-space-sm p-space-sm bg-surface-container-low rounded-lg">
+<div class="w-3 h-3 rounded-full bg-primary flex-shrink-0" id="sensor-solenoid-led"></div>
+<div class="flex flex-col min-w-0">
+<span class="font-code-badge text-code-badge text-outline uppercase truncate">12V Solenoid</span>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface truncate" id="sensor-solenoid-text">Armed & Locked</span>
+</div>
+</div>
+</div>
+<!-- Action Control Center -->
+<div class="flex flex-col sm:flex-row items-center gap-space-md pt-space-sm">
+<button class="w-full sm:flex-1 flex items-center justify-center gap-space-sm px-space-lg py-3.5 bg-secondary hover:bg-secondary-container active:bg-primary-container text-on-secondary font-label-lg text-label-lg rounded-lg shadow-sm transition-all duration-200 cursor-pointer" id="unlock-btn" onclick="handleUnlockTrigger()">
+<span class="material-symbols-outlined text-[20px]" id="unlock-btn-icon">lock_open</span>
+<span id="unlock-btn-label">Unlock Locker #04 & Borrow Book</span>
+</button>
+<button class="w-full sm:w-auto flex items-center justify-center gap-space-sm px-space-md py-3.5 bg-surface-container hover:bg-surface-variant text-on-surface font-label-md text-label-md rounded-lg transition-colors cursor-pointer" id="simulate-btn" onclick="handleSensorSimulation()" title="Demonstration trigger for hardware loop">
+<span class="material-symbols-outlined text-[18px] text-secondary">sensors</span>
+<span>Simulate Sensor: Book Picked Up & Door Closed</span>
+</button>
+</div>
+</div>
+<!-- Safety & Usage Instructions Box -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm text-primary">
+<span class="material-symbols-outlined text-[22px] text-secondary">info</span>
+<h3 class="font-headline-sm text-headline-sm font-semibold">Automated Dispensing Protocol</h3>
+</div>
+<span class="font-code-badge text-code-badge bg-surface-container px-2 py-0.5 rounded text-on-surface-variant">SOP-HW-04</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Step 1 Instruction -->
+<div class="flex items-start gap-space-sm p-space-sm rounded-lg bg-surface-container-low">
+<span class="w-6 h-6 rounded-full bg-primary-container text-on-secondary-container flex items-center justify-center font-code-badge text-code-badge font-bold flex-shrink-0">1</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Energize Solenoid</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Press 'Unlock Locker' to energize the 12V solenoid for a safe 10-second release window.</p>
+</div>
+</div>
+<!-- Step 2 Instruction -->
+<div class="flex items-start gap-space-sm p-space-sm rounded-lg bg-surface-container-low">
+<span class="w-6 h-6 rounded-full bg-primary-container text-on-secondary-container flex items-center justify-center font-code-badge text-code-badge font-bold flex-shrink-0">2</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Access Compartment</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Pull open Locker Door #04 when the mechanical click sounds and the green beacon illuminates.</p>
+</div>
+</div>
+<!-- Step 3 Instruction -->
+<div class="flex items-start gap-space-sm p-space-sm rounded-lg bg-surface-container-low">
+<span class="w-6 h-6 rounded-full bg-primary-container text-on-secondary-container flex items-center justify-center font-code-badge text-code-badge font-bold flex-shrink-0">3</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Optical Validation</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Retrieve the textbook. The internal FC-51 IR beam reflects empty shelf status in real time.</p>
+</div>
+</div>
+<!-- Step 4 Instruction -->
+<div class="flex items-start gap-space-sm p-space-sm rounded-lg bg-surface-container-low">
+<span class="w-6 h-6 rounded-full bg-primary-container text-on-secondary-container flex items-center justify-center font-code-badge text-code-badge font-bold flex-shrink-0">4</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Secure Door Latch</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Firmly push the door shut until the magnetic reed switch engages to conclude transaction.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN: Hardware Grid & Console (5 cols) -->
+<div class="xl:col-span-5 flex flex-col gap-space-lg">
+<!-- Interactive Locker Compartment Matrix Diagram (#01 to #08) -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[20px] text-secondary">view_comfy</span>
+<h3 class="font-headline-sm text-headline-sm text-primary font-semibold">Physical Bay Matrix</h3>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-code-badge text-code-badge text-on-surface-variant">BAY #04 ASSIGNED</span>
+</div>
+</div>
+<!-- 8-Bay Hardware Grid (2 rows x 4 cols) -->
+<div class="grid grid-cols-4 gap-space-sm">
+<!-- Bay 01: Occupied -->
+<div class="flex flex-col p-space-sm rounded-lg bg-surface-container-low opacity-75">
+<div class="flex items-center justify-between mb-1">
+<span class="font-code-badge text-code-badge text-outline font-bold">#01</span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+</div>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface truncate">Occupied</span>
+<span class="font-code-telemetry text-[10px] text-outline truncate">UID: RK-10</span>
+</div>
+<!-- Bay 02: Available -->
+<div class="flex flex-col p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-1">
+<span class="font-code-badge text-code-badge text-on-surface-variant font-bold">#02</span>
+<span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span>
+</div>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface truncate">Available</span>
+<span class="font-code-telemetry text-[10px] text-outline truncate">Empty Bay</span>
+</div>
+<!-- Bay 03: Active Loan -->
+<div class="flex flex-col p-space-sm rounded-lg bg-surface-container-low opacity-75">
+<div class="flex items-center justify-between mb-1">
+<span class="font-code-badge text-code-badge text-outline font-bold">#03</span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+</div>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface truncate">Active Loan</span>
+<span class="font-code-telemetry text-[10px] text-outline truncate">K. Varma</span>
+</div>
+<!-- Bay 04: TARGET LOCKER (Glowing Blue Accent) -->
+<div class="flex flex-col p-space-sm rounded-lg bg-secondary text-on-secondary shadow-md transition-all duration-300 transform scale-[1.02]" id="bay-04-cell">
+<div class="flex items-center justify-between mb-1">
+<span class="font-code-badge text-code-badge text-on-secondary font-black">#04</span>
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed animate-ping" id="bay-04-pulse"></span>
+</div>
+<span class="font-label-md text-label-md font-bold text-on-secondary truncate">Your Book</span>
+<span class="font-code-telemetry text-[10px] text-primary-fixed tracking-tight truncate" id="bay-04-subtext">READY • OGATA</span>
+</div>
+<!-- Bay 05: Available -->
+<div class="flex flex-col p-space-sm rounded-lg bg-surface-container-low">
+<div class="flex items-center justify-between mb-1">
+<span class="font-code-badge text-code-badge text-on-surface-variant font-bold">#05</span>
+<span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span>
+</div>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface truncate">Available</span>
+<span class="font-code-telemetry text-[10px] text-outline truncate">Empty Bay</span>
+</div>
+<!-- Bay 06: Occupied -->
+<div class="flex flex-col p-space-sm rounded-lg bg-surface-container-low opacity-75">
+<div class="flex items-center justify-between mb-1">
+<span class="font-code-badge text-code-badge text-outline font-bold">#06</span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+</div>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface truncate">Occupied</span>
+<span class="font-code-telemetry text-[10px] text-outline truncate">UID: EE-94</span>
+</div>
+<!-- Bay 07: Occupied -->
+<div class="flex flex-col p-space-sm rounded-lg bg-surface-container-low opacity-75">
+<div class="flex items-center justify-between mb-1">
+<span class="font-code-badge text-code-badge text-outline font-bold">#07</span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+</div>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface truncate">Occupied</span>
+<span class="font-code-telemetry text-[10px] text-outline truncate">UID: ME-12</span>
+</div>
+<!-- Bay 08: Maintenance -->
+<div class="flex flex-col p-space-sm rounded-lg bg-surface-container-low">
+<div class="flex items-center justify-between mb-1">
+<span class="font-code-badge text-code-badge text-outline font-bold">#08</span>
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+</div>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface truncate">Offline</span>
+<span class="font-code-telemetry text-[10px] text-outline truncate">Solenoid Serv</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-space-xs text-on-surface-variant font-code-badge text-code-badge">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span>Allocated Bay</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-on-tertiary-container"></span>
+<span>Available</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<span>Occupied</span>
+</div>
+</div>
+</div>
+<!-- Real-time Hardware Telemetry Console Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[20px] text-primary">terminal</span>
+<h3 class="font-headline-sm text-headline-sm text-primary font-semibold">Hardware Telemetry Bus</h3>
+</div>
+<span class="font-code-badge text-code-badge bg-surface-container text-secondary px-2 py-0.5 rounded font-bold">RPi GPIO LIVE</span>
+</div>
+<!-- Terminal-like Console Feed -->
+<div class="bg-primary text-surface rounded-lg p-space-md font-code-telemetry text-code-telemetry flex flex-col gap-2">
+<div class="flex items-center justify-between text-outline-variant text-[11px] pb-1 border-b border-surface-variant/20">
+<span>INTERFACE: BCM_PINOUT</span>
+<span>POLARITY: ACTIVE_HIGH</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-on-primary-container">Relay Pin (GPIO 17):</span>
+<span class="text-on-secondary font-bold" id="tel-relay">LOW (Standby)</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-on-primary-container">FC-51 IR (GPIO 27):</span>
+<span class="text-tertiary-fixed font-bold" id="tel-ir">Digital HIGH (Present)</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-on-primary-container">MC-38 Door (GPIO 22):</span>
+<span class="text-secondary-fixed-dim font-bold" id="tel-door">Digital LOW (Closed)</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-on-primary-container">Bus Voltage (INA219):</span>
+<span class="text-surface font-medium">12.18V • 0.04A Idle</span>
+</div>
+<div class="pt-2 mt-1 border-t border-surface-variant/20 flex flex-col gap-1">
+<span class="text-outline-variant text-[11px]">TRANSACTION STATE ENGINE:</span>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary-container" id="tel-status-dot"></span>
+<span class="text-on-secondary font-semibold" id="tel-status">Awaiting Member Confirmation</span>
+</div>
+</div>
+</div>
+<!-- Real-Time Activity Log Mini -->
+<div class="flex flex-col gap-space-xs">
+<span class="font-code-badge text-code-badge text-outline uppercase tracking-wider">Local SQLite Journal</span>
+<div class="flex flex-col gap-1 font-code-telemetry text-[11px] text-on-surface-variant bg-surface-container-low p-space-sm rounded-lg max-h-24 overflow-y-auto" id="journal-feed">
+<div>[11:42:01.042] RFID card tap registered: 04:A2:8F:C9</div>
+<div>[11:42:01.189] Member resolved: Ananya Sharma (21BEE1048)</div>
+<div>[11:42:01.401] Lock 04 routed for checkout: VIT-EEE-BK-2024-089</div>
+<div class="text-secondary font-semibold" id="journal-dynamic">[11:42:02.000] Standing by for manual Solenoid Unlock trigger...</div>
+</div>
+</div>
+<!-- Rule Compliance Warning Callout -->
+<div class="flex items-start gap-space-sm p-space-md bg-surface-container-low rounded-lg">
+<span class="material-symbols-outlined text-[20px] text-secondary flex-shrink-0">gavel</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Institutional Ledger Verification</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Transaction is only recorded in SQLite upon physical verification of book departure and door locking. Incomplete operations will trigger an alert.
+            </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Interactive JavaScript Handling Hardware Simulation Loop -->
+<script>
+    let isUnlocked = false;
+    let isDispensed = false;
+    let unlockTimer = null;
+
+    function handleUnlockTrigger() {
+      if (isDispensed) {
+        alert("Transaction already completed! Locker is closed and secured.");
+        return;
+      }
+      
+      const btn = document.getElementById('unlock-btn');
+      const btnIcon = document.getElementById('unlock-btn-icon');
+      const btnLabel = document.getElementById('unlock-btn-label');
+      
+      const telRelay = document.getElementById('tel-relay');
+      const telStatus = document.getElementById('tel-status');
+      const telStatusDot = document.getElementById('tel-status-dot');
+      
+      const sensorSolenoidLed = document.getElementById('sensor-solenoid-led');
+      const sensorSolenoidText = document.getElementById('sensor-solenoid-text');
+      
+      const step3 = document.getElementById('step-node-3');
+      const step3Icon = document.getElementById('step-icon-3');
+      const step3Desc = document.getElementById('step-desc-3');
+      const stepperStage = document.getElementById('stepper-stage-indicator');
+      
+      const bayCell = document.getElementById('bay-04-cell');
+      const baySubtext = document.getElementById('bay-04-subtext');
+      const journalFeed = document.getElementById('journal-feed');
+
+      isUnlocked = true;
+
+      // Update button to active unlocking state
+      btn.classList.remove('bg-secondary', 'hover:bg-secondary-container');
+      btn.classList.add('bg-tertiary-container', 'text-tertiary-fixed');
+      btnIcon.innerText = 'lock_open_right';
+      btnLabel.innerText = 'Solenoid Energized (Open Locker #04 Door Now)';
+
+      // Update Step 3
+      step3.classList.remove('bg-surface-container-low');
+      step3.classList.add('bg-primary-container', 'text-on-secondary-container');
+      step3Icon.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+      step3Icon.classList.add('bg-secondary', 'text-on-secondary');
+      step3Desc.innerText = '12V Latch Open (10s)';
+      stepperStage.innerText = 'STAGE: 3 OF 5 • SOLENOID ACTIVE';
+
+      // Update Hardware indicators
+      sensorSolenoidLed.classList.remove('bg-primary');
+      sensorSolenoidLed.classList.add('bg-on-tertiary-container', 'animate-pulse');
+      sensorSolenoidText.innerText = 'Energized & Unlocked';
+
+      telRelay.innerText = 'HIGH (Active 12V 1.8A)';
+      telRelay.classList.remove('text-on-secondary');
+      telRelay.classList.add('text-tertiary-fixed');
+
+      telStatus.innerText = 'Solenoid Engaged: Door Free';
+      telStatusDot.classList.remove('bg-secondary-container');
+      telStatusDot.classList.add('bg-on-tertiary-container', 'animate-ping');
+
+      baySubtext.innerText = 'SOLENOID OPEN';
+
+      // Journal entry
+      const logEntry = document.createElement('div');
+      logEntry.className = 'text-on-tertiary-container font-semibold';
+      logEntry.innerText = `[${new Date().toTimeString().split(' ')[0]}] RELAY GPIO 17 -> HIGH: Solenoid 04 triggered`;
+      journalFeed.appendChild(logEntry);
+      journalFeed.scrollTop = journalFeed.scrollHeight;
+    }
+
+    function handleSensorSimulation() {
+      if (!isUnlocked) {
+        alert("Please unlock the locker first before retrieving the textbook!");
+        return;
+      }
+      if (isDispensed) return;
+
+      isDispensed = true;
+
+      // Telemetry variables
+      const telIr = document.getElementById('tel-ir');
+      const telDoor = document.getElementById('tel-door');
+      const telRelay = document.getElementById('tel-relay');
+      const telStatus = document.getElementById('tel-status');
+      const telStatusDot = document.getElementById('tel-status-dot');
+
+      const sensorIrLed = document.getElementById('sensor-ir-led');
+      const sensorIrText = document.getElementById('sensor-ir-text');
+      const sensorDoorLed = document.getElementById('sensor-door-led');
+      const sensorDoorText = document.getElementById('sensor-door-text');
+      const sensorSolenoidLed = document.getElementById('sensor-solenoid-led');
+      const sensorSolenoidText = document.getElementById('sensor-solenoid-text');
+
+      const statusBanner = document.getElementById('status-banner');
+      const btn = document.getElementById('unlock-btn');
+      const btnIcon = document.getElementById('unlock-btn-icon');
+      const btnLabel = document.getElementById('unlock-btn-label');
+      const simulateBtn = document.getElementById('simulate-btn');
+
+      const step3 = document.getElementById('step-node-3');
+      const step4 = document.getElementById('step-node-4');
+      const step4Icon = document.getElementById('step-icon-4');
+      const step4Desc = document.getElementById('step-desc-4');
+      const step5 = document.getElementById('step-node-5');
+      const step5Icon = document.getElementById('step-icon-5');
+      const step5Desc = document.getElementById('step-desc-5');
+      const stepperStage = document.getElementById('stepper-stage-indicator');
+
+      const bayCell = document.getElementById('bay-04-cell');
+      const baySubtext = document.getElementById('bay-04-subtext');
+      const bayPulse = document.getElementById('bay-04-pulse');
+      const journalFeed = document.getElementById('journal-feed');
+
+      // Sequence: Book Removed (IR High to Low) then Door Shut (MC-38 Low)
+      sensorIrLed.classList.remove('bg-on-tertiary-container', 'animate-pulse');
+      sensorIrLed.classList.add('bg-outline');
+      sensorIrText.innerText = 'Empty (Beam Cleared)';
+
+      sensorDoorLed.classList.remove('bg-secondary');
+      sensorDoorLed.classList.add('bg-on-tertiary-container');
+      sensorDoorText.innerText = 'Closed & Latched';
+
+      sensorSolenoidLed.classList.remove('bg-on-tertiary-container', 'animate-pulse');
+      sensorSolenoidLed.classList.add('bg-primary');
+      sensorSolenoidText.innerText = 'De-energized (Locked)';
+
+      telRelay.innerText = 'LOW (Safe Standby)';
+      telRelay.classList.remove('text-tertiary-fixed');
+      telRelay.classList.add('text-on-secondary');
+
+      telIr.innerText = 'Digital LOW (Book Removed)';
+      telIr.classList.remove('text-tertiary-fixed');
+      telIr.classList.add('text-outline-variant');
+
+      telDoor.innerText = 'Digital LOW (Latched Secure)';
+      telDoor.classList.remove('text-secondary-fixed-dim');
+      telDoor.classList.add('text-tertiary-fixed');
+
+      telStatus.innerText = 'Checkout Verified & Logged in SQLite';
+      telStatusDot.classList.remove('animate-ping', 'bg-on-tertiary-container');
+      telStatusDot.classList.add('bg-tertiary-fixed');
+
+      // Update Stepper
+      step3.classList.remove('bg-primary-container', 'text-on-secondary-container');
+      step3.classList.add('bg-surface-container-low');
+      
+      step4.classList.remove('bg-surface-container-low');
+      step4.classList.add('bg-surface-container-high');
+      step4Icon.innerText = '✓';
+      step4Desc.innerText = 'IR Beam Cleared';
+
+      step5.classList.remove('bg-surface-container-low');
+      step5.classList.add('bg-tertiary-container', 'text-tertiary-fixed');
+      step5Icon.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+      step5Icon.classList.add('bg-tertiary-fixed', 'text-on-tertiary-fixed');
+      step5Desc.innerText = 'Door Latched Confirmed';
+
+      stepperStage.innerText = 'COMPLETED: 5 OF 5 • SESSION FINALIZED';
+
+      // Update Status Banner to Complete
+      statusBanner.classList.remove('bg-tertiary-container', 'text-tertiary-fixed');
+      statusBanner.classList.add('bg-primary-container', 'text-on-secondary-container');
+      statusBanner.innerHTML = `
+        <span class="material-symbols-outlined text-[24px] text-tertiary-fixed">task_alt</span>
+        <div class="flex flex-col">
+          <span class="font-label-lg text-label-lg font-semibold leading-tight text-on-secondary-container">Loan Confirmed & Dispatched Successfully!</span>
+          <span class="font-body-sm text-body-sm text-on-primary-container leading-tight">Due date registered: 14 days from now. Locker Bay #04 is now secured and marked vacant.</span>
+        </div>
+      `;
+
+      // Update Buttons
+      btn.disabled = true;
+      btn.className = 'w-full sm:flex-1 flex items-center justify-center gap-space-sm px-space-lg py-3.5 bg-surface-container text-outline font-label-lg text-label-lg rounded-lg cursor-not-allowed';
+      btnIcon.innerText = 'check_circle';
+      btnLabel.innerText = 'Checkout Session Closed';
+
+      simulateBtn.disabled = true;
+      simulateBtn.className = 'hidden';
+
+      // Update Bay Matrix
+      bayCell.classList.remove('bg-secondary', 'text-on-secondary');
+      bayCell.classList.add('bg-surface-container-low', 'text-on-surface');
+      baySubtext.innerText = 'TRANS CLOSED';
+      bayPulse.classList.remove('animate-ping', 'bg-tertiary-fixed');
+      bayPulse.classList.add('bg-on-tertiary-container');
+
+      // Journal append
+      const time = new Date().toTimeString().split(' ')[0];
+      journalFeed.innerHTML += `
+        <div class="text-tertiary-fixed font-semibold">[${time}] FC-51: Book removal signal logged (IR Reflectance = 0)</div>
+        <div class="text-tertiary-fixed font-semibold">[${time}] MC-38: Magnetic closure trip active</div>
+        <div class="text-secondary font-bold">[${time}] SQLite DB WRITE: Circulation table updated successfully (LOAN_ACTIVE)</div>
+      `;
+      journalFeed.scrollTop = journalFeed.scrollHeight;
+    }
+  </script>
+</div></main></div><div class="fixed inset-0 z-50 bg-primary/40 backdrop-blur-sm hidden target:flex items-center justify-center p-space-md" id="logout-dialog"><div class="bg-surface-container-lowest rounded-xl max-w-md w-full p-space-xl shadow-[0_20px_25px_-5px_rgba(18,59,103,0.1)] flex flex-col gap-space-md"><div class="flex items-center gap-space-sm text-error"><span class="material-symbols-outlined text-[28px]">warning</span><span class="font-headline-sm text-headline-sm text-on-surface">Confirm Termination</span></div><p class="font-body-md text-body-md text-on-surface-variant">Are you sure you want to end your current session? Any open solenoid unlocks or active dispenser locks will be automatically secured.</p><div class="flex items-center justify-end gap-space-sm pt-space-sm"><a class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" href="#">Cancel</a><a class="px-space-md py-space-sm rounded-lg font-label-md text-label-md bg-error text-on-error hover:bg-on-error-container transition-colors" data-path="login" href="#">Disconnect & Logout</a></div></div></div></body></html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>SmartLocker — Enterprise RFID Access Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              navy: '#002549',
+              blue: '#123b67',
+              accent: '#2563eb',
+              light: '#f8f9ff',
+              surface: '#eef2f9',
+              success: '#15803d',
+              danger: '#b91c1c'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-brand-light font-sans text-slate-800 antialiased min-h-screen flex flex-col justify-between">
+
+  <!-- Interactive Feedback Toast -->
+  <div id="statusToast" class="fixed top-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 opacity-0 pointer-events-none -translate-y-4">
+    <div id="toastContent" class="flex items-center gap-3 px-5 py-3 rounded-xl shadow-xl bg-white text-slate-800 border-l-4 border-brand-accent">
+      <span class="material-symbols-outlined text-brand-accent text-2xl" id="toastIcon">wifi_tethering</span>
+      <div class="flex flex-col">
+        <span class="font-display font-semibold text-sm" id="toastTitle">Card Authenticated</span>
+        <span class="text-xs text-slate-500" id="toastSubtitle">Loading your locker session...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="w-full bg-white border-b border-slate-200 px-6 py-4 shadow-sm">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-brand-navy flex items-center justify-center text-white shadow-md">
+          <span class="material-symbols-outlined text-2xl">inventory_2</span>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-display font-bold text-lg text-brand-navy leading-tight">SmartLocker Automated Station</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+        </span>
+        <span class="font-mono text-xs font-semibold text-slate-700">Station #01 Online</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Portal Stage -->
+  <main class="flex-1 flex items-center justify-center p-6">
+    <div class="max-w-xl w-full bg-white rounded-2xl shadow-xl border border-slate-100 p-8 sm:p-10 flex flex-col items-center text-center">
+      
+
+
+      <h1 class="font-display font-extrabold text-2xl sm:text-3xl text-brand-navy tracking-tight mb-6">
+        Welcome to SmartLocker
+      </h1>
+
+      <!-- RFID Contactless Dial Animation -->
+      <div class="relative flex items-center justify-center w-36 h-36 mb-6">
+        <div class="absolute inset-0 rounded-full bg-blue-100/60 animate-ping opacity-75"></div>
+        <div class="absolute inset-2 rounded-full bg-blue-50 animate-pulse"></div>
+        <div id="scannerIconHolder" class="relative z-10 w-24 h-24 rounded-full bg-brand-navy flex items-center justify-center text-white shadow-xl transition-all duration-300">
+          <span class="material-symbols-outlined text-4xl" id="scannerIcon">contactless</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col items-center mb-6">
+        <span class="font-display font-bold text-base text-brand-navy mb-1" id="scannerStatusText">
+          Ready for Card Tap
+        </span>
+        <span class="text-xs text-slate-500">
+          Accepts ISO/IEC 14443 Type A &amp; EM4100 RFID Cards
+        </span>
+      </div>
+
+      <!-- Credential Input Form -->
+      <form onsubmit="event.preventDefault(); submitAuth();" class="w-full max-w-md flex flex-col gap-3">
+        <div class="relative flex items-center">
+          <span class="material-symbols-outlined absolute left-3.5 text-slate-400">badge</span>
+          <input 
+            type="text" 
+            id="rfidInput" 
+            autofocus
+            placeholder="Scan or enter RFID card UID..." 
+            class="w-full bg-slate-50 border border-slate-300 rounded-xl pl-11 pr-4 py-3 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-accent focus:bg-white font-mono transition-all"
+          />
+        </div>
+        <button 
+          type="submit" 
+          id="loginBtn"
+          class="w-full bg-brand-accent hover:bg-brand-blue text-white font-display font-semibold py-3 px-4 rounded-xl shadow-md transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
+        >
+          <span class="material-symbols-outlined text-lg" id="btnIcon">login</span>
+          <span id="btnLabel">Access System</span>
+        </button>
+      </form>
+
+      <!-- Quick Enrolled Member Cards for Fast Verification -->
+      <div class="w-full max-w-md mt-6 pt-6 border-t border-slate-100 flex flex-col items-start text-left">
+        <span class="font-display text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+          Company Employee Directory
+        </span>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 w-full">
+          <button type="button" onclick="quickAuth('12:5E:7B:44')" class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 hover:bg-blue-50 border border-slate-200 text-left transition-all">
+            <span class="material-symbols-outlined text-brand-accent text-lg">badge</span>
+            <div class="flex flex-col min-w-0">
+              <span class="font-display text-xs font-bold text-slate-800 truncate">Shanmukha Anand</span>
+              <span class="font-mono text-[10px] text-slate-500">Employee</span>
+            </div>
+          </button>
+          <button type="button" onclick="quickAuth('04:A2:8F:C9')" class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 hover:bg-blue-50 border border-slate-200 text-left transition-all">
+            <span class="material-symbols-outlined text-brand-accent text-lg">badge</span>
+            <div class="flex flex-col min-w-0">
+              <span class="font-display text-xs font-bold text-slate-800 truncate">Ananya Sharma</span>
+              <span class="font-mono text-[10px] text-slate-500">Employee</span>
+            </div>
+          </button>
+          <button type="button" onclick="quickAuth('E2:80:68:10')" class="flex items-center gap-2 p-2 rounded-lg bg-purple-50/80 hover:bg-purple-100 border border-purple-200 text-left transition-all">
+            <span class="material-symbols-outlined text-purple-700 text-lg">admin_panel_settings</span>
+            <div class="flex flex-col min-w-0">
+              <span class="font-display text-xs font-bold text-purple-900 truncate">K. Ramesh</span>
+              <span class="font-mono text-[10px] text-purple-600 font-semibold">Host</span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+
+  <script>
+    async function submitAuth() {
+      const input = document.getElementById('rfidInput');
+      const val = input.value.trim();
+      if (!val) {
+        showToast('Input Required', 'Please tap your RFID card or enter your ID.', 'warning');
+        return;
+      }
+      authenticate(val);
+    }
+
+    function quickAuth(uid) {
+      document.getElementById('rfidInput').value = uid;
+      authenticate(uid);
+    }
+
+    async function authenticate(identifier) {
+      const btn = document.getElementById('loginBtn');
+      const btnIcon = document.getElementById('btnIcon');
+      const btnLabel = document.getElementById('btnLabel');
+      const iconHolder = document.getElementById('scannerIconHolder');
+      const statusText = document.getElementById('scannerStatusText');
+
+      btn.disabled = true;
+      btn.classList.add('opacity-75');
+      btnIcon.textContent = 'hourglass_empty';
+      btnLabel.textContent = 'Authenticating...';
+
+      iconHolder.className = 'relative z-10 w-24 h-24 rounded-full bg-brand-accent flex items-center justify-center text-white shadow-xl transition-all duration-300 scale-105';
+      statusText.textContent = 'Verifying credential: ' + identifier;
+
+      try {
+        const res = await fetch('/api/auth/rfid', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ rfid_uid: identifier })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          iconHolder.className = 'relative z-10 w-24 h-24 rounded-full bg-emerald-600 flex items-center justify-center text-white shadow-xl transition-all duration-300';
+          statusText.textContent = 'Welcome, ' + data.member.name;
+          showToast('Access Granted', 'Welcome, ' + data.member.name + '.', 'success');
+
+          setTimeout(() => {
+            window.location.href = data.redirect_url;
+          }, 600);
+        } else {
+          iconHolder.className = 'relative z-10 w-24 h-24 rounded-full bg-red-600 flex items-center justify-center text-white shadow-xl transition-all duration-300';
+          statusText.textContent = 'Access Denied';
+          showToast('Authentication Failed', data.message, 'error');
+
+          setTimeout(() => {
+            iconHolder.className = 'relative z-10 w-24 h-24 rounded-full bg-brand-navy flex items-center justify-center text-white shadow-xl transition-all duration-300';
+            statusText.textContent = 'Ready for Card Tap';
+            btn.disabled = false;
+            btn.classList.remove('opacity-75');
+            btnIcon.textContent = 'login';
+            btnLabel.textContent = 'Access System';
+            document.getElementById('rfidInput').value = '';
+            document.getElementById('rfidInput').focus();
+          }, 2000);
+        }
+      } catch (err) {
+        showToast('Connection Error', 'Unable to communicate with SmartLocker controller.', 'error');
+        btn.disabled = false;
+        btn.classList.remove('opacity-75');
+        btnIcon.textContent = 'login';
+        btnLabel.textContent = 'Access System';
+      }
+    }
+
+    function showToast(title, subtitle, type) {
+      const toast = document.getElementById('statusToast');
+      const toastContent = document.getElementById('toastContent');
+      const toastIcon = document.getElementById('toastIcon');
+      const toastTitle = document.getElementById('toastTitle');
+      const toastSubtitle = document.getElementById('toastSubtitle');
+
+      toastTitle.textContent = title;
+      toastSubtitle.textContent = subtitle;
+
+      if (type === 'success') {
+        toastIcon.textContent = 'check_circle';
+        toastIcon.className = 'material-symbols-outlined text-emerald-600 text-2xl';
+        toastContent.className = 'flex items-center gap-3 px-5 py-3 rounded-xl shadow-xl bg-white text-slate-800 border-l-4 border-emerald-500';
+      } else if (type === 'error') {
+        toastIcon.textContent = 'cancel';
+        toastIcon.className = 'material-symbols-outlined text-red-600 text-2xl';
+        toastContent.className = 'flex items-center gap-3 px-5 py-3 rounded-xl shadow-xl bg-white text-slate-800 border-l-4 border-red-500';
+      } else {
+        toastIcon.textContent = 'info';
+        toastIcon.className = 'material-symbols-outlined text-blue-600 text-2xl';
+        toastContent.className = 'flex items-center gap-3 px-5 py-3 rounded-xl shadow-xl bg-white text-slate-800 border-l-4 border-blue-500';
+      }
+
+      toast.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-4');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'pointer-events-none', '-translate-y-4');
+      }, 4000);
+    }
+
+    // Check if user was logged out due to inactivity timeout
+    window.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('timeout') === '1') {
+        showToast('Session Timed Out', 'Automatically logged out after 30 seconds of inactivity.', 'info');
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    });
+  </script>
+</body>
+</html>

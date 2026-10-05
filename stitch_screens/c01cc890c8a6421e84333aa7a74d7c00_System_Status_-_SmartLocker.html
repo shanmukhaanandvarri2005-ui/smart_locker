@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"primary-container":"#123b67","on-primary-container":"#84a6d8","on-secondary-container":"#fefcff","primary-fixed-dim":"#a6c8fd","tertiary-fixed":"#7ffc97","surface-variant":"#d3e4fe","secondary-container":"#316bf3","on-primary-fixed-variant":"#224875","on-primary-fixed":"#001c39","on-secondary-fixed-variant":"#003ea8","on-tertiary-container":"#3aba5e","surface-bright":"#f8f9ff","on-surface-variant":"#43474f","surface-dim":"#cbdbf5","surface-container-high":"#dce9ff","on-tertiary":"#ffffff","surface-tint":"#3d608e","surface":"#f8f9ff","primary-fixed":"#d4e3ff","error":"#ba1a1a","on-primary":"#ffffff","outline-variant":"#c3c6d0","on-error-container":"#93000a","tertiary":"#002b0e","primary":"#002549","error-container":"#ffdad6","on-tertiary-fixed":"#002109","tertiary-container":"#004419","surface-container-lowest":"#ffffff","on-secondary":"#ffffff","on-error":"#ffffff","on-surface":"#0b1c30","on-tertiary-fixed-variant":"#005320","secondary":"#0051d5","background":"#f8f9ff","surface-container-highest":"#d3e4fe","outline":"#737780","secondary-fixed-dim":"#b4c5ff","secondary-fixed":"#dbe1ff","on-secondary-fixed":"#00174b","surface-container":"#e5eeff","tertiary-fixed-dim":"#62df7d","surface-container-low":"#eff4ff","inverse-on-surface":"#eaf1ff","inverse-surface":"#213145","inverse-primary":"#a6c8fd","on-background":"#0b1c30"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"gutter":"1.5rem","margin":"2rem","gutter-sm":"1rem","space-lg":"1.5rem","space-sm":"0.5rem","space-md":"1rem","space-xs":"0.25rem","margin-sm":"1rem","space-xl":"2rem"},"fontFamily":{"code-telemetry":["JetBrains Mono"],"label-lg":["Inter"],"headline-xl-mobile":["Plus Jakarta Sans"],"body-lg":["Inter"],"label-md":["Inter"],"headline-md":["Plus Jakarta Sans"],"code-badge":["JetBrains Mono"],"body-md":["Inter"],"body-sm":["Inter"],"headline-lg-mobile":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"]},"fontSize":{"code-telemetry":["13px",{"lineHeight":"18px","letterSpacing":"-0.01em","fontWeight":"500"}],"label-lg":["14px",{"lineHeight":"20px","fontWeight":"600"}],"headline-xl-mobile":["30px",{"lineHeight":"38px","letterSpacing":"-0.02em","fontWeight":"700"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"label-md":["12px",{"lineHeight":"16px","fontWeight":"500"}],"headline-md":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"code-badge":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-xl":["40px",{"lineHeight":"48px","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-sm":["18px",{"lineHeight":"26px","fontWeight":"600"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="p-space-lg flex items-start gap-space-sm bg-surface-container-low"><img alt="SmartLocker Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Vtr0xI_75roQQIg48y0OFsfC--krHwc-8XspQRvXiep1aST1iPZ35PdojCz7qtCld8DfvzuGlEqHlsB5Ze-EvP7utqz0H2e_-bZe5UPncdLV3ulBxHRWcg4kdL3ACIOJLr51Rs8qI3z0RvHcFgGwoyjoUZSz5c76PS-GQXiIvMaURPljN2YYeJUy1x37BvfKvvrNmscPSst70T463I12TDnEW7HqRcRxV8BykY22OmAaA4iHNGGlYMK_zZ"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary leading-tight">SmartLocker</span><span class="font-body-sm text-body-sm text-on-surface-variant leading-tight">Vishnu Inst. of Tech • EEE</span></div></div><div class="px-space-md py-space-sm"><span class="font-code-badge text-code-badge text-outline uppercase tracking-wider px-space-sm">Operations &amp; Telemetry</span></div><nav class="flex flex-col gap-space-xs px-space-md" data-active-classes="bg-primary-container text-on-secondary-container font-label-lg text-label-lg rounded-lg"><a class="flex items-center gap-space-sm px-space-md py-space-sm font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface rounded-lg transition-colors" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[20px]">dashboard</span><span>Dashboard</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface rounded-lg transition-colors" data-path="borrow-a-book" href="#"><span class="material-symbols-outlined text-[20px]">book</span><span>Borrow a Book</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface rounded-lg transition-colors" data-path="return-a-book" href="#"><span class="material-symbols-outlined text-[20px]">assignment_return</span><span>Return a Book</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface rounded-lg transition-colors" data-path="account-history" href="#"><span class="material-symbols-outlined text-[20px]">history</span><span>Account History</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface rounded-lg transition-colors" data-path="system-status" href="#"><span class="material-symbols-outlined text-[20px]">memory</span><span>System Status</span></a><a class="flex items-center justify-between px-space-md py-space-sm font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface rounded-lg transition-colors" data-path="user-management" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">manage_accounts</span><span>User Management</span></div><span class="font-code-badge text-code-badge bg-surface-container-high text-primary px-1.5 py-0.5 rounded-sm">ADMIN</span></a></nav></div><div class="p-space-md flex flex-col gap-space-sm"><a class="flex items-center gap-space-sm px-space-md py-space-sm font-label-md text-label-md text-error hover:bg-error-container hover:text-on-error-container rounded-lg transition-colors" href="#logout-dialog"><span class="material-symbols-outlined text-[20px]">logout</span><span>Logout</span></a><div class="p-space-md bg-surface-container-low rounded-xl flex flex-col gap-space-xs shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center justify-between"><span class="font-code-badge text-code-badge text-tertiary-container bg-tertiary-fixed px-1.5 py-0.5 rounded-full flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span>SECURE HW</span><span class="material-symbols-outlined text-[18px] text-outline">lock</span></div><div class="flex flex-col"><span class="font-label-md text-label-md text-on-surface font-semibold">Student Member</span><span class="font-code-telemetry text-code-telemetry text-secondary font-medium tracking-tight">RFID: 04:A2:8F:C9</span></div></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-xl"><div class="flex items-center gap-space-md"><div class="flex items-center gap-1.5 px-space-sm py-1 bg-surface-container-lowest rounded-full shadow-[0_1px_3px_rgba(18,59,103,0.04)]"><span class="w-2 h-2 rounded-full bg-on-tertiary-container animate-pulse"></span><span class="font-code-badge text-code-badge text-on-surface">RPi 3B+ Online</span></div><div class="hidden xl:flex items-center gap-1.5 px-space-sm py-1 bg-surface-container rounded-full"><span class="material-symbols-outlined text-[14px] text-secondary">tune</span><span class="font-code-badge text-code-badge text-on-surface-variant">Demo Hardware: Active</span></div><div class="hidden md:flex items-center gap-1.5 px-space-sm py-1 bg-surface-container-lowest rounded-full shadow-[0_1px_3px_rgba(18,59,103,0.04)]"><span class="material-symbols-outlined text-[14px] text-on-tertiary-container">bolt</span><span class="font-code-badge text-code-badge text-on-surface-variant">12V Solenoid: Secured</span></div></div><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm text-outline hover:text-on-surface cursor-pointer bg-surface-container-lowest px-space-sm py-1.5 rounded-lg shadow-[0_1px_3px_rgba(18,59,103,0.04)]"><span class="material-symbols-outlined text-[18px]">search</span><span class="font-body-sm text-body-sm text-outline">Quick Search</span><span class="font-code-badge text-code-badge bg-surface-container px-1 py-0.5 rounded text-on-surface-variant">⌘K</span></div><div class="relative flex items-center justify-center p-1.5 rounded-full hover:bg-surface-container text-on-surface-variant hover:text-on-surface cursor-pointer"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1 right-1 w-4 h-4 bg-error text-on-error font-code-badge text-[9px] flex items-center justify-center rounded-full font-bold">2</span></div><div class="flex items-center gap-space-sm pl-space-sm"><div class="hidden lg:flex flex-col text-right"><span class="font-label-md text-label-md text-on-surface leading-tight">Ananya Sharma</span><span class="font-body-sm text-body-sm text-on-surface-variant leading-tight">21BEE1048 • Scholar</span></div><img alt="Profile" class="w-8 h-8 rounded-full object-cover shadow-[0_1px_3px_rgba(18,59,103,0.08)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHiD6ZO8blrXIWf-0_upB1pMpsESF3AhCjbOXl4LguyhZpTYatg60MGi7bijePsUZ3ggqDkdCqET_D4Q_OK1kYZecjgGwAMvqS_SH6rYZly1wx2swzZ33J7hURInKEIg_B9-sXJyvxRgikJ93j62recEQFpCOsTDUJWDMWVTZkG5yLAKXgH-Z0UoFGabu21u0p4qiIAjnGTA62kEWZgbe3bU-sB1V6Lal3k4vT48RNBOqSNp6zJoS9Kg"/></div></div></header><main class="relative pt-16 bg-surface min-h-screen w-full px-space-xl"><div class="flex flex-col w-full pb-space-xl">
+<!-- Active Sidebar Link Injector Script -->
+<script>
+    (function() {
+      const activeItem = document.querySelector('nav a[data-path="system-status"]');
+      if (activeItem) {
+        activeItem.className = 'flex items-center gap-space-sm px-space-md py-space-sm bg-primary-container text-on-secondary-container font-label-lg text-label-lg rounded-lg shadow-sm transition-colors';
+        const icon = activeItem.querySelector('.material-symbols-outlined');
+        if (icon) icon.style.fontVariationSettings = "'FILL' 1";
+      }
+    })();
+  </script>
+<!-- Page Header & Ambient Status Strip -->
+<div class="flex flex-col gap-space-sm mb-space-lg">
+<div class="flex flex-col xl:flex-row xl:items-end justify-between gap-space-md">
+<div class="flex flex-col">
+<div class="flex items-center gap-2 mb-1">
+<span class="font-code-badge text-code-badge px-2 py-0.5 rounded-full bg-surface-container-high text-primary tracking-widest uppercase font-semibold">Diagnostic Interface // Rev 4.12</span>
+<span class="w-2 h-2 rounded-full bg-on-tertiary-container animate-ping"></span>
+<span class="font-code-badge text-code-badge text-tertiary-container font-bold">10Hz HARDWARE BUS ACTIVE</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">IoT Hardware Telemetry &amp; System Diagnostics</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-4xl mt-0.5">
+          Real-time physical telemetry from Raspberry Pi 3 Model B+, sensor bus interfaces, solenoid actuator relays, and SQLite WAL transaction engine.
+        </p>
+</div>
+<!-- Quick Action Commands -->
+<div class="flex items-center gap-space-sm flex-wrap">
+<button class="flex items-center gap-1.5 px-space-md py-2 bg-surface-container-lowest text-primary hover:bg-surface-container rounded-lg shadow-sm transition-all text-label-md font-label-md" id="btn-ping" onclick="triggerPingAction()">
+<span class="material-symbols-outlined text-[18px] text-secondary">sensors</span>
+<span>Ping Controller</span>
+</button>
+<button class="flex items-center gap-1.5 px-space-md py-2 bg-surface-container-lowest text-primary hover:bg-surface-container rounded-lg shadow-sm transition-all text-label-md font-label-md" id="btn-calibrate" onclick="triggerCalibrateAction()">
+<span class="material-symbols-outlined text-[18px] text-secondary">tune</span>
+<span>Calibrate IR</span>
+</button>
+<button class="flex items-center gap-1.5 px-space-md py-2 bg-primary text-on-primary hover:bg-primary-container rounded-lg shadow-sm transition-all text-label-md font-label-md" onclick="emergencyLockoutNotice()">
+<span class="material-symbols-outlined text-[18px] text-tertiary-fixed">verified_user</span>
+<span>Security Audit Run</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Primary Key Metrics Ribbon (Bento Microstrip) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-space-md mb-space-lg">
+<!-- Node Host -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant mb-2">
+<span class="font-label-md text-label-md uppercase tracking-wider text-outline font-semibold">RPi 3B+ Host</span>
+<span class="material-symbols-outlined text-[20px] text-primary">developer_board</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-md text-headline-md text-primary font-bold tracking-tight">43.8°C</span>
+<span class="font-code-badge text-code-badge text-tertiary-container font-semibold">NORMAL</span>
+</div>
+<div class="flex items-center justify-between font-code-telemetry text-code-telemetry text-on-surface-variant mt-2 pt-2 bg-surface-container-low rounded-lg px-2 py-1">
+<span>RAM: 412 / 1024 MB</span>
+<span class="font-semibold text-secondary">40.2%</span>
+</div>
+</div>
+<!-- Power Rail INA219 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant mb-2">
+<span class="font-label-md text-label-md uppercase tracking-wider text-outline font-semibold">Solenoid Rail</span>
+<span class="material-symbols-outlined text-[20px] text-secondary">electrical_services</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-md text-headline-md text-primary font-bold tracking-tight">12.18 V</span>
+<span class="font-code-badge text-code-badge text-tertiary-container font-semibold">INA219</span>
+</div>
+<div class="flex items-center justify-between font-code-telemetry text-code-telemetry text-on-surface-variant mt-2 pt-2 bg-surface-container-low rounded-lg px-2 py-1">
+<span>Current: 0.14 A Idle</span>
+<span class="text-tertiary-container font-semibold">Regulated</span>
+</div>
+</div>
+<!-- SQLite WAL Latency -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant mb-2">
+<span class="font-label-md text-label-md uppercase tracking-wider text-outline font-semibold">SQLite Engine</span>
+<span class="material-symbols-outlined text-[20px] text-secondary">database</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-md text-headline-md text-primary font-bold tracking-tight">0.8 ms</span>
+<span class="font-code-badge text-code-badge text-on-surface-variant bg-surface-container px-1 rounded font-semibold">WAL</span>
+</div>
+<div class="flex items-center justify-between font-code-telemetry text-code-telemetry text-on-surface-variant mt-2 pt-2 bg-surface-container-low rounded-lg px-2 py-1">
+<span>4 Tables • 2.4 MB</span>
+<span class="text-tertiary-container font-semibold">Synced</span>
+</div>
+</div>
+<!-- Network Endpoints -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant mb-2">
+<span class="font-label-md text-label-md uppercase tracking-wider text-outline font-semibold">Network IP / Port</span>
+<span class="material-symbols-outlined text-[20px] text-secondary">lan</span>
+</div>
+<div class="flex items-baseline gap-1">
+<span class="font-code-telemetry text-code-telemetry text-primary font-bold">192.168.1.105</span>
+<span class="font-code-badge text-code-badge text-on-surface-variant">:5000</span>
+</div>
+<div class="flex items-center justify-between font-code-telemetry text-code-telemetry text-on-surface-variant mt-2 pt-2 bg-surface-container-low rounded-lg px-2 py-1">
+<span>SPI0 &amp; I2C1 Bus</span>
+<span class="text-tertiary-container font-semibold">Connected</span>
+</div>
+</div>
+<!-- Polling Pulse -->
+<div class="bg-primary text-on-primary rounded-xl p-space-md shadow-sm flex flex-col justify-between relative overflow-hidden">
+<div class="absolute -right-6 -bottom-6 w-24 h-24 bg-secondary-container/20 rounded-full blur-xl pointer-events-none"></div>
+<div class="flex items-center justify-between text-primary-fixed mb-2">
+<span class="font-label-md text-label-md uppercase tracking-wider font-semibold">Telemetry Loop</span>
+<span class="material-symbols-outlined text-[20px] text-tertiary-fixed">sync</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-md text-headline-md font-bold tracking-tight text-white">0.4s ago</span>
+</div>
+<div class="flex items-center justify-between font-code-telemetry text-code-telemetry text-primary-fixed mt-2 pt-2 bg-primary-container/80 rounded-lg px-2 py-1">
+<span>Continuous 10Hz</span>
+<span class="flex items-center gap-1 font-semibold text-tertiary-fixed">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed animate-ping"></span> Live
+        </span>
+</div>
+</div>
+</div>
+<!-- Hardware Compartment Matrix (Physical 8-Bay Hardware Map) -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm mb-space-lg">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-sm mb-space-md">
+<div>
+<div class="flex items-center gap-2">
+<h2 class="font-headline-sm text-headline-sm text-primary">Compartment Matrix &amp; Actuator Solenoid Grid</h2>
+<span class="font-code-badge text-code-badge bg-surface-container-high text-primary px-2 py-0.5 rounded-full">8 PHYSICAL CHANNELS</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Real-time status of ULN2803A Darlington drivers, MC-38 magnetic reeds, and FC-51 infrared load sensors.</p>
+</div>
+<div class="flex items-center gap-space-md flex-wrap">
+<div class="flex items-center gap-1.5 font-code-badge text-code-badge text-on-surface-variant">
+<span class="w-2.5 h-2.5 rounded-full bg-tertiary-container"></span> Closed / Armed
+        </div>
+<div class="flex items-center gap-1.5 font-code-badge text-code-badge text-on-surface-variant">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span> Actuator Energized
+        </div>
+<div class="flex items-center gap-1.5 font-code-badge text-code-badge text-on-surface-variant">
+<span class="w-2.5 h-2.5 rounded-full bg-surface-dim"></span> Book Vacant
+        </div>
+</div>
+</div>
+<!-- 8 Locker Bays Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-8 gap-space-md">
+<!-- Bay 01 -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex flex-col justify-between shadow-sm relative group hover:shadow-md transition-all">
+<div class="flex items-center justify-between mb-2">
+<span class="font-headline-sm text-headline-sm text-primary font-bold">#01</span>
+<span class="font-code-badge text-code-badge text-tertiary-container bg-surface-container-lowest px-1.5 py-0.5 rounded font-bold">12.2Ω</span>
+</div>
+<div class="space-y-1.5 my-2 font-code-telemetry text-code-telemetry">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Solenoid:</span>
+<span class="text-tertiary-container font-semibold">SECURED</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Reed Sw:</span>
+<span class="text-primary font-medium">CLOSED</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Shelf IR:</span>
+<span class="text-secondary font-semibold">BOOK DET.</span>
+</div>
+</div>
+<button class="w-full mt-2 py-1.5 bg-surface-container-lowest hover:bg-secondary hover:text-on-secondary text-primary rounded-lg font-label-md text-label-md shadow-sm transition-all flex items-center justify-center gap-1" onclick="cycleSolenoid(1)">
+<span class="material-symbols-outlined text-[16px]">lock_open</span> Pulse Unlock
+        </button>
+</div>
+<!-- Bay 02 -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex flex-col justify-between shadow-sm relative group hover:shadow-md transition-all">
+<div class="flex items-center justify-between mb-2">
+<span class="font-headline-sm text-headline-sm text-primary font-bold">#02</span>
+<span class="font-code-badge text-code-badge text-tertiary-container bg-surface-container-lowest px-1.5 py-0.5 rounded font-bold">12.1Ω</span>
+</div>
+<div class="space-y-1.5 my-2 font-code-telemetry text-code-telemetry">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Solenoid:</span>
+<span class="text-tertiary-container font-semibold">SECURED</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Reed Sw:</span>
+<span class="text-primary font-medium">CLOSED</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Shelf IR:</span>
+<span class="text-secondary font-semibold">BOOK DET.</span>
+</div>
+</div>
+<button class="w-full mt-2 py-1.5 bg-surface-container-lowest hover:bg-secondary hover:text-on-secondary text-primary rounded-lg font-label-md text-label-md shadow-sm transition-all flex items-center justify-center gap-1" onclick="cycleSolenoid(2)">
+<span class="material-symbols-outlined text-[16px]">lock_open</span> Pulse Unlock
+        </button>
+</div>
+<!-- Bay 03 (Vacant) -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex flex-col justify-between shadow-sm relative group hover:shadow-md transition-all">
+<div class="flex items-center justify-between mb-2">
+<span class="font-headline-sm text-headline-sm text-primary font-bold">#03</span>
+<span class="font-code-badge text-code-badge text-tertiary-container bg-surface-container-lowest px-1.5 py-0.5 rounded font-bold">12.4Ω</span>
+</div>
+<div class="space-y-1.5 my-2 font-code-telemetry text-code-telemetry">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Solenoid:</span>
+<span class="text-tertiary-container font-semibold">SECURED</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Reed Sw:</span>
+<span class="text-primary font-medium">CLOSED</span>
+</div>
+<div class="flex items-center justify-between text-outline">
+<span>Shelf IR:</span>
+<span class="text-outline font-semibold">EMPTY</span>
+</div>
+</div>
+<button class="w-full mt-2 py-1.5 bg-surface-container-lowest hover:bg-secondary hover:text-on-secondary text-primary rounded-lg font-label-md text-label-md shadow-sm transition-all flex items-center justify-center gap-1" onclick="cycleSolenoid(3)">
+<span class="material-symbols-outlined text-[16px]">lock_open</span> Pulse Unlock
+        </button>
+</div>
+<!-- Bay 04 (Active Dispense Ready) -->
+<div class="bg-secondary-fixed/50 rounded-xl p-space-md flex flex-col justify-between shadow-md relative group hover:shadow-lg transition-all">
+<div class="flex items-center justify-between mb-2">
+<span class="font-headline-sm text-headline-sm text-primary font-bold">#04</span>
+<span class="font-code-badge text-code-badge text-secondary bg-surface-container-lowest px-1.5 py-0.5 rounded font-bold">STANDBY</span>
+</div>
+<div class="space-y-1.5 my-2 font-code-telemetry text-code-telemetry">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Solenoid:</span>
+<span class="text-tertiary-container font-semibold">SECURED</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Reed Sw:</span>
+<span class="text-primary font-medium">CLOSED</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Shelf IR:</span>
+<span class="text-secondary font-semibold">BOOK DET.</span>
+</div>
+</div>
+<button class="w-full mt-2 py-1.5 bg-secondary text-on-secondary hover:bg-primary-container rounded-lg font-label-md text-label-md shadow-sm transition-all flex items-center justify-center gap-1" onclick="cycleSolenoid(4)">
+<span class="material-symbols-outlined text-[16px]">bolt</span> Pulse Unlock
+        </button>
+</div>
+<!-- Bay 05 -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex flex-col justify-between shadow-sm relative group hover:shadow-md transition-all">
+<div class="flex items-center justify-between mb-2">
+<span class="font-headline-sm text-headline-sm text-primary font-bold">#05</span>
+<span class="font-code-badge text-code-badge text-tertiary-container bg-surface-container-lowest px-1.5 py-0.5 rounded font-bold">12.0Ω</span>
+</div>
+<div class="space-y-1.5 my-2 font-code-telemetry text-code-telemetry">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Solenoid:</span>
+<span class="text-tertiary-container font-semibold">SECURED</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Reed Sw:</span>
+<span class="text-primary font-medium">CLOSED</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Shelf IR:</span>
+<span class="text-secondary font-semibold">BOOK DET.</span>
+</div>
+</div>
+<button class="w-full mt-2 py-1.5 bg-surface-container-lowest hover:bg-secondary hover:text-on-secondary text-primary rounded-lg font-label-md text-label-md shadow-sm transition-all flex items-center justify-center gap-1" onclick="cycleSolenoid(5)">
+<span class="material-symbols-outlined text-[16px]">lock_open</span> Pulse Unlock
+        </button>
+</div>
+<!-- Bay 06 (Vacant) -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex flex-col justify-between shadow-sm relative group hover:shadow-md transition-all">
+<div class="flex items-center justify-between mb-2">
+<span class="font-headline-sm text-headline-sm text-primary font-bold">#06</span>
+<span class="font-code-badge text-code-badge text-tertiary-container bg-surface-container-lowest px-1.5 py-0.5 rounded font-bold">12.3Ω</span>
+</div>
+<div class="space-y-1.5 my-2 font-code-telemetry text-code-telemetry">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Solenoid:</span>
+<span class="text-tertiary-container font-semibold">SECURED</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Reed Sw:</span>
+<span class="text-primary font-medium">CLOSED</span>
+</div>
+<div class="flex items-center justify-between text-outline">
+<span>Shelf IR:</span>
+<span class="text-outline font-semibold">EMPTY</span>
+</div>
+</div>
+<button class="w-full mt-2 py-1.5 bg-surface-container-lowest hover:bg-secondary hover:text-on-secondary text-primary rounded-lg font-label-md text-label-md shadow-sm transition-all flex items-center justify-center gap-1" onclick="cycleSolenoid(6)">
+<span class="material-symbols-outlined text-[16px]">lock_open</span> Pulse Unlock
+        </button>
+</div>
+<!-- Bay 07 -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex flex-col justify-between shadow-sm relative group hover:shadow-md transition-all">
+<div class="flex items-center justify-between mb-2">
+<span class="font-headline-sm text-headline-sm text-primary font-bold">#07</span>
+<span class="font-code-badge text-code-badge text-tertiary-container bg-surface-container-lowest px-1.5 py-0.5 rounded font-bold">12.2Ω</span>
+</div>
+<div class="space-y-1.5 my-2 font-code-telemetry text-code-telemetry">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Solenoid:</span>
+<span class="text-tertiary-container font-semibold">SECURED</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Reed Sw:</span>
+<span class="text-primary font-medium">CLOSED</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Shelf IR:</span>
+<span class="text-secondary font-semibold">BOOK DET.</span>
+</div>
+</div>
+<button class="w-full mt-2 py-1.5 bg-surface-container-lowest hover:bg-secondary hover:text-on-secondary text-primary rounded-lg font-label-md text-label-md shadow-sm transition-all flex items-center justify-center gap-1" onclick="cycleSolenoid(7)">
+<span class="material-symbols-outlined text-[16px]">lock_open</span> Pulse Unlock
+        </button>
+</div>
+<!-- Bay 08 -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex flex-col justify-between shadow-sm relative group hover:shadow-md transition-all">
+<div class="flex items-center justify-between mb-2">
+<span class="font-headline-sm text-headline-sm text-primary font-bold">#08</span>
+<span class="font-code-badge text-code-badge text-tertiary-container bg-surface-container-lowest px-1.5 py-0.5 rounded font-bold">12.5Ω</span>
+</div>
+<div class="space-y-1.5 my-2 font-code-telemetry text-code-telemetry">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Solenoid:</span>
+<span class="text-tertiary-container font-semibold">SECURED</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Reed Sw:</span>
+<span class="text-primary font-medium">CLOSED</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Shelf IR:</span>
+<span class="text-secondary font-semibold">BOOK DET.</span>
+</div>
+</div>
+<button class="w-full mt-2 py-1.5 bg-surface-container-lowest hover:bg-secondary hover:text-on-secondary text-primary rounded-lg font-label-md text-label-md shadow-sm transition-all flex items-center justify-center gap-1" onclick="cycleSolenoid(8)">
+<span class="material-symbols-outlined text-[16px]">lock_open</span> Pulse Unlock
+        </button>
+</div>
+</div>
+</div>
+<!-- Hardware Subsystems Diagnostic Cards (7 Cards Detailed Grid) -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-space-md mb-space-lg">
+<!-- Card 1: RPi 3B+ Controller -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[24px]">memory</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-primary leading-tight">Host CPU Node</span>
+<span class="font-code-badge text-code-badge text-outline">BCM2837 ARMv7 1.4GHz</span>
+</div>
+</div>
+<span class="font-code-badge text-code-badge bg-tertiary-fixed text-tertiary-container px-2 py-0.5 rounded-full font-bold">ONLINE</span>
+</div>
+<div class="space-y-2 mt-4 font-body-sm text-body-sm text-on-surface-variant">
+<div class="flex justify-between items-center py-1 bg-surface-container-low px-2 rounded">
+<span>Hostname:</span>
+<span class="font-code-telemetry text-code-telemetry text-primary font-semibold">rpi-smartlocker-eee</span>
+</div>
+<div class="flex justify-between items-center py-1 px-2">
+<span>System Uptime:</span>
+<span class="font-code-telemetry text-code-telemetry text-on-surface font-semibold">14d 6h 32m 19s</span>
+</div>
+<div class="flex justify-between items-center py-1 bg-surface-container-low px-2 rounded">
+<span>Kernel Build:</span>
+<span class="font-code-telemetry text-code-telemetry text-on-surface">Linux 6.1.21-v7+ (32-bit)</span>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between font-code-badge text-code-badge text-outline">
+<span>Thermal Load: 43.8°C</span>
+<span class="text-tertiary-container font-semibold">Governor: ondemand</span>
+</div>
+</div>
+<!-- Card 2: SQLite Local Database -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[24px]">storage</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-primary leading-tight">SQLite Transaction</span>
+<span class="font-code-badge text-code-badge text-outline">Local ACID Embedded</span>
+</div>
+</div>
+<span class="font-code-badge text-code-badge bg-tertiary-fixed text-tertiary-container px-2 py-0.5 rounded-full font-bold">CONNECTED</span>
+</div>
+<div class="space-y-2 mt-4 font-body-sm text-body-sm text-on-surface-variant">
+<div class="flex justify-between items-center py-1 bg-surface-container-low px-2 rounded">
+<span>Active Journal:</span>
+<span class="font-code-telemetry text-code-telemetry text-secondary font-semibold">WAL (Write-Ahead-Log)</span>
+</div>
+<div class="flex justify-between items-center py-1 px-2">
+<span>Schema Tables:</span>
+<span class="font-code-telemetry text-code-telemetry text-on-surface">members, lockers, loans, logs</span>
+</div>
+<div class="flex justify-between items-center py-1 bg-surface-container-low px-2 rounded">
+<span>Disk Utilization:</span>
+<span class="font-code-telemetry text-code-telemetry text-primary font-semibold">2.4 MB (Fast NVMe/eMMC)</span>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between font-code-badge text-code-badge text-outline">
+<span>Integrity Check: OK</span>
+<span class="text-tertiary-container font-semibold">0 Corrupt Pages</span>
+</div>
+</div>
+<!-- Card 3: RC522 RFID Interface -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[24px]">contactless</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-primary leading-tight">RC522 RFID Module</span>
+<span class="font-code-badge text-code-badge text-outline">SPI0.0 Interface (13.56 MHz)</span>
+</div>
+</div>
+<span class="font-code-badge text-code-badge bg-primary-fixed text-on-primary-fixed-variant px-2 py-0.5 rounded-full font-bold animate-pulse">POLLING</span>
+</div>
+<div class="space-y-2 mt-4 font-body-sm text-body-sm text-on-surface-variant">
+<div class="flex justify-between items-center py-1 bg-surface-container-low px-2 rounded">
+<span>Bus Pins (BCM):</span>
+<span class="font-code-telemetry text-code-telemetry text-on-surface">MOSI 10, MISO 9, SCK 11, CE0 8</span>
+</div>
+<div class="flex justify-between items-center py-1 px-2">
+<span>Supported Standards:</span>
+<span class="font-code-telemetry text-code-telemetry text-on-surface font-semibold">ISO 14443A / MIFARE 1K</span>
+</div>
+<div class="flex justify-between items-center py-1 bg-surface-container-low px-2 rounded">
+<span>Last Handshake UID:</span>
+<span class="font-code-telemetry text-code-telemetry text-secondary font-bold">04:A2:8F:C9 (Verified)</span>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between font-code-badge text-code-badge text-outline">
+<span>Antenna Gain: 48 dB Max</span>
+<span class="text-tertiary-container font-semibold">0 Collisions</span>
+</div>
+</div>
+<!-- Card 4: MC-38 Magnetic Door Sensors -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[24px]">sensor_door</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-primary leading-tight">MC-38 Door Sensors</span>
+<span class="font-code-badge text-code-badge text-outline">Magnetic Reed Switches</span>
+</div>
+</div>
+<span class="font-code-badge text-code-badge bg-tertiary-fixed text-tertiary-container px-2 py-0.5 rounded-full font-bold">ALL 8 CLOSED</span>
+</div>
+<div class="space-y-2 mt-4 font-body-sm text-body-sm text-on-surface-variant">
+<div class="flex justify-between items-center py-1 bg-surface-container-low px-2 rounded">
+<span>Assigned GPIOs:</span>
+<span class="font-code-telemetry text-code-telemetry text-on-surface">BCM 22, 23, 24, 25, 5, 6, 12, 13</span>
+</div>
+<div class="flex justify-between items-center py-1 px-2">
+<span>Debounce Delay:</span>
+<span class="font-code-telemetry text-code-telemetry text-on-surface">80 ms Software Filter</span>
+</div>
+<div class="flex justify-between items-center py-1 bg-surface-container-low px-2 rounded">
+<span>Tamper Detection:</span>
+<span class="font-code-telemetry text-code-telemetry text-tertiary-container font-bold">No Perimeter Breaches</span>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between font-code-badge text-code-badge text-outline">
+<span>Logic Mode: Active LOW</span>
+<span class="text-tertiary-container font-semibold">Internal Pull-Up</span>
+</div>
+</div>
+<!-- Card 5: ULN2803A Solenoid Drivers -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[24px]">electric_bolt</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-primary leading-tight">12V Solenoid Drivers</span>
+<span class="font-code-badge text-code-badge text-outline">ULN2803A Darlington Array</span>
+</div>
+</div>
+<span class="font-code-badge text-code-badge bg-tertiary-fixed text-tertiary-container px-2 py-0.5 rounded-full font-bold">ARMED &amp; SECURED</span>
+</div>
+<div class="space-y-2 mt-4 font-body-sm text-body-sm text-on-surface-variant">
+<div class="flex justify-between items-center py-1 bg-surface-container-low px-2 rounded">
+<span>Isolation Topology:</span>
+<span class="font-code-telemetry text-code-telemetry text-on-surface">Optocoupler High-Side Rail</span>
+</div>
+<div class="flex justify-between items-center py-1 px-2">
+<span>Actuation Pulse Width:</span>
+<span class="font-code-telemetry text-code-telemetry text-on-surface">2500 ms Max Safe Clamp</span>
+</div>
+<div class="flex justify-between items-center py-1 bg-surface-container-low px-2 rounded">
+<span>Flyback Protection:</span>
+<span class="font-code-telemetry text-code-telemetry text-tertiary-container font-bold">1N4007 Diodes Active</span>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between font-code-badge text-code-badge text-outline">
+<span>Thermal Sinking: Passive</span>
+<span class="text-tertiary-container font-semibold">Rail Load 12.18V</span>
+</div>
+</div>
+<!-- Card 6: FC-51 Infrared Optical Sensors -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[24px]">visibility</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-primary leading-tight">FC-51 Optical Sensors</span>
+<span class="font-code-badge text-code-badge text-outline">Shelf Book Obstacle Array</span>
+</div>
+</div>
+<span class="font-code-badge text-code-badge bg-surface-container-high text-primary px-2 py-0.5 rounded-full font-bold">6/8 OCCUPIED</span>
+</div>
+<div class="space-y-2 mt-4 font-body-sm text-body-sm text-on-surface-variant">
+<div class="flex justify-between items-center py-1 bg-surface-container-low px-2 rounded">
+<span>Beam Threshold:</span>
+<span class="font-code-telemetry text-code-telemetry text-on-surface font-semibold">4.8V Potentiometer Tuned</span>
+</div>
+<div class="flex justify-between items-center py-1 px-2">
+<span>Wavelength:</span>
+<span class="font-code-telemetry text-code-telemetry text-on-surface">940 nm Non-visible IR</span>
+</div>
+<div class="flex justify-between items-center py-1 bg-surface-container-low px-2 rounded">
+<span>Vacant Bays:</span>
+<span class="font-code-telemetry text-code-telemetry text-secondary font-bold">Bay #03, Bay #06</span>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between font-code-badge text-code-badge text-outline">
+<span>Sample Rate: 100ms</span>
+<span class="text-tertiary-container font-semibold">Ambient Rejection OK</span>
+</div>
+</div>
+<!-- Card 7: RGB Visual Indicator & Buzzer (Full Row or Span) -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between md:col-span-2 xl:col-span-3">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[24px]">notifications_active</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-primary leading-tight">RGB Notification Beacon &amp; Piezo Alert</span>
+<span class="font-code-badge text-code-badge bg-secondary-fixed text-on-secondary-fixed font-bold px-2 py-0.5 rounded-full">ACTIVE PWM</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">GPIO 18 Hardware Pulse-Width Modulation (Duty Cycle: 65% Steady Blue) • Piezo Sounder on GPIO 19</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-space-md py-1.5 bg-surface-container-low hover:bg-surface-container text-primary rounded-lg font-label-md text-label-md transition-all flex items-center gap-1 shadow-sm" onclick="testBuzzerTone()">
+<span class="material-symbols-outlined text-[16px]">volume_up</span> Test Tone
+          </button>
+<button class="px-space-md py-1.5 bg-surface-container-low hover:bg-surface-container text-primary rounded-lg font-label-md text-label-md transition-all flex items-center gap-1 shadow-sm" onclick="cycleBeaconColor()">
+<span class="material-symbols-outlined text-[16px]">palette</span> Cycle RGB
+          </button>
+</div>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-space-md mt-4 pt-3 bg-surface-container-low p-space-md rounded-lg font-code-telemetry text-code-telemetry">
+<div>
+<span class="text-outline text-body-sm block">Current State</span>
+<span class="text-primary font-bold">STANDBY (BLUE)</span>
+</div>
+<div>
+<span class="text-outline text-body-sm block">PWM Channel</span>
+<span class="text-on-surface font-semibold">PWM0 (BCM 18)</span>
+</div>
+<div>
+<span class="text-outline text-body-sm block">Piezo Resonant Freq</span>
+<span class="text-on-surface font-semibold">2,730 Hz Clean</span>
+</div>
+<div>
+<span class="text-outline text-body-sm block">Safety Timeout</span>
+<span class="text-tertiary-container font-bold">3000ms Auto-Mute</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Real-time Oscilloscope Telemetry Stream & Live Event Stream -->
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-space-lg mb-space-lg">
+<!-- Visual Signal Waveform / Oscilloscope Telemetry View -->
+<div class="xl:col-span-2 bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm mb-4">
+<div>
+<div class="flex items-center gap-2">
+<h2 class="font-headline-sm text-headline-sm text-primary">Live GPIO Logic Oscilloscope</h2>
+<span class="font-code-badge text-code-badge bg-tertiary-fixed text-tertiary-container font-bold px-2 py-0.5 rounded-full">REAL-TIME BUS</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Continuous trace of Solenoid Actuator #04 enable line vs. Optical Reed sensor debouncing</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-code-telemetry text-code-telemetry text-outline">Scale: 50ms/div</span>
+<button class="px-space-sm py-1 bg-surface-container hover:bg-surface-container-high rounded text-label-md font-label-md text-primary" id="btn-pause-scope" onclick="toggleOscilloscope()">
+            Pause
+          </button>
+</div>
+</div>
+<!-- Simulated SVG Oscilloscope View -->
+<div class="w-full bg-primary rounded-lg p-space-md shadow-inner flex flex-col justify-between relative overflow-hidden h-64">
+<!-- SVG Grid & Waveform -->
+<svg class="w-full h-full text-secondary-container" preserveaspectratio="none" viewbox="0 0 700 200">
+<defs>
+<pattern height="25" id="grid-pattern" patternunits="userSpaceOnUse" width="35">
+<path d="M 35 0 L 0 0 0 25" fill="none" stroke="#224875" stroke-dasharray="2,2" stroke-width="0.5"></path>
+</pattern>
+<lineargradient id="wave-grad" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#316bf3" stop-opacity="0.5"></stop>
+<stop offset="100%" stop-color="#316bf3" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<rect fill="url(#grid-pattern)" height="100%" width="100%"></rect>
+<!-- Channel 1: Solenoid 12V Control PWM Pulse Wave -->
+<path d="M 0,60 L 120,60 L 120,20 L 260,20 L 260,60 L 380,60 L 380,20 L 520,20 L 520,60 L 700,60" fill="none" id="solenoid-wave" stroke="#7ffc97" stroke-linejoin="round" stroke-width="2.5"></path>
+<!-- Channel 2: Optical IR Reflector Logic Trace with noise filter -->
+<path d="M 0,150 L 80,150 L 95,150 L 140,110 L 210,110 L 215,150 L 360,150 L 400,110 L 480,110 L 490,150 L 700,150" fill="none" id="ir-wave" stroke="#316bf3" stroke-width="2"></path>
+</svg>
+<!-- Dynamic Overlay Readout -->
+<div class="flex items-center justify-between font-code-telemetry text-code-telemetry pt-2 border-t-0 text-white/90">
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-tertiary-fixed"></span> CH1: Solenoid Trigger (HIGH 3.3V Logic)</span>
+<span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-secondary-container"></span> CH2: IR Sensor Analog (4.82V Safe)</span>
+</div>
+<span class="text-tertiary-fixed font-bold font-code-badge">STABLE: JITTER &lt; 0.4μs</span>
+</div>
+</div>
+<!-- Waveform Metadata Footer -->
+<div class="flex items-center justify-between flex-wrap gap-2 mt-3 pt-3 bg-surface-container-low px-space-md py-2 rounded-lg font-code-telemetry text-code-telemetry">
+<span class="text-on-surface-variant">SPI Baudrate: 1.00 MHz</span>
+<span class="text-on-surface-variant">I2C INA219 Addr: 0x40</span>
+<span class="text-on-surface-variant">Interrupt Queue: 0 Pending</span>
+<span class="text-tertiary-container font-semibold">Signal-to-Noise: 44.2 dB</span>
+</div>
+</div>
+<!-- Safety Engine & Disconnection Rules Panel -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-[22px] text-error">shield</span>
+<h2 class="font-headline-sm text-headline-sm text-primary">Safety Engine &amp; Fallbacks</h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+          Hardware protection and fail-safe interlocks enforced by the Python/RPi GPIO daemon.
+        </p>
+<div class="space-y-space-sm font-body-sm text-body-sm">
+<div class="p-space-sm bg-surface-container-low rounded-lg flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-primary font-semibold">Impedance Drift Rule</span>
+<span class="font-code-badge text-code-badge text-error font-bold">STATE: UNKNOWN</span>
+</div>
+<p class="text-on-surface-variant text-body-sm">
+              If solenoid coil resistance falls below 10Ω or exceeds 16Ω, the bay triggers hardware isolation to avoid ULN2803A thermal breakdown.
+            </p>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded-lg flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-primary font-semibold">Sensor Disconnect Rule</span>
+<span class="font-code-badge text-code-badge text-tertiary-container font-bold">FAIL-LOCKED</span>
+</div>
+<p class="text-on-surface-variant text-body-sm">
+              Disconnected MC-38 or floating GPIOs immediately cause the bay to report locked and disallows unauthenticated release pulses.
+            </p>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded-lg flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-primary font-semibold">Continuous Solenoid Guard</span>
+<span class="font-code-badge text-code-badge text-primary font-bold">3.0s HARD LIMIT</span>
+</div>
+<p class="text-on-surface-variant text-body-sm">
+              Software watchdog forcibly clears GPIO pins after 3000ms regardless of external client state.
+            </p>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm">
+<button class="w-full py-2 bg-error text-on-error hover:bg-on-error-container rounded-lg font-label-md text-label-md transition-all shadow-sm flex items-center justify-center gap-1.5" onclick="emergencyAllLock()">
+<span class="material-symbols-outlined text-[18px]">lock_reset</span>
+<span>Emergency System Disarm &amp; Lock</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Real-Time Event & Telemetry Stream Log Table -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden mb-space-lg">
+<div class="p-space-lg flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm bg-surface-container-low">
+<div>
+<div class="flex items-center gap-2">
+<h2 class="font-headline-sm text-headline-sm text-primary">Live Sensor &amp; Actuator Telemetry Audit</h2>
+<span class="font-code-badge text-code-badge bg-tertiary-fixed text-tertiary-container font-bold px-2 py-0.5 rounded-full">REAL-TIME INGEST</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Live streaming event feed from SPI bus listener, interrupt lines, and database commits.</p>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-space-md py-1.5 bg-surface-container hover:bg-surface-container-high text-primary rounded-lg font-label-md text-label-md shadow-sm transition-all flex items-center gap-1" onclick="flushSensorCache()">
+<span class="material-symbols-outlined text-[16px]">cleaning_services</span> Flush Buffer
+        </button>
+<button class="px-space-md py-1.5 bg-secondary text-on-secondary hover:bg-secondary/90 rounded-lg font-label-md text-label-md shadow-sm transition-all flex items-center gap-1" onclick="exportTelemetryLog()">
+<span class="material-symbols-outlined text-[16px]">download</span> Export CSV
+        </button>
+</div>
+</div>
+<!-- Data Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-md text-label-md">
+<th class="py-space-sm px-space-md">TIMESTAMP (UTC+5:30)</th>
+<th class="py-space-sm px-space-md">HARDWARE MODULE</th>
+<th class="py-space-sm px-space-md">PIN / BCM</th>
+<th class="py-space-sm px-space-md">EVENT CLASSIFIER</th>
+<th class="py-space-sm px-space-md">LOGIC STATE</th>
+<th class="py-space-sm px-space-md text-right">AUDIT HASH</th>
+</tr>
+</thead>
+<tbody class="font-code-telemetry text-code-telemetry divide-y-0 text-on-surface" id="telemetry-log-tbody">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-2.5 px-space-md text-on-surface-variant">14:28:44.204</td>
+<td class="py-2.5 px-space-md font-semibold text-primary">RC522 RFID SPI0</td>
+<td class="py-2.5 px-space-md">BCM 8 (CE0)</td>
+<td class="py-2.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed text-[11px] font-bold">
+                TAG_POLL_MATCH
+              </span>
+</td>
+<td class="py-2.5 px-space-md text-tertiary-container font-semibold">HIGH (3.3V)</td>
+<td class="py-2.5 px-space-md text-right text-outline">0x8f2a41d9</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface/40">
+<td class="py-2.5 px-space-md text-on-surface-variant">14:28:44.112</td>
+<td class="py-2.5 px-space-md font-semibold text-primary">SQLite 3 WAL Core</td>
+<td class="py-2.5 px-space-md">IPC Socket</td>
+<td class="py-2.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container-high text-primary text-[11px] font-bold">
+                TX_COMMIT_SYNC
+              </span>
+</td>
+<td class="py-2.5 px-space-md text-primary font-semibold">0.82ms ACK</td>
+<td class="py-2.5 px-space-md text-right text-outline">0x21ba89ce</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-2.5 px-space-md text-on-surface-variant">14:28:42.980</td>
+<td class="py-2.5 px-space-md font-semibold text-primary">INA219 Power Sense</td>
+<td class="py-2.5 px-space-md">I2C (0x40)</td>
+<td class="py-2.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-tertiary-fixed text-tertiary-container text-[11px] font-bold">
+                RAIL_VOLT_SAMPLE
+              </span>
+</td>
+<td class="py-2.5 px-space-md text-on-surface font-semibold">12.18V / 0.14A</td>
+<td class="py-2.5 px-space-md text-right text-outline">0x3b118efa</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface/40">
+<td class="py-2.5 px-space-md text-on-surface-variant">14:28:39.450</td>
+<td class="py-2.5 px-space-md font-semibold text-primary">MC-38 Locker #04</td>
+<td class="py-2.5 px-space-md">BCM 25</td>
+<td class="py-2.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container-high text-primary text-[11px] font-bold">
+                REED_STATE_STABLE
+              </span>
+</td>
+<td class="py-2.5 px-space-md text-tertiary-container font-semibold">LOW (Engaged)</td>
+<td class="py-2.5 px-space-md text-right text-outline">0x99e5210c</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-2.5 px-space-md text-on-surface-variant">14:28:38.200</td>
+<td class="py-2.5 px-space-md font-semibold text-primary">ULN2803A Bay #04</td>
+<td class="py-2.5 px-space-md">BCM 17</td>
+<td class="py-2.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed text-[11px] font-bold">
+                SOLENOID_DEACTIVATE
+              </span>
+</td>
+<td class="py-2.5 px-space-md text-tertiary-container font-semibold">LOW (Secured)</td>
+<td class="py-2.5 px-space-md text-right text-outline">0xfa4911d0</td>
+</tr>
+<!-- Row 6 -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface/40">
+<td class="py-2.5 px-space-md text-on-surface-variant">14:28:35.700</td>
+<td class="py-2.5 px-space-md font-semibold text-primary">FC-51 Optical Bay #04</td>
+<td class="py-2.5 px-space-md">BCM 27</td>
+<td class="py-2.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed text-[11px] font-bold">
+                IR_REFLECT_DETECT
+              </span>
+</td>
+<td class="py-2.5 px-space-md text-secondary font-semibold">HIGH (Book Loaded)</td>
+<td class="py-2.5 px-space-md text-right text-outline">0x07dd64b3</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Notification Toast Modal Container (Dynamic via JS) -->
+<div class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none" id="toast-container"></div>
+<!-- Embedded Micro-Interaction JavaScript -->
+<script>
+    // Live Toast Notifier
+    function showToast(title, msg, isSuccess = true) {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = `p-4 rounded-xl shadow-lg flex items-center gap-3 transition-all pointer-events-auto transform translate-y-2 opacity-0 duration-200 ${
+        isSuccess ? 'bg-primary text-on-primary' : 'bg-error text-on-error'
+      }`;
+      toast.innerHTML = `
+        <span class="material-symbols-outlined text-[22px]">${isSuccess ? 'check_circle' : 'warning'}</span>
+        <div class="flex flex-col">
+          <span class="font-label-lg text-label-lg font-bold leading-tight">${title}</span>
+          <span class="font-body-sm text-body-sm opacity-90 leading-tight">${msg}</span>
+        </div>
+      `;
+      container.appendChild(toast);
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      });
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    // Ping Controller Action
+    function triggerPingAction() {
+      const btn = document.getElementById('btn-ping');
+      if (!btn) return;
+      btn.classList.add('opacity-50', 'pointer-events-none');
+      const start = performance.now();
+      setTimeout(() => {
+        btn.classList.remove('opacity-50', 'pointer-events-none');
+        const latency = (performance.now() - start + 8.4).toFixed(1);
+        showToast('RPi 3B+ Ping OK', `192.168.1.105 responded in ${latency}ms via SPI daemon.`);
+        appendTelemetryLog('SYSTEM_PING', 'IPC Loop', 'ECHO_RESPONSE', `${latency}ms OK`);
+      }, 240);
+    }
+
+    // Calibrate IR Action
+    function triggerCalibrateAction() {
+      showToast('IR Calibration Initiated', 'FC-51 optical sensors sampling ambient baseline across 8 bays.');
+      appendTelemetryLog('FC-51 Optical Bus', 'BCM Multi', 'AUTO_CALIBRATE', 'Threshold: 4.80V');
+    }
+
+    // Cycle Solenoid Pulse
+    function cycleSolenoid(bayId) {
+      showToast(`Bay #${bayId.toString().padStart(2, '0')} Unlocked`, `ULN2803A energized coil for 2500ms safety window.`);
+      appendTelemetryLog(`ULN2803A Bay #${bayId.toString().padStart(2, '0')}`, `BCM ${16 + bayId}`, 'SOLENOID_PULSE', 'HIGH (12.18V)');
+    }
+
+    // Test Buzzer Tone
+    function testBuzzerTone() {
+      showToast('Piezo Tone Triggered', '2,730 Hz test tone pulsed on GPIO 19.');
+      appendTelemetryLog('Piezo Buzzer', 'BCM 19', 'FREQ_PULSE', '2730 Hz (200ms)');
+    }
+
+    // Cycle Beacon Color
+    function cycleBeaconColor() {
+      showToast('RGB Beacon Transitioned', 'Pulsing Amber diagnostic cycle on GPIO 18.');
+      appendTelemetryLog('RGB Beacon', 'BCM 18 (PWM)', 'PWM_COLOR_STEP', '0xFA8072');
+    }
+
+    // Flush Sensor Buffer
+    function flushSensorCache() {
+      showToast('Sensor Buffer Flushed', 'Cleared 64 pending raw telemetry samples from memory.');
+    }
+
+    // Export Log
+    function exportTelemetryLog() {
+      showToast('Export Generated', 'Downloading smartlocker_telemetry_dump.csv');
+    }
+
+    // Emergency Disarm
+    function emergencyAllLock() {
+      showToast('EMERGENCY LOCKDOWN', 'All 8 solenoids forced to LOW (Secured). Watchdog armed.', false);
+      appendTelemetryLog('SAFETY_INTERLOCK', 'ALL_PINS', 'SYS_EMERGENCY_LOCK', 'CLAMPED_LOW');
+    }
+
+    function emergencyLockoutNotice() {
+      showToast('Security Audit Verified', '0 unauthorized solenoid pulses detected in past 24 hours.');
+    }
+
+    // Append entry to live log table
+    function appendTelemetryLog(module, pin, event, logic) {
+      const tbody = document.getElementById('telemetry-log-tbody');
+      if (!tbody) return;
+      const now = new Date();
+      const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}.${now.getMilliseconds().toString().padStart(3,'0')}`;
+      const randomHash = '0x' + Math.floor(Math.random() * 0xFFFFFFF).toString(16).padStart(8, '0');
+
+      const tr = document.createElement('tr');
+      tr.className = 'hover:bg-surface-container-low transition-colors bg-surface-container-high/30';
+      tr.innerHTML = `
+        <td class="py-2.5 px-space-md text-on-surface-variant">${timeStr}</td>
+        <td class="py-2.5 px-space-md font-semibold text-primary">${module}</td>
+        <td class="py-2.5 px-space-md">${pin}</td>
+        <td class="py-2.5 px-space-md">
+          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-tertiary-fixed text-tertiary-container text-[11px] font-bold">
+            ${event}
+          </span>
+        </td>
+        <td class="py-2.5 px-space-md text-primary font-semibold">${logic}</td>
+        <td class="py-2.5 px-space-md text-right text-outline">${randomHash}</td>
+      `;
+      tbody.insertBefore(tr, tbody.firstChild);
+      if (tbody.children.length > 8) {
+        tbody.removeChild(tbody.lastChild);
+      }
+    }
+
+    // Oscilloscope Pause/Resume Toggle
+    let scopeRunning = true;
+    function toggleOscilloscope() {
+      scopeRunning = !scopeRunning;
+      const btn = document.getElementById('btn-pause-scope');
+      if (btn) btn.innerText = scopeRunning ? 'Pause' : 'Resume';
+    }
+  </script>
+</div></main></div><div class="fixed inset-0 z-50 bg-primary/40 backdrop-blur-sm hidden target:flex items-center justify-center p-space-md" id="logout-dialog"><div class="bg-surface-container-lowest rounded-xl max-w-md w-full p-space-xl shadow-[0_20px_25px_-5px_rgba(18,59,103,0.1)] flex flex-col gap-space-md"><div class="flex items-center gap-space-sm text-error"><span class="material-symbols-outlined text-[28px]">warning</span><span class="font-headline-sm text-headline-sm text-on-surface">Confirm Termination</span></div><p class="font-body-md text-body-md text-on-surface-variant">Are you sure you want to end your current session? Any open solenoid unlocks or active dispenser locks will be automatically secured.</p><div class="flex items-center justify-end gap-space-sm pt-space-sm"><a class="px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" href="#">Cancel</a><a class="px-space-md py-space-sm rounded-lg font-label-md text-label-md bg-error text-on-error hover:bg-on-error-container transition-colors" data-path="login" href="#">Disconnect &amp; Logout</a></div></div></div></body></html>

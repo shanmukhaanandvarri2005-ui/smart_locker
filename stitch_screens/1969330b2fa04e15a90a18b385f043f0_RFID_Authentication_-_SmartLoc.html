@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_blank" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"primary-container":"#123b67","on-primary-container":"#84a6d8","on-secondary-container":"#fefcff","primary-fixed-dim":"#a6c8fd","tertiary-fixed":"#7ffc97","surface-variant":"#d3e4fe","secondary-container":"#316bf3","on-primary-fixed-variant":"#224875","on-primary-fixed":"#001c39","on-secondary-fixed-variant":"#003ea8","on-tertiary-container":"#3aba5e","surface-bright":"#f8f9ff","on-surface-variant":"#43474f","surface-dim":"#cbdbf5","surface-container-high":"#dce9ff","on-tertiary":"#ffffff","surface-tint":"#3d608e","surface":"#f8f9ff","primary-fixed":"#d4e3ff","error":"#ba1a1a","on-primary":"#ffffff","outline-variant":"#c3c6d0","on-error-container":"#93000a","tertiary":"#002b0e","primary":"#002549","error-container":"#ffdad6","on-tertiary-fixed":"#002109","tertiary-container":"#004419","surface-container-lowest":"#ffffff","on-secondary":"#ffffff","on-error":"#ffffff","on-surface":"#0b1c30","on-tertiary-fixed-variant":"#005320","secondary":"#0051d5","background":"#f8f9ff","surface-container-highest":"#d3e4fe","outline":"#737780","secondary-fixed-dim":"#b4c5ff","secondary-fixed":"#dbe1ff","on-secondary-fixed":"#00174b","surface-container":"#e5eeff","tertiary-fixed-dim":"#62df7d","surface-container-low":"#eff4ff","inverse-on-surface":"#eaf1ff","inverse-surface":"#213145","inverse-primary":"#a6c8fd","on-background":"#0b1c30"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"gutter":"1.5rem","margin":"2rem","gutter-sm":"1rem","space-lg":"1.5rem","space-sm":"0.5rem","space-md":"1rem","space-xs":"0.25rem","margin-sm":"1rem","space-xl":"2rem"},"fontFamily":{"code-telemetry":["JetBrains Mono"],"label-lg":["Inter"],"headline-xl-mobile":["Plus Jakarta Sans"],"body-lg":["Inter"],"label-md":["Inter"],"headline-md":["Plus Jakarta Sans"],"code-badge":["JetBrains Mono"],"body-md":["Inter"],"body-sm":["Inter"],"headline-lg-mobile":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"]},"fontSize":{"code-telemetry":["13px",{"lineHeight":"18px","letterSpacing":"-0.01em","fontWeight":"500"}],"label-lg":["14px",{"lineHeight":"20px","fontWeight":"600"}],"headline-xl-mobile":["30px",{"lineHeight":"38px","letterSpacing":"-0.02em","fontWeight":"700"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"label-md":["12px",{"lineHeight":"16px","fontWeight":"500"}],"headline-md":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"code-badge":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-xl":["40px",{"lineHeight":"48px","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-sm":["18px",{"lineHeight":"26px","fontWeight":"600"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><main class="w-full min-h-screen bg-surface flex items-center justify-center p-space-md"><div class="flex flex-col w-full">
+<!-- Interactive Toast Notification Overlay (Hidden by default, triggered via JS) -->
+<div class="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-300 opacity-0 pointer-events-none -translate-y-4" id="statusToast">
+<div class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl shadow-xl bg-surface-container-lowest text-on-surface" id="toastContent">
+<span class="material-symbols-outlined text-secondary" id="toastIcon">wifi_tethering</span>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg" id="toastTitle">RFID Tag Verified!</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant" id="toastSubtitle">Authenticating session...</span>
+</div>
+</div>
+</div>
+<div class="max-w-6xl w-full mx-auto px-margin-sm md:px-margin py-space-lg flex flex-col gap-space-lg">
+<!-- Top Hardware Status Bar & Institutional Header -->
+<div class="flex flex-col md:flex-row items-center justify-between gap-space-md bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
+<div class="flex items-center gap-space-md w-full md:w-auto">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center p-1 shrink-0 overflow-hidden shadow-sm">
+<img alt="SmartLocker Logo" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Vtr0xI_75roQQIg48y0OFsfC--krHwc-8XspQRvXiep1aST1iPZ35PdojCz7qtCld8DfvzuGlEqHlsB5Ze-EvP7utqz0H2e_-bZe5UPncdLV3ulBxHRWcg4kdL3ACIOJLr51Rs8qI3z0RvHcFgGwoyjoUZSz5c76PS-GQXiIvMaURPljN2YYeJUy1x37BvfKvvrNmscPSst70T463I12TDnEW7HqRcRxV8BykY22OmAaA4iHNGGlYMK_zZ"/>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-primary tracking-tight">SmartLocker System</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Vishnu Institute of Technology • Dept. of Electrical & Electronics Engineering</span>
+</div>
+</div>
+<!-- Real-Time Hardware Diagnostics Chip -->
+<div class="flex flex-wrap items-center gap-space-sm bg-surface-container-low px-space-md py-space-xs rounded-full">
+<div class="flex items-center gap-1.5">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary-container opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-on-tertiary-container"></span>
+</span>
+<span class="font-code-badge text-code-badge text-on-surface">RPi 3 Model B+ : Connected</span>
+</div>
+<span class="font-code-badge text-code-badge text-on-surface-variant hidden sm:inline">•</span>
+<span class="font-code-badge text-code-badge text-secondary font-semibold">192.168.1.105:5000</span>
+<span class="font-code-badge text-code-badge bg-surface-container px-2 py-0.5 rounded-full text-on-surface-variant">HOST: LINUX-ARMv7</span>
+</div>
+</div>
+<!-- Main Authentication Stage: Split Layout Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-stretch">
+<!-- Primary Kiosk / RFID Interactive Portal (7 Columns) -->
+<div class="lg:col-span-7 flex flex-col justify-between bg-surface-container-lowest rounded-xl shadow-sm p-space-lg relative overflow-hidden">
+<!-- Ambient Decorative Gradient Blur -->
+<div class="absolute -top-16 -right-16 w-56 h-56 bg-secondary-container/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute -bottom-16 -left-16 w-56 h-56 bg-primary-container/10 rounded-full blur-3xl pointer-events-none"></div>
+<div>
+<!-- Subtitle & Category Overline -->
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-code-badge text-code-badge uppercase tracking-wider text-secondary bg-surface-variant px-space-sm py-0.5 rounded-full">
+              Automated Book Dispenser
+            </span>
+<span class="font-code-badge text-code-badge text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">sensors</span> RC522 SPI0.0
+            </span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary leading-tight mb-space-xs">
+            Welcome to SmartLocker
+          </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-space-lg">
+            Automated Library Book Dispensing and Return System. Hold your RFID student credential over the sensor zone below.
+          </p>
+<!-- Hardware Visual Illustration & Contactless Target Card -->
+<div class="relative w-full bg-surface-container-low rounded-xl p-space-lg flex flex-col items-center justify-center my-space-sm overflow-hidden min-h-[300px]">
+<!-- Graphic: Cubicle Matrix & RFID Scanning Deck -->
+<div class="w-full max-w-sm flex flex-col items-center text-center">
+<!-- Contactless Wave Graphic Container -->
+<div class="relative flex items-center justify-center w-36 h-36 mb-space-md">
+<!-- Concentric Radial RFID Waves -->
+<div class="absolute inset-0 rounded-full bg-secondary-container/10 animate-ping opacity-75"></div>
+<div class="absolute inset-2 rounded-full bg-secondary/15 animate-pulse"></div>
+<div class="absolute inset-6 rounded-full bg-secondary-container/20"></div>
+<!-- Center RFID Transceiver Dial -->
+<div class="relative z-10 w-20 h-20 rounded-full bg-primary flex items-center justify-center text-on-primary shadow-lg transition-transform duration-300" id="scannerIconHolder">
+<span class="material-symbols-outlined text-4xl" id="scannerIcon">contactless</span>
+</div>
+</div>
+<!-- Live Dynamic Status Instruction -->
+<div class="flex flex-col items-center">
+<span class="font-headline-sm text-headline-sm text-primary mb-1" id="scannerStatusText">
+                  Tap your RFID student card
+                </span>
+<span class="font-body-md text-body-md text-on-surface-variant mb-space-sm">
+                  Position tag within 2-4 cm of the scanner panel
+                </span>
+<!-- Pulsing Hardware Reader Active Badge -->
+<div class="inline-flex items-center gap-2 px-space-md py-1 bg-surface-container-lowest rounded-full shadow-sm">
+<span class="w-2 h-2 rounded-full bg-on-tertiary-container animate-pulse"></span>
+<span class="font-code-telemetry text-code-telemetry text-on-surface">
+                    RFID Scanner Ready (USB RC522 / EM4100 Reader Active)
+                  </span>
+</div>
+</div>
+</div>
+<!-- Visual Hardware Schematic Accents (Corner Sensor Pins) -->
+<div class="absolute bottom-3 left-4 flex items-center gap-1.5 text-on-surface-variant/70">
+<span class="material-symbols-outlined text-sm">memory</span>
+<span class="font-code-badge text-code-badge">13.56 MHz ISO/IEC 14443 Type A</span>
+</div>
+<div class="absolute bottom-3 right-4 flex items-center gap-1.5 text-on-surface-variant/70">
+<span class="material-symbols-outlined text-sm">lock</span>
+<span class="font-code-badge text-code-badge">12V Solenoids Arm Ready</span>
+</div>
+</div>
+</div>
+<!-- Locker Specs Footer / Integrated Hardware Pill -->
+<div class="mt-space-md bg-surface-container p-space-sm rounded-lg flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary shrink-0 text-xl">developer_board</span>
+<span class="font-code-badge text-code-badge text-on-surface">
+            Equipped with FC-51 Infrared Shelf Sensors, MC-38 Magnetic Door Sensor, & 12V Solenoid Electronic Lock
+          </span>
+</div>
+</div>
+<!-- Live Simulation & Development Sandbox Box (5 Columns) -->
+<div class="lg:col-span-5 flex flex-col gap-space-md">
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between flex-1">
+<div>
+<!-- Box Header with Mode Indicator -->
+<div class="flex items-center justify-between pb-space-sm mb-space-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">terminal</span>
+<h2 class="font-headline-sm text-headline-sm text-primary">Hardware Sandbox</h2>
+</div>
+<span class="font-code-badge text-code-badge bg-surface-variant text-primary px-2.5 py-1 rounded-full uppercase">
+                Dev / Demo Mode
+              </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-space-md">
+              Select an enrolled student credential or unauthorized tag to trigger the local electro-mechanical dispensing simulation.
+            </p>
+<!-- Demo Card Radios -->
+<div class="flex flex-col gap-space-sm mb-space-md" id="cardRadioGroup">
+<!-- Card 1: Ananya Sharma -->
+<label class="demo-card-item cursor-pointer block p-space-sm bg-surface-container-low hover:bg-surface-container rounded-lg transition-all" data-id="21BEE1048" data-name="Ananya Sharma" data-rfid="04:A2:8F:C9" data-role="Student" data-status="borrowed">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-2">
+<input checked="" class="text-secondary accent-secondary" name="demo_card" type="radio" value="04:A2:8F:C9"/>
+<div>
+<div class="font-label-lg text-label-lg text-on-surface">Ananya Sharma</div>
+<div class="font-code-badge text-code-badge text-on-surface-variant">Reg: 21BEE1048 • UID: 04:A2:8F:C9</div>
+</div>
+</div>
+<span class="font-code-badge text-code-badge px-2 py-0.5 rounded-full bg-surface-variant text-on-surface-variant shrink-0">
+                    1 Borrowed
+                  </span>
+</div>
+</label>
+<!-- Card 2: Rahul Varma -->
+<label class="demo-card-item cursor-pointer block p-space-sm bg-surface-container-low hover:bg-surface-container rounded-lg transition-all" data-id="21BEE1082" data-name="Rahul Varma" data-rfid="5B:C1:99:32" data-role="Student" data-status="eligible">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-2">
+<input class="text-secondary accent-secondary" name="demo_card" type="radio" value="5B:C1:99:32"/>
+<div>
+<div class="font-label-lg text-label-lg text-on-surface">Rahul Varma</div>
+<div class="font-code-badge text-code-badge text-on-surface-variant">Reg: 21BEE1082 • UID: 5B:C1:99:32</div>
+</div>
+</div>
+<span class="font-code-badge text-code-badge px-2 py-0.5 rounded-full bg-tertiary-container/20 text-on-tertiary-container shrink-0">
+                    Eligible (0)
+                  </span>
+</div>
+</label>
+<!-- Card 3: Prof. K. Satyanarayana -->
+<label class="demo-card-item cursor-pointer block p-space-sm bg-surface-container-low hover:bg-surface-container rounded-lg transition-all" data-id="EEE-FAC-014" data-name="Prof. K. Satyanarayana" data-rfid="E2:44:81:AA" data-role="Admin / Faculty" data-status="faculty">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-2">
+<input class="text-secondary accent-secondary" name="demo_card" type="radio" value="E2:44:81:AA"/>
+<div>
+<div class="font-label-lg text-label-lg text-on-surface">Prof. K. Satyanarayana</div>
+<div class="font-code-badge text-code-badge text-on-surface-variant">Staff: EEE-FAC-014 • UID: E2:44:81:AA</div>
+</div>
+</div>
+<span class="font-code-badge text-code-badge px-2 py-0.5 rounded-full bg-primary-container text-on-primary-container shrink-0">
+                    Faculty Override
+                  </span>
+</div>
+</label>
+<!-- Card 4: Unregistered Card -->
+<label class="demo-card-item cursor-pointer block p-space-sm bg-surface-container-low hover:bg-surface-container rounded-lg transition-all" data-id="UNKNOWN" data-name="Unregistered Tag" data-rfid="FF:EE:DD:CC" data-role="Visitor" data-status="unregistered">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-2">
+<input class="text-secondary accent-secondary" name="demo_card" type="radio" value="FF:EE:DD:CC"/>
+<div>
+<div class="font-label-lg text-label-lg text-error">Unregistered Test Card</div>
+<div class="font-code-badge text-code-badge text-on-surface-variant">UID: FF:EE:DD:CC (Failure Test)</div>
+</div>
+</div>
+<span class="font-code-badge text-code-badge px-2 py-0.5 rounded-full bg-error-container text-on-error-container shrink-0">
+                    Not in Registry
+                  </span>
+</div>
+</label>
+</div>
+</div>
+<!-- Trigger Simulation Button -->
+<div class="flex flex-col gap-space-xs mt-space-md">
+<button class="w-full bg-secondary hover:bg-primary transition-colors text-on-secondary font-label-lg text-label-lg py-3 px-space-md rounded-lg flex items-center justify-center gap-2 shadow-md" id="simulateBtn" onclick="runRfidSimulation()">
+<span class="material-symbols-outlined text-lg" id="btnIcon">tap_and_play</span>
+<span id="btnLabel">Simulate Tap & Login</span>
+</button>
+<span class="font-code-badge text-code-badge text-on-surface-variant text-center mt-1">
+              Simulates GPIO 24 hardware interrupt to Python Flask back-end
+            </span>
+</div>
+</div>
+<!-- Telemetry & Diagnostic Data Console Mini-Box -->
+<div class="bg-primary-container text-on-primary rounded-xl p-space-md shadow-sm flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md uppercase tracking-wider text-on-primary-container">Telemetry Stream</span>
+<span class="font-code-badge text-code-badge text-on-tertiary-container bg-tertiary-container/30 px-2 py-0.5 rounded">POLL: 50ms</span>
+</div>
+<div class="font-code-telemetry text-code-telemetry text-on-primary-container space-y-1" id="telemetryLog">
+<div class="truncate">> [INFO] SPI0.0 RC522 initialized on bcm2835_gpio</div>
+<div class="truncate">> [INFO] MC-38 Magnetic Hall sensors: ALL BAYS LOCKED</div>
+<div class="truncate text-surface-bright">> [READY] Awaiting 13.56MHz induction resonance...</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Secondary Navigation & Access Controls -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-space-md p-space-md bg-surface-container-lowest rounded-xl shadow-sm text-on-surface-variant">
+<div class="flex items-center gap-space-lg">
+<a class="flex items-center gap-1 font-label-md text-label-md hover:text-secondary transition-colors" href="javascript:void(0)" onclick="alert('Student Helpdesk & EEE Lab Assistant Contact: lab-eee@vishnu.edu.in | Extension: 4108')">
+<span class="material-symbols-outlined text-lg">support_agent</span>
+          Student Assistance & Card Re-issue
+        </a>
+<a class="flex items-center gap-1 font-label-md text-label-md hover:text-secondary transition-colors" href="javascript:void(0)" onclick="alert('Manual faculty override panel requires Physical Key and Master Security Passcode.')">
+<span class="material-symbols-outlined text-lg">key</span>
+          Faculty Locker Bay Override
+        </a>
+</div>
+<div class="font-code-badge text-code-badge text-on-surface-variant">
+        SmartLocker v2.4-PROD • Vishnu Institute of Technology, Bhimavaram
+      </div>
+</div>
+</div>
+<!-- Inline Client-side State Machine & Hardware Simulation Script -->
+<script>
+    function runRfidSimulation() {
+      const selectedRadio = document.querySelector('input[name="demo_card"]:checked');
+      if (!selectedRadio) return;
+
+      const parentItem = selectedRadio.closest('.demo-card-item');
+      const name = parentItem.getAttribute('data-name');
+      const regId = parentItem.getAttribute('data-id');
+      const rfidUid = parentItem.getAttribute('data-rfid');
+      const status = parentItem.getAttribute('data-status');
+      const role = parentItem.getAttribute('data-role');
+
+      const simulateBtn = document.getElementById('simulateBtn');
+      const btnIcon = document.getElementById('btnIcon');
+      const btnLabel = document.getElementById('btnLabel');
+      const toast = document.getElementById('statusToast');
+      const toastContent = document.getElementById('toastContent');
+      const toastIcon = document.getElementById('toastIcon');
+      const toastTitle = document.getElementById('toastTitle');
+      const toastSubtitle = document.getElementById('toastSubtitle');
+      const scannerIconHolder = document.getElementById('scannerIconHolder');
+      const scannerStatusText = document.getElementById('scannerStatusText');
+      const telemetryLog = document.getElementById('telemetryLog');
+
+      // State 1: Simulating Induction & Scanning
+      simulateBtn.disabled = true;
+      simulateBtn.classList.add('opacity-75');
+      btnIcon.textContent = 'hourglass_empty';
+      btnLabel.textContent = 'Reading RFID...';
+
+      scannerIconHolder.classList.remove('bg-primary', 'bg-error', 'bg-tertiary-container');
+      scannerIconHolder.classList.add('bg-secondary', 'scale-110');
+      scannerStatusText.textContent = 'Transmitting UID: ' + rfidUid;
+
+      // Telemetry update
+      const timeStr = new Date().toLocaleTimeString('en-GB');
+      telemetryLog.innerHTML += `<div class="truncate text-secondary-fixed">> [${timeStr}] INDUCTION: Tag UID ${rfidUid} captured</div>`;
+      telemetryLog.scrollTop = telemetryLog.scrollHeight;
+
+      setTimeout(() => {
+        // State 2: Verification Result
+        if (status === 'unregistered') {
+          // Failure Mode
+          scannerIconHolder.classList.remove('bg-secondary');
+          scannerIconHolder.classList.add('bg-error');
+          scannerStatusText.textContent = 'Access Denied: Unregistered Tag';
+
+          toastIcon.textContent = 'cancel';
+          toastIcon.className = 'material-symbols-outlined text-error text-2xl';
+          toastTitle.textContent = 'Authentication Failed';
+          toastSubtitle.textContent = 'Card UID ' + rfidUid + ' not recognized in SQLite registry.';
+          toastContent.className = 'flex items-center gap-space-sm px-space-md py-space-sm rounded-xl shadow-xl bg-error-container text-on-error-container';
+
+          telemetryLog.innerHTML += `<div class="truncate text-error">> [FAIL] Registry lookup NULL: Access Solenoid Inhibited</div>`;
+        } else {
+          // Success Mode
+          scannerIconHolder.classList.remove('bg-secondary');
+          scannerIconHolder.classList.add('bg-tertiary-container');
+          scannerStatusText.textContent = 'Welcome, ' + name;
+
+          toastIcon.textContent = 'check_circle';
+          toastIcon.className = 'material-symbols-outlined text-on-tertiary-container text-2xl';
+          toastTitle.textContent = 'RFID Tag Verified!';
+          toastSubtitle.textContent = 'Authenticating session for ' + name + ' (' + regId + ')...';
+          toastContent.className = 'flex items-center gap-space-sm px-space-md py-space-sm rounded-xl shadow-xl bg-surface-container-lowest text-on-surface border-l-4 border-on-tertiary-container';
+
+          telemetryLog.innerHTML += `<div class="truncate text-tertiary-fixed">> [AUTH] Member ID ${regId} verified. Session Token issued.</div>`;
+          telemetryLog.innerHTML += `<div class="truncate text-tertiary-fixed">> [GPIO] 12V Solenoid Trigger Bay #02 Activated</div>`;
+        }
+
+        // Display Notification Toast
+        toast.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-4');
+        toast.classList.add('opacity-100', 'translate-y-0');
+
+        // Reset Scanner Button after 3.5s
+        setTimeout(() => {
+          toast.classList.remove('opacity-100', 'translate-y-0');
+          toast.classList.add('opacity-0', 'pointer-events-none', '-translate-y-4');
+
+          scannerIconHolder.className = 'relative z-10 w-20 h-20 rounded-full bg-primary flex items-center justify-center text-on-primary shadow-lg transition-transform duration-300';
+          scannerStatusText.textContent = 'Tap your RFID student card';
+
+          simulateBtn.disabled = false;
+          simulateBtn.classList.remove('opacity-75');
+          btnIcon.textContent = 'tap_and_play';
+          btnLabel.textContent = 'Simulate Tap & Login';
+        }, 3500);
+
+      }, 800);
+    }
+  </script>
+</div></main></body></html>

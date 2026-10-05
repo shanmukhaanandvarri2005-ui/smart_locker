@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>SmartLocker — Return a Book</title>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              navy: '#002549',
+              blue: '#123b67',
+              accent: '#2563eb',
+              light: '#f8f9ff',
+              surface: '#eef2f9',
+              success: '#15803d',
+              danger: '#b91c1c'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-brand-light font-sans text-slate-800 antialiased min-h-screen flex flex-col justify-between">
+
+  <!-- Header -->
+  <header class="w-full bg-white border-b border-slate-200 px-6 py-4 shadow-sm">
+    <div class="max-w-5xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="/dashboard" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 transition-colors">
+          <span class="material-symbols-outlined text-xl">arrow_back</span>
+        </a>
+        <div class="flex flex-col">
+          <span class="font-display font-bold text-lg text-brand-navy leading-tight">Return a Book</span>
+          <span class="text-xs text-slate-500">SmartLocker Automated Station • Return Portal</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 text-xs">
+        <span class="font-mono text-slate-500 hidden sm:inline">{{ current_user.name if current_user else "Member" }} (RFID: {{ current_user.rfid_uid if current_user else "—" }})</span>
+        <a href="/dashboard" class="text-brand-accent font-semibold hover:underline">Dashboard</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Return Stage -->
+  <main class="flex-1 flex items-center justify-center p-6">
+    <div class="max-w-2xl w-full bg-white rounded-2xl shadow-xl border border-slate-100 p-6 sm:p-8 flex flex-col gap-6">
+      
+      {% if active_loans %}
+      <div id="return-selection-block" class="flex flex-col gap-5">
+        <div class="flex flex-col gap-1">
+          <span class="font-mono text-xs uppercase tracking-wider text-brand-accent font-semibold">My Borrowed Books</span>
+          <h1 class="font-display font-bold text-2xl text-brand-navy">Select Borrowed Book to Return</h1>
+          <p class="text-xs text-slate-500">Choose the book you are returning to unlock its assigned locker compartment.</p>
+        </div>
+
+        <!-- Loans Radio Cards -->
+        <div class="flex flex-col gap-3">
+          {% for loan in active_loans %}
+          <label class="cursor-pointer block border-2 border-brand-accent/30 hover:border-brand-accent rounded-xl p-4 transition-all bg-blue-50/30">
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-start gap-3">
+                <input type="radio" name="selected_loan" value="{{ loan.loan_id }}" checked class="mt-1 accent-brand-accent text-brand-accent"/>
+                <div class="flex flex-col">
+                  <span class="font-display font-bold text-base text-brand-navy">{{ loan.book_label }}</span>
+                  <span class="text-xs text-slate-600 font-medium">{{ loan.book_author }}</span>
+                  <div class="flex items-center gap-3 mt-2 text-xs text-slate-500 font-mono">
+                    <span>Locker: <strong class="text-brand-accent">{{ loan.locker_code }}</strong></span>
+                    <span>•</span>
+                    <span class="text-emerald-700 font-semibold">No Due Date • Return Anytime</span>
+                  </div>
+                </div>
+              </div>
+              <span class="font-mono text-[11px] font-semibold bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full shrink-0">
+                BORROWED
+              </span>
+            </div>
+          </label>
+          {% endfor %}
+        </div>
+
+        <!-- Return Trigger Action -->
+        <button 
+          type="button" 
+          id="returnActionBtn" 
+          onclick="executeReturn()"
+          class="w-full bg-brand-accent hover:bg-brand-blue text-white font-display font-bold py-3.5 px-4 rounded-xl shadow-md transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer mt-2"
+        >
+          <span class="material-symbols-outlined text-xl">lock_open</span>
+          <span id="returnBtnLabel">Unlock Locker Compartment</span>
+        </button>
+      </div>
+
+      <!-- Return Success Confirmation (Hidden by default) -->
+      <div id="return-success-block" class="hidden flex flex-col items-center text-center gap-5 py-4">
+        <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shadow-inner">
+          <span class="material-symbols-outlined text-3xl">verified</span>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <span class="font-mono text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full self-center">
+            Return Verified
+          </span>
+          <h2 class="font-display font-extrabold text-2xl text-brand-navy mt-2" id="returnSuccessTitle">
+            Book Returned Successfully!
+          </h2>
+          <p class="text-sm text-slate-600 max-w-md mt-1" id="returnSuccessDesc">
+            Compartment locked. The book is safely inside the locker and your record has been updated.
+          </p>
+        </div>
+
+        <a 
+          href="/dashboard"
+          class="w-full bg-brand-navy hover:bg-brand-blue text-white font-display font-bold py-3.5 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer mt-2"
+        >
+          <span class="material-symbols-outlined text-lg">dashboard</span>
+          <span>Back to Dashboard</span>
+        </a>
+      </div>
+
+      {% else %}
+      <div class="py-12 text-center flex flex-col items-center justify-center gap-3">
+        <div class="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+          <span class="material-symbols-outlined text-3xl">task_alt</span>
+        </div>
+        <h2 class="font-display font-bold text-lg text-slate-800">No Books to Return</h2>
+        <p class="text-xs text-slate-500 max-w-sm">All of your books have been returned. You do not have any books currently borrowed.</p>
+        <div class="flex items-center gap-3 mt-3">
+          <a href="/dashboard" class="bg-slate-100 hover:bg-slate-200 text-slate-800 px-4 py-2 rounded-lg text-xs font-semibold">Dashboard</a>
+          <a href="/borrow" class="bg-brand-accent hover:bg-brand-blue text-white px-4 py-2 rounded-lg text-xs font-semibold">Borrow a Book</a>
+        </div>
+      </div>
+      {% endif %}
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="w-full bg-white border-t border-slate-200 py-3 px-6 text-center text-xs text-slate-500">
+    SmartLocker Automated Station
+  </footer>
+
+  <script>
+    async function executeReturn() {
+      const radio = document.querySelector('input[name="selected_loan"]:checked');
+      if (!radio) {
+        alert('Please select a book loan to return.');
+        return;
+      }
+
+      const loanId = radio.value;
+      const btn = document.getElementById('returnActionBtn');
+      const label = document.getElementById('returnBtnLabel');
+
+      btn.disabled = true;
+      btn.classList.add('opacity-75');
+      label.textContent = 'Unlocking Locker Compartment...';
+
+      try {
+        const res = await fetch('/api/locker/return', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ loan_id: loanId })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          document.getElementById('return-selection-block').classList.add('hidden');
+          document.getElementById('return-success-block').classList.remove('hidden');
+
+          document.getElementById('returnSuccessTitle').textContent = data.book_label + ' Returned!';
+          document.getElementById('returnSuccessDesc').textContent = data.locker_code + ' compartment verified. Thank you for returning the book on time.';
+        } else {
+          alert(data.message || 'Error processing book return.');
+          btn.disabled = false;
+          btn.classList.remove('opacity-75');
+          label.textContent = 'Unlock Locker Compartment';
+        }
+      } catch (err) {
+        alert('Network communication error with SmartLocker backend.');
+        btn.disabled = false;
+        btn.classList.remove('opacity-75');
+        label.textContent = 'Unlock Locker Compartment';
+      }
+    }
+  </script>
+
+  {% include 'inactivity_modal.html' %}
+</body>
+</html>

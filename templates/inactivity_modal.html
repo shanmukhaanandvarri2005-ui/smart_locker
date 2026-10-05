@@ -1,0 +1,154 @@
+{% if current_user and current_user.role not in ['staff', 'admin', 'host'] %}
+<!-- 30-Second Inactivity Warning & Auto-Logout Modal Component (Employees Only; No Timeout for Host) -->
+<div id="inactivityModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden transition-all duration-300 p-4">
+  <div class="bg-white rounded-2xl shadow-2xl border border-slate-100 max-w-sm w-full p-6 flex flex-col items-center text-center animate-in fade-in zoom-in-95 duration-200">
+    
+    <!-- Circular Animated Countdown Display -->
+    <div class="relative w-20 h-20 flex items-center justify-center mb-3">
+      <svg class="w-20 h-20 transform -rotate-90" viewBox="0 0 36 36">
+        <path
+          class="text-slate-100"
+          stroke-width="3.5"
+          stroke="currentColor"
+          fill="none"
+          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+        />
+        <path
+          id="countdownRing"
+          class="text-amber-500 transition-all duration-1000 ease-linear"
+          stroke-dasharray="100, 100"
+          stroke-dashoffset="0"
+          stroke-width="3.5"
+          stroke-linecap="round"
+          stroke="currentColor"
+          fill="none"
+          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+        />
+      </svg>
+      <span id="countdownNumber" class="absolute font-display font-extrabold text-2xl text-amber-600">10</span>
+    </div>
+
+    <span class="font-mono text-[11px] font-bold uppercase tracking-wider text-amber-700 bg-amber-50 px-3 py-0.5 rounded-full mb-2 border border-amber-200">
+      Auto-Logout Warning
+    </span>
+
+    <h3 class="font-display font-bold text-lg text-brand-navy mb-1">
+      Are you still there?
+    </h3>
+    
+    <p class="text-xs text-slate-500 mb-5 max-w-xs leading-relaxed">
+      For security on this shared locker station, you will be automatically logged out in 
+      <strong id="countdownText" class="text-amber-600 font-bold">10 seconds</strong>.
+    </p>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-col sm:flex-row gap-2.5 w-full">
+      <button 
+        type="button" 
+        id="stayLoggedInBtn"
+        onclick="resetInactivityTimer(true)" 
+        class="flex-1 bg-brand-accent hover:bg-brand-blue text-white font-display font-bold py-2.5 px-4 rounded-xl text-xs shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+      >
+        <span class="material-symbols-outlined text-base">touch_app</span>
+        <span>Stay Logged In</span>
+      </button>
+      <a 
+        href="/logout" 
+        class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-display font-semibold py-2.5 px-4 rounded-xl text-xs transition-all flex items-center justify-center gap-1 cursor-pointer"
+      >
+        <span class="material-symbols-outlined text-base">logout</span>
+        <span>Logout</span>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  (function() {
+    const INACTIVITY_LIMIT_SEC = 30; // Total inactivity duration requested by user
+    const WARNING_DIALOG_SEC = 10;   // Seconds before timeout to display countdown warning
+
+    let secondsRemaining = INACTIVITY_LIMIT_SEC;
+    let timerInterval = null;
+    let modalShown = false;
+
+    const modal = document.getElementById('inactivityModal');
+    const countdownNumber = document.getElementById('countdownNumber');
+    const countdownText = document.getElementById('countdownText');
+    const countdownRing = document.getElementById('countdownRing');
+
+    function updateDisplay(seconds) {
+      if (countdownNumber) countdownNumber.textContent = seconds;
+      if (countdownText) countdownText.textContent = seconds + ' second' + (seconds === 1 ? '' : 's');
+      if (countdownRing) {
+        // Percentage of remaining warning time (from 10s down to 0s)
+        const progress = (seconds / WARNING_DIALOG_SEC) * 100;
+        const offset = 100 - Math.max(0, Math.min(100, progress));
+        countdownRing.setAttribute('stroke-dashoffset', offset);
+      }
+    }
+
+    function showModal() {
+      modalShown = true;
+      if (modal) {
+        modal.classList.remove('hidden');
+      }
+      updateDisplay(secondsRemaining);
+    }
+
+    function hideModal() {
+      modalShown = false;
+      if (modal) {
+        modal.classList.add('hidden');
+      }
+    }
+
+    function onTick() {
+      secondsRemaining--;
+
+      if (secondsRemaining <= WARNING_DIALOG_SEC && secondsRemaining > 0) {
+        if (!modalShown) {
+          showModal();
+        } else {
+          updateDisplay(secondsRemaining);
+        }
+      } else if (secondsRemaining <= 0) {
+        clearInterval(timerInterval);
+        // Automatically logout and clear session
+        window.location.href = '/logout?timeout=1';
+      }
+    }
+
+    // Global reset function available to Stay Logged In button
+    window.resetInactivityTimer = function(pingServer = false) {
+      secondsRemaining = INACTIVITY_LIMIT_SEC;
+      hideModal();
+
+      if (pingServer) {
+        fetch('/api/heartbeat', { method: 'POST' }).catch(() => {});
+      }
+    };
+
+    // User activity events that reset the timer (only when warning modal is not displayed)
+    const userEvents = ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll'];
+    let lastActivityReset = Date.now();
+
+    userEvents.forEach(eventType => {
+      window.addEventListener(eventType, () => {
+        // Throttle activity resets to at most once per 500ms
+        const now = Date.now();
+        if (now - lastActivityReset > 500) {
+          lastActivityReset = now;
+          if (!modalShown) {
+            secondsRemaining = INACTIVITY_LIMIT_SEC;
+          }
+        }
+      }, { passive: true });
+    });
+
+    // Start 1-second interval loop
+    timerInterval = setInterval(onTick, 1000);
+  })();
+</script>
+{% endif %}
