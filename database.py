@@ -19,6 +19,29 @@ except ImportError:
 DB_PATH = os.path.join(os.path.dirname(__file__), 'smart_locker.db')
 
 
+class RowWrapper(dict):
+    """A dictionary that also supports integer indexing like sqlite3.Row."""
+    def __init__(self, raw_dict, raw_values):
+        super().__init__(raw_dict)
+        self._values = list(raw_values)
+
+    def __getitem__(self, k):
+        if isinstance(k, int):
+            return self._values[k]
+        return super().__getitem__(k)
+
+
+def _format_row(row):
+    if row is None:
+        return None
+    d = dict(row)
+    for k, v in d.items():
+        if isinstance(v, (datetime, timedelta)):
+            d[k] = v.strftime('%Y-%m-%d %H:%M:%S')
+    raw_vals = [d[k] for k in d.keys()]
+    return RowWrapper(d, raw_vals)
+
+
 class PostgresCursorWrapper:
     """Wraps a psycopg2 DictCursor to provide seamless cross-compatibility with SQLite queries."""
     def __init__(self, cursor):
@@ -39,18 +62,18 @@ class PostgresCursorWrapper:
         return self._cursor.executemany(sql, seq_of_params)
 
     def fetchone(self):
-        return self._cursor.fetchone()
+        return _format_row(self._cursor.fetchone())
 
     def fetchall(self):
-        return self._cursor.fetchall()
+        return [_format_row(r) for r in self._cursor.fetchall()]
 
     def fetchmany(self, size=None):
-        if size is not None:
-            return self._cursor.fetchmany(size)
-        return self._cursor.fetchmany()
+        rows = self._cursor.fetchmany(size) if size is not None else self._cursor.fetchmany()
+        return [_format_row(r) for r in rows]
 
     def __iter__(self):
-        return iter(self._cursor)
+        for r in self._cursor:
+            yield _format_row(r)
 
     def __getattr__(self, name):
         return getattr(self._cursor, name)
