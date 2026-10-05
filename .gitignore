@@ -8,6 +8,9 @@ env/
 venv/
 .venv/
 ENV/
+.env
+.env.*
+!.env.example
 
 # Distribution / packaging
 build/
