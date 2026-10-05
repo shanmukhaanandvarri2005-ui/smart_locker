@@ -2,14 +2,119 @@ import sqlite3
 import os
 from datetime import datetime, timedelta
 
+# Automatically load .env file if present
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+# Try importing PostgreSQL / Supabase driver
+try:
+    import psycopg2
+    from psycopg2.extras import DictCursor
+except ImportError:
+    psycopg2 = None
+
 DB_PATH = os.path.join(os.path.dirname(__file__), 'smart_locker.db')
 
+
+class PostgresCursorWrapper:
+    """Wraps a psycopg2 DictCursor to provide seamless cross-compatibility with SQLite queries."""
+    def __init__(self, cursor):
+        self._cursor = cursor
+
+    def _convert_query(self, query):
+        # Translate SQLite '?' positional placeholders to PostgreSQL '%s'
+        return query.replace('?', '%s')
+
+    def execute(self, query, params=None):
+        sql = self._convert_query(query)
+        if params is not None:
+            return self._cursor.execute(sql, params)
+        return self._cursor.execute(sql)
+
+    def executemany(self, query, seq_of_params):
+        sql = self._convert_query(query)
+        return self._cursor.executemany(sql, seq_of_params)
+
+    def fetchone(self):
+        return self._cursor.fetchone()
+
+    def fetchall(self):
+        return self._cursor.fetchall()
+
+    def fetchmany(self, size=None):
+        if size is not None:
+            return self._cursor.fetchmany(size)
+        return self._cursor.fetchmany()
+
+    def __iter__(self):
+        return iter(self._cursor)
+
+    def __getattr__(self, name):
+        return getattr(self._cursor, name)
+
+
+class PostgresConnectionWrapper:
+    """Wraps a psycopg2 connection to mimic SQLite connection behavior."""
+    def __init__(self, conn):
+        self._conn = conn
+
+    def cursor(self):
+        return PostgresCursorWrapper(self._conn.cursor(cursor_factory=DictCursor))
+
+    def commit(self):
+        return self._conn.commit()
+
+    def rollback(self):
+        return self._conn.rollback()
+
+    def close(self):
+        return self._conn.close()
+
+    def __getattr__(self, name):
+        return getattr(self._conn, name)
+
+
+def is_postgres_configured():
+    """Checks whether a PostgreSQL / Supabase connection URL is provided."""
+    db_url = os.environ.get('DATABASE_URL') or os.environ.get('SUPABASE_DB_URL')
+    return bool(db_url and psycopg2)
+
+
 def get_db():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
+    """Returns an active database connection (Supabase PostgreSQL if configured, otherwise local SQLite)."""
+    db_url = os.environ.get('DATABASE_URL') or os.environ.get('SUPABASE_DB_URL')
+    if db_url and psycopg2:
+        # Handle Supabase pooler / standard URL (convert postgres:// to postgresql:// if needed)
+        if db_url.startswith('postgres://'):
+            db_url = db_url.replace('postgres://', 'postgresql://', 1)
+        raw_conn = psycopg2.connect(db_url)
+        return PostgresConnectionWrapper(raw_conn)
+    else:
+        conn = sqlite3.connect(DB_PATH)
+        conn.row_factory = sqlite3.Row
+        return conn
+
 
 def init_db(force_reset=False):
+    """Initializes tables and seeds base records."""
+    if is_postgres_configured():
+        # PostgreSQL / Supabase initialization via supabase_schema.sql
+        schema_path = os.path.join(os.path.dirname(__file__), 'supabase_schema.sql')
+        if os.path.exists(schema_path):
+            conn = get_db()
+            cursor = conn.cursor()
+            with open(schema_path, 'r', encoding='utf-8') as f:
+                schema_sql = f.read()
+            cursor.execute(schema_sql)
+            conn.commit()
+            conn.close()
+            print("Successfully initialized Supabase PostgreSQL database schema and seed data.")
+        return
+
+    # Local SQLite fallback
     if force_reset and os.path.exists(DB_PATH):
         try:
             os.remove(DB_PATH)
@@ -84,12 +189,13 @@ def init_db(force_reset=False):
     conn.commit()
     conn.close()
 
+
 def seed_clean_data(conn):
     cursor = conn.cursor()
     now = datetime.now()
     now_str = now.strftime('%Y-%m-%d %H:%M:%S')
 
-    # Production Registered Members (Students & Faculty)
+    # Production Registered Members (Employees & Hosts)
     members = [
         (
             'Varri Shanmukha Anand',
@@ -141,6 +247,10 @@ def seed_clean_data(conn):
 
     conn.commit()
 
+
 if __name__ == '__main__':
     init_db(force_reset=True)
-    print('SmartLocker database cleanly initialized at', DB_PATH)
+    if is_postgres_configured():
+        print('SmartLocker database cleanly initialized in Supabase PostgreSQL.')
+    else:
+        print('SmartLocker database cleanly initialized at', DB_PATH)

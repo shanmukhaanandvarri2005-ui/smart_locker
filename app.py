@@ -7,11 +7,17 @@ try:
 except ImportError:
     psutil = None
 from datetime import datetime, timedelta
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 from database import get_db, init_db
 from hardware import hardware
 
 app = Flask(__name__)
-app.secret_key = 'smart_locker_secure_deployment_key_vit_eee'
+app.secret_key = os.environ.get('SECRET_KEY', 'smart_locker_secure_deployment_key_vit_eee')
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.jinja_env.auto_reload = True
 
