@@ -129,13 +129,59 @@
 
 
   <script>
-    async function submitAuth() {
+    let isAuthenticating = false;
+    let autoScanTimer = null;
+
+    /**
+     * Extracts ONLY the first RFID scan from any concatenated, repeated,
+     * or rapid multi-tap input strings (e.g. 367785532536778553253677855325 -> 3677855325).
+     */
+    function extractFirstScan(raw) {
+      if (!raw) return '';
+      let s = String(raw).trim();
+      
+      // If multi-line (e.g. scanner sent Enter between rapid scans), take the first non-empty line/token
+      const tokens = s.split(/[\r\n,\s]+/).filter(Boolean);
+      if (tokens.length > 0) {
+        s = tokens[0];
+      }
+
+      const n = s.length;
+      // 1. Check for repeating identical chunks (e.g. 10 digits repeated 2x, 3x)
+      for (let k = 4; k <= Math.floor(n / 2); k++) {
+        if (n % k === 0) {
+          const chunk = s.slice(0, k);
+          if (chunk.repeat(n / k) === s) {
+            return chunk;
+          }
+        }
+      }
+
+      // 2. If standard 10-digit RFID card (EM4100 / Mifare decimal UID) was repeated or had trailing keystrokes
+      if (n > 10 && /^\d{10}/.test(s)) {
+        return s.slice(0, 10);
+      }
+
+      return s;
+    }
+
+    async function submitAuth(valOverride) {
+      if (isAuthenticating) return;
       const input = document.getElementById('rfidInput');
-      const val = input.value.trim();
+      let val = valOverride !== undefined ? valOverride : input.value;
+      val = extractFirstScan(val);
+
       if (!val) {
         showToast('Input Required', 'Please tap your RFID card or enter your ID.', 'warning');
         return;
       }
+
+      // Immediately lock and blur input to reject any trailing or repeated taps from scanner
+      isAuthenticating = true;
+      input.value = val;
+      input.readOnly = true;
+      input.blur();
+
       authenticate(val);
     }
 
@@ -145,6 +191,7 @@
       const btnLabel = document.getElementById('btnLabel');
       const iconHolder = document.getElementById('scannerIconHolder');
       const statusText = document.getElementById('scannerStatusText');
+      const input = document.getElementById('rfidInput');
 
       btn.disabled = true;
       btn.classList.add('opacity-75');
@@ -182,8 +229,10 @@
             btn.classList.remove('opacity-75');
             btnIcon.textContent = 'login';
             btnLabel.textContent = 'Access System';
-            document.getElementById('rfidInput').value = '';
-            document.getElementById('rfidInput').focus();
+            input.readOnly = false;
+            input.value = '';
+            isAuthenticating = false;
+            input.focus();
           }, 2000);
         }
       } catch (err) {
@@ -192,6 +241,9 @@
         btn.classList.remove('opacity-75');
         btnIcon.textContent = 'login';
         btnLabel.textContent = 'Access System';
+        input.readOnly = false;
+        isAuthenticating = false;
+        input.focus();
       }
     }
 
@@ -228,8 +280,61 @@
       }, 4000);
     }
 
-    // Check if user was logged out due to inactivity timeout
+    // Attach listeners on load
     window.addEventListener('DOMContentLoaded', () => {
+      const input = document.getElementById('rfidInput');
+      if (input) {
+        input.value = '';
+        input.readOnly = false;
+        isAuthenticating = false;
+        input.focus();
+
+        // Discard any keystrokes if authenticating
+        input.addEventListener('keydown', (e) => {
+          if (isAuthenticating) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+          }
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            submitAuth();
+          }
+        });
+
+        // Live input monitor: Detect when RFID scanner finishes typing the card UID
+        input.addEventListener('input', () => {
+          if (isAuthenticating) {
+            input.value = '';
+            return;
+          }
+
+          const rawVal = input.value.trim();
+
+          // Standard 10-digit RFID card (EM4100 / Mifare decimal):
+          // As soon as 10 digits are received, grab the first scan immediately and lock input!
+          if (/^\d{10}/.test(rawVal)) {
+            const firstScan = extractFirstScan(rawVal);
+            input.value = firstScan;
+            input.readOnly = true;
+            input.blur();
+            clearTimeout(autoScanTimer);
+            submitAuth(firstScan);
+            return;
+          }
+
+          // Debounce for hexadecimal or other ID formats (e.g. 8+ characters)
+          clearTimeout(autoScanTimer);
+          if (rawVal.length >= 8) {
+            autoScanTimer = setTimeout(() => {
+              if (!isAuthenticating && input.value.trim().length >= 8) {
+                submitAuth();
+              }
+            }, 300);
+          }
+        });
+      }
+
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('timeout') === '1') {
         showToast('Session Timed Out', 'Automatically logged out after 30 seconds of inactivity.', 'info');

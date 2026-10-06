@@ -212,28 +212,77 @@ def logout():
         return redirect(url_for('auth_page', timeout='1'))
     return redirect(url_for('auth_page'))
 
+def extract_first_rfid_scan(raw: str) -> str:
+    """Extracts only the first RFID scan from any concatenated, repeated, or rapid multi-tap input."""
+    if not raw:
+        return ""
+    s = str(raw).strip()
+    # If separated by newlines, carriage returns, commas or spaces, take the first token
+    lines = [p.strip() for p in s.replace('\r', '\n').replace(',', ' ').split('\n') if p.strip()]
+    if lines:
+        s = lines[0].split()[0]
+    
+    n = len(s)
+    # Check if the string consists of repeated identical sub-patterns (e.g. 10 digits repeated 2x, 3x)
+    for k in range(4, (n // 2) + 1):
+        if n % k == 0:
+            chunk = s[:k]
+            if chunk * (n // k) == s:
+                return chunk
+    
+    # If standard 10-digit EM4100 RFID scan was repeated or had trailing keystrokes
+    if n > 10 and s[:10].isdigit():
+        return s[:10]
+        
+    return s
+
+
 # ----------------- REST API ENDPOINTS ----------------- #
 
 @app.route('/api/auth/rfid', methods=['POST'])
 def api_auth_rfid():
-    """Authenticates a user via RFID card UID."""
+    """Authenticates a user via RFID card UID, accepting only the first scan."""
     data = request.get_json() or {}
-    identifier = data.get('rfid_uid', '').strip()
+    raw_identifier = data.get('rfid_uid', '').strip()
 
-    if not identifier:
+    if not raw_identifier:
         return jsonify({"success": False, "message": "RFID Card UID is required."}), 400
+
+    clean_id = extract_first_rfid_scan(raw_identifier)
 
     conn = get_db()
     cursor = conn.cursor()
-    clean_id = identifier.strip()
-    # Flexible matching: Case-insensitive and colon/hyphen-insensitive
+
+    # 1. Flexible exact matching on clean_id and raw_identifier
     cursor.execute("""
         SELECT * FROM members 
         WHERE LOWER(TRIM(rfid_uid)) = LOWER(?) 
            OR LOWER(TRIM(reg_no)) = LOWER(?)
            OR REPLACE(REPLACE(LOWER(rfid_uid), ':', ''), '-', '') = REPLACE(REPLACE(LOWER(?), ':', ''), '-', '')
-    """, (clean_id, clean_id, clean_id))
+           OR LOWER(TRIM(rfid_uid)) = LOWER(?) 
+           OR LOWER(TRIM(reg_no)) = LOWER(?)
+           OR REPLACE(REPLACE(LOWER(rfid_uid), ':', ''), '-', '') = REPLACE(REPLACE(LOWER(?), ':', ''), '-', '')
+    """, (clean_id, clean_id, clean_id, raw_identifier, raw_identifier, raw_identifier))
     member = cursor.fetchone()
+
+    # 2. Resilient fallback: Match prefix against active registered members
+    if not member:
+        cursor.execute("SELECT * FROM members WHERE status = 'active' OR status IS NULL")
+        all_members = cursor.fetchall()
+        for m in sorted(all_members, key=lambda x: len(x['rfid_uid'] or ''), reverse=True):
+            m_uid = (m['rfid_uid'] or '').strip()
+            m_reg = (m['reg_no'] or '').strip()
+            if m_uid and len(m_uid) >= 4:
+                norm_uid = m_uid.replace(':', '').replace('-', '').lower()
+                norm_clean = clean_id.replace(':', '').replace('-', '').lower()
+                norm_raw = raw_identifier.replace(':', '').replace('-', '').lower()
+                if clean_id.startswith(m_uid) or raw_identifier.startswith(m_uid) or norm_clean.startswith(norm_uid) or norm_raw.startswith(norm_uid):
+                    member = m
+                    break
+            if m_reg and len(m_reg) >= 4:
+                if clean_id.startswith(m_reg) or raw_identifier.startswith(m_reg):
+                    member = m
+                    break
 
     now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
@@ -241,11 +290,11 @@ def api_auth_rfid():
         cursor.execute('''
         INSERT INTO transactions (member_id, locker_id, operation, result, timestamp, details)
         VALUES (NULL, NULL, 'auth', 'rejected', ?, ?)
-        ''', (now_str, f"Unregistered credential: {identifier}"))
+        ''', (now_str, f"Unregistered credential: {clean_id or raw_identifier}"))
         conn.commit()
         conn.close()
         hardware.set_led('RED')
-        return jsonify({"success": False, "message": f"Unrecognized RFID credential [{identifier}]. Please contact facility administrator."}), 401
+        return jsonify({"success": False, "message": f"Unrecognized RFID credential [{clean_id or raw_identifier}]. Please contact facility administrator."}), 401
 
     member = dict(member)
     if member['status'] != 'active':
