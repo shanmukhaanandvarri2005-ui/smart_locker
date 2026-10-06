@@ -1,0 +1,15 @@
+[Unit]
+Description=SmartLocker IoT Book Dispensing & Return System
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/smart_locker
+EnvironmentFile=/home/pi/smart_locker/.env
+ExecStart=/home/pi/smart_locker/venv/bin/python app.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
