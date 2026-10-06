@@ -305,6 +305,18 @@ def api_locker_status():
     status = hardware.read_sensors()
     return jsonify({"success": True, "status": status})
 
+@app.route('/api/locker/unlock', methods=['POST'])
+def api_locker_unlock():
+    """Direct hardware unlock endpoint triggering ESP8266 relay and solenoid."""
+    data = request.get_json() or {}
+    duration = int(data.get('duration', 4))
+    hardware.unlock_solenoid(duration_sec=duration)
+    return jsonify({
+        "success": True,
+        "message": f"Unlock signal sent to ESP8266 relay for {duration} seconds.",
+        "status": hardware.read_sensors()
+    })
+
 @app.route('/api/locker/borrow', methods=['POST'])
 def api_locker_borrow():
     """Executes verified borrow sequence according to SRS and SAD."""

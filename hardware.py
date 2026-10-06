@@ -1,5 +1,20 @@
+import os
 import threading
 import time
+import logging
+
+try:
+    import serial
+    import serial.tools.list_ports
+except ImportError:
+    serial = None
+
+try:
+    import requests
+except ImportError:
+    requests = None
+
+logger = logging.getLogger("smart_locker.hardware")
 
 # Raspberry Pi GPIO Pin Mappings (BCM Mode)
 PIN_SOLENOID = 18       # Relay trigger for 12V Solenoid Lock
@@ -10,10 +25,27 @@ PIN_LED_RED = 17        # RGB LED Red Pin
 PIN_LED_GREEN = 27      # RGB LED Green Pin
 PIN_LED_BLUE = 22       # RGB LED Blue Pin
 
+
 class HardwareController:
+    """
+    Unified hardware controller supporting:
+    1. ESP8266 via USB Serial (NodeMCU / Wemos D1 Mini at 115200 baud)
+    2. ESP8266 via WiFi HTTP Webhooks (ESP8266_IP in .env)
+    3. Raspberry Pi physical GPIO (if deployed on RPi)
+    4. Seamless simulation fallback when no physical hardware is plugged in
+    """
     def __init__(self):
         self.lock = threading.Lock()
         self.is_rpi = False
+        
+        # ESP8266 Serial configuration
+        self.serial_port_name = os.environ.get('SERIAL_PORT', 'AUTO')
+        self.serial_baud = int(os.environ.get('SERIAL_BAUD', '115200'))
+        self.ser = None
+        self.esp8266_connected = False
+        
+        # ESP8266 WiFi configuration (optional)
+        self.esp8266_ip = os.environ.get('ESP8266_IP', '').strip()
         
         # Locker physical status
         self.solenoid_unlocked = False      # False = LOCKED, True = UNLOCKED
@@ -23,6 +55,7 @@ class HardwareController:
         self.led_color = 'BLUE'             # 'BLUE' (standby), 'GREEN' (active), 'RED' (alert)
         
         self._init_gpio()
+        self._init_serial()
 
     def _init_gpio(self):
         try:
@@ -34,7 +67,7 @@ class HardwareController:
             GPIO.setup(PIN_SOLENOID, GPIO.OUT, initial=GPIO.LOW)
             GPIO.setup(PIN_LED_RED, GPIO.OUT, initial=GPIO.LOW)
             GPIO.setup(PIN_LED_GREEN, GPIO.OUT, initial=GPIO.LOW)
-            GPIO.setup(PIN_LED_BLUE, GPIO.OUT, initial=GPIO.HIGH) # Default blue standby
+            GPIO.setup(PIN_LED_BLUE, GPIO.OUT, initial=GPIO.HIGH)
             
             # Setup inputs with internal pull-up resistors
             GPIO.setup(PIN_DOOR_SENSOR, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -42,57 +75,187 @@ class HardwareController:
             GPIO.setup(PIN_IR_ENTRANCE, GPIO.IN, pull_up_down=GPIO.PUD_UP)
             
             self.is_rpi = True
+            print("[Hardware] Initialized Raspberry Pi GPIO successfully.")
         except (ImportError, RuntimeError):
             self.is_rpi = False
 
-    def unlock_solenoid(self, duration_sec=15):
-        """Unlocks the solenoid lock and triggers active green indicator."""
+    def _find_esp8266_port(self):
+        """Attempts to discover the ESP8266 COM port on Windows/Linux/Mac."""
+        if not serial:
+            return None
+
+        # If user explicitly defined a port (e.g. SERIAL_PORT=COM3), use that
+        if self.serial_port_name and self.serial_port_name.upper() != 'AUTO':
+            return self.serial_port_name
+
+        try:
+            com_ports = list(serial.tools.list_ports.comports())
+            # Search for USB-to-Serial adapters (CH340, CP2102, FTDI, etc.)
+            for p in com_ports:
+                desc = (p.description or "").lower()
+                hwid = (p.hwid or "").lower()
+                if "bluetooth" in desc or "bthenum" in hwid:
+                    continue
+                if any(k in desc or k in hwid for k in ["ch340", "cp210", "ftdi", "usb serial", "usb-serial", "uart", "1a86", "10c4"]):
+                    return p.device
+            
+            # Fallback: first non-bluetooth port
+            for p in com_ports:
+                desc = (p.description or "").lower()
+                if "bluetooth" not in desc:
+                    return p.device
+        except Exception as e:
+            print(f"[Hardware] Port scan error: {e}")
+        return None
+
+    def _init_serial(self):
+        """Connects to the ESP8266 via USB Serial if available."""
+        if not serial:
+            return
+
+        port = self._find_esp8266_port()
+        if not port:
+            self.esp8266_connected = False
+            return
+
+        try:
+            if self.ser and self.ser.is_open:
+                try:
+                    self.ser.close()
+                except Exception:
+                    pass
+            self.ser = serial.Serial(port, self.serial_baud, timeout=1.0)
+            self.esp8266_connected = True
+            self.serial_port_name = port
+            print(f"[Hardware] Connected to ESP8266 on {port} @ {self.serial_baud} baud.")
+        except Exception as e:
+            self.esp8266_connected = False
+            print(f"[Hardware] ESP8266 serial connect skipped ({port}): {e}")
+
+    def _send_serial_command(self, cmd: str):
+        """Sends a command to ESP8266 over USB Serial with auto-reconnect."""
+        if not serial:
+            return False
+
         with self.lock:
-            self.solenoid_unlocked = True
-            self.set_led('GREEN')
-            if self.is_rpi:
+            if not self.ser or not self.ser.is_open:
+                self._init_serial()
+
+            if self.ser and self.ser.is_open:
+                try:
+                    payload = (cmd.strip() + "\n").encode('utf-8')
+                    self.ser.write(payload)
+                    self.ser.flush()
+                    print(f"[Hardware -> ESP8266 Serial]: {cmd.strip()}")
+                    return True
+                except Exception as e:
+                    print(f"[Hardware] Serial write failed: {e}")
+                    try:
+                        self.ser.close()
+                    except Exception:
+                        pass
+                    self.ser = None
+                    self.esp8266_connected = False
+        return False
+
+    def _send_wifi_command(self, path: str):
+        """Sends an HTTP command to ESP8266 over WiFi if configured."""
+        if not requests or not self.esp8266_ip:
+            return False
+        try:
+            url = f"http://{self.esp8266_ip}{path}"
+            res = requests.get(url, timeout=2.0)
+            print(f"[Hardware -> ESP8266 WiFi ({url})]: status={res.status_code}")
+            return res.status_code == 200
+        except Exception as e:
+            print(f"[Hardware] WiFi command failed ({self.esp8266_ip}): {e}")
+            return False
+
+    def unlock_solenoid(self, duration_sec=4):
+        """
+        Unlocks the 12V solenoid lock by energizing the relay.
+        Controls:
+          1. Raspberry Pi GPIO (if on Pi)
+          2. ESP8266 over USB Serial
+          3. ESP8266 over WiFi (if configured)
+        """
+        self.solenoid_unlocked = True
+        self.set_led('GREEN')
+
+        # 1. RPi GPIO
+        if self.is_rpi:
+            try:
                 import RPi.GPIO as GPIO
                 GPIO.output(PIN_SOLENOID, GPIO.HIGH)
+            except Exception:
+                pass
 
+        # 2. ESP8266 USB Serial Command (e.g. UNLOCK:4)
+        self._send_serial_command(f"UNLOCK:{duration_sec}")
+
+        # 3. ESP8266 WiFi Webhook (if IP configured)
+        if self.esp8266_ip:
+            threading.Thread(
+                target=self._send_wifi_command, 
+                args=(f"/unlock?duration={duration_sec}",), 
+                daemon=True
+            ).start()
+
+        # Non-blocking auto-relock timer for software state
         if duration_sec:
             def auto_relock():
                 time.sleep(duration_sec)
                 self.lock_solenoid()
             threading.Thread(target=auto_relock, daemon=True).start()
 
+        return True
+
     def lock_solenoid(self):
-        """Secures the solenoid lock and returns LED to standby blue."""
-        with self.lock:
-            self.solenoid_unlocked = False
-            self.door_open = False
-            self.set_led('BLUE')
-            if self.is_rpi:
+        """Secures the solenoid lock and returns status to standby."""
+        self.solenoid_unlocked = False
+        self.door_open = False
+        self.set_led('BLUE')
+
+        if self.is_rpi:
+            try:
                 import RPi.GPIO as GPIO
                 GPIO.output(PIN_SOLENOID, GPIO.LOW)
+            except Exception:
+                pass
+
+        # Send LOCK command to ESP8266
+        self._send_serial_command("LOCK")
+
+        if self.esp8266_ip:
+            threading.Thread(target=self._send_wifi_command, args=("/lock",), daemon=True).start()
 
     def set_led(self, color):
         """Controls the common-cathode RGB status indicator."""
         self.led_color = color.upper()
         if self.is_rpi:
-            import RPi.GPIO as GPIO
-            GPIO.output(PIN_LED_RED, GPIO.HIGH if self.led_color == 'RED' else GPIO.LOW)
-            GPIO.output(PIN_LED_GREEN, GPIO.HIGH if self.led_color == 'GREEN' else GPIO.LOW)
-            GPIO.output(PIN_LED_BLUE, GPIO.HIGH if self.led_color == 'BLUE' else GPIO.LOW)
+            try:
+                import RPi.GPIO as GPIO
+                GPIO.output(PIN_LED_RED, GPIO.HIGH if self.led_color == 'RED' else GPIO.LOW)
+                GPIO.output(PIN_LED_GREEN, GPIO.HIGH if self.led_color == 'GREEN' else GPIO.LOW)
+                GPIO.output(PIN_LED_BLUE, GPIO.HIGH if self.led_color == 'BLUE' else GPIO.LOW)
+            except Exception:
+                pass
 
     def read_sensors(self):
-        """Polls hardware sensors."""
+        """Polls hardware sensors and ESP8266 controller state."""
         if self.is_rpi:
-            import RPi.GPIO as GPIO
-            # MC-38 Reed Switch: CLOSED when magnet is near (LOW with pull-up to GND)
-            door_raw = GPIO.input(PIN_DOOR_SENSOR)
-            self.door_open = (door_raw == GPIO.HIGH)
-            
-            # FC-51 IR Sensors: Output LOW when object detected
-            shelf_raw = GPIO.input(PIN_IR_SHELF)
-            self.book_present = (shelf_raw == GPIO.LOW)
-            
-            entrance_raw = GPIO.input(PIN_IR_ENTRANCE)
-            self.entrance_passage = (entrance_raw == GPIO.LOW)
+            try:
+                import RPi.GPIO as GPIO
+                door_raw = GPIO.input(PIN_DOOR_SENSOR)
+                self.door_open = (door_raw == GPIO.HIGH)
+                
+                shelf_raw = GPIO.input(PIN_IR_SHELF)
+                self.book_present = (shelf_raw == GPIO.LOW)
+                
+                entrance_raw = GPIO.input(PIN_IR_ENTRANCE)
+                self.entrance_passage = (entrance_raw == GPIO.LOW)
+            except Exception:
+                pass
 
         return {
             "lock_status": "unlocked" if self.solenoid_unlocked else "locked",
@@ -100,7 +263,10 @@ class HardwareController:
             "book_present": self.book_present,
             "entrance_passage": self.entrance_passage,
             "led_indicator": self.led_color,
-            "is_physical_rpi": self.is_rpi
+            "is_physical_rpi": self.is_rpi,
+            "esp8266_connected": self.esp8266_connected or bool(self.ser and self.ser.is_open),
+            "esp8266_port": self.serial_port_name if self.esp8266_connected else None,
+            "esp8266_ip": self.esp8266_ip if self.esp8266_ip else None
         }
 
 hardware = HardwareController()
