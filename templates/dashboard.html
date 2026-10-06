@@ -137,19 +137,12 @@
       <!-- Welcome Hero Banner -->
       <div class="bg-gradient-to-r from-brand-navy via-brand-blue to-blue-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="flex flex-col gap-1.5 z-10">
-          <div class="flex items-center gap-2">
-            <span class="material-symbols-outlined text-amber-400 text-2xl">stars</span>
-            <span class="text-xs uppercase font-mono tracking-widest text-blue-200 font-bold">Automated Library Station</span>
-          </div>
           <h1 class="font-display font-extrabold text-2xl sm:text-3xl text-white tracking-tight flex items-center gap-2.5 flex-wrap">
             <span>Welcome, {{ current_user.name if current_user else "Employee" }}</span>
             {% if current_user and current_user.reg_no %}
             <span class="text-xs sm:text-sm font-mono font-bold bg-white/15 px-3 py-1 rounded-xl border border-white/20">ID: {{ current_user.reg_no }}</span>
             {% endif %}
           </h1>
-          <p class="text-xs sm:text-sm text-blue-100 max-w-xl">
-            Select books below like a vending machine and press the green <strong>Borrow</strong> button. To return books, select them below and press the red <strong>Return</strong> button.
-          </p>
         </div>
 
         <div class="flex items-center gap-3 z-10 self-start sm:self-auto bg-white/10 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-white/20">
@@ -177,9 +170,6 @@
                 </h2>
                 <span class="text-xs bg-slate-100 text-slate-600 font-bold px-2 py-0.5 rounded-full font-mono">5 Compartments</span>
               </div>
-              <p class="text-xs text-slate-500">
-                Select one or more books, then press the green Borrow button to release the physical lockers.
-              </p>
             </div>
           </div>
 
@@ -327,9 +317,6 @@
                   {{ active_loans|length }} Active Loan(s)
                 </span>
               </div>
-              <p class="text-xs text-slate-500">
-                Select the book(s) you wish to return, then press the red Return button to unlock their compartments.
-              </p>
             </div>
           </div>
 
