@@ -158,12 +158,10 @@
         </span>
       </div>
 
-      <div class="flex items-center gap-2 mb-6 text-xs text-slate-500 font-medium">
-        <span id="confirmRole" class="uppercase font-bold text-[10px] bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded-full">
+      <div class="flex items-center justify-center gap-2 mb-6">
+        <span id="confirmRole" class="uppercase font-bold text-[10px] bg-slate-100 text-slate-700 px-3 py-1 rounded-full border border-slate-200">
           Employee
         </span>
-        <span>•</span>
-        <span id="confirmDept">Authorized Personnel</span>
       </div>
 
       <!-- Confirm Action Button -->
@@ -329,7 +327,6 @@
           const empId = m.reg_no || (m.member_id ? String(m.member_id).padStart(3, '0') : '001');
           const empRfid = m.rfid_uid || identifier;
           const empRole = (m.role === 'host' || m.role === 'staff' || m.role === 'admin') ? 'Host' : 'Employee';
-          const empDept = m.department || 'Authorized Personnel';
           const empAvatar = m.avatar_url || ('https://api.dicebear.com/7.x/initials/svg?seed=' + encodeURIComponent(empName) + '&backgroundColor=002549');
 
           document.getElementById('confirmName').textContent = empName;
@@ -337,7 +334,6 @@
           const confirmRfidEl = document.getElementById('confirmRfid');
           if (confirmRfidEl) confirmRfidEl.textContent = empRfid;
           document.getElementById('confirmRole').textContent = empRole;
-          document.getElementById('confirmDept').textContent = empDept;
           document.getElementById('confirmAvatar').src = empAvatar;
 
           showToast('Employee Verified', 'Please confirm your identity to proceed to the vending machine.', 'success');
