@@ -241,7 +241,7 @@
               type="button" 
               id="dashReturnBtn"
               onclick="executeDashboardReturn({{ active_loans[0].loan_id }})" 
-              class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-display font-bold py-3.5 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
+              class="w-full bg-red-600 hover:bg-red-700 text-white font-display font-bold py-3.5 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
             >
               <span class="material-symbols-outlined text-xl" id="dashReturnIcon">assignment_return</span>
               <span id="dashReturnLabel">Unlock {{ single_locker.locker_code }} &amp; Return</span>
@@ -307,7 +307,7 @@
                   <button 
                     type="button" 
                     onclick="executeDashboardReturn({{ loan.loan_id }})" 
-                    class="inline-flex items-center gap-1 bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition-all cursor-pointer active:scale-[0.98]"
+                    class="inline-flex items-center gap-1 bg-red-600 hover:bg-red-700 text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition-all cursor-pointer active:scale-[0.98]"
                   >
                     <span class="material-symbols-outlined text-sm">assignment_return</span>
                     <span>Unlock &amp; Return</span>
