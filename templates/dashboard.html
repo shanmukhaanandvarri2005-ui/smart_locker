@@ -68,81 +68,17 @@
           <span>Book Dispenser</span>
         </a>
 
-        <!-- Recent Activity: Only visible for Host accounts; Completely hidden for regular employees -->
         {% if is_host %}
-        <button 
-          type="button" 
-          id="activityNavBtn"
-          onclick="toggleSidebarActivity()"
-          class="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-display font-medium text-sm transition-all cursor-pointer group mt-1"
-        >
-          <div class="flex items-center gap-3">
-            <span class="material-symbols-outlined text-xl text-slate-500 group-hover:text-brand-accent transition-colors">history</span>
-            <span>All System Activity</span>
-          </div>
-          <div class="flex items-center gap-1.5">
-            {% if recent_transactions %}
-            <span class="font-mono text-[10px] bg-slate-100 group-hover:bg-blue-100 text-slate-600 group-hover:text-brand-accent font-bold px-2 py-0.5 rounded-full transition-colors">
-              {{ recent_transactions|length }}
-            </span>
-            {% endif %}
-            <span id="activityChevron" class="material-symbols-outlined text-base text-slate-400 transition-transform duration-200">expand_more</span>
-          </div>
-        </button>
-
-        <!-- Previous Activity Content Pane for Host -->
-        <div id="sidebarActivityPane" class="hidden flex flex-col gap-2 pt-1 pb-2">
-          <div class="flex items-center justify-between px-2 pt-1 pb-1 border-b border-slate-100 text-[11px] text-slate-400 font-medium">
-            <span>All Personnel Logs</span>
-            <span class="font-mono text-[10px]">{{ recent_transactions|length }} total</span>
-          </div>
-
-          {% if recent_transactions %}
-          <div class="flex flex-col gap-2 max-h-[360px] overflow-y-auto pr-1 text-xs">
-            {% for tx in recent_transactions %}
-            <div class="bg-slate-50 hover:bg-blue-50/50 p-2.5 rounded-xl border border-slate-100/90 transition-all flex flex-col gap-1.5">
-              <div class="flex items-center justify-between gap-1">
-                <div class="flex items-center gap-1.5">
-                  <div class="w-6 h-6 rounded-md {% if tx.operation == 'borrow' %}bg-blue-100 text-brand-accent{% elif tx.operation == 'return' %}bg-emerald-100 text-emerald-700{% else %}bg-slate-200 text-slate-700{% endif %} flex items-center justify-center shrink-0">
-                    <span class="material-symbols-outlined text-xs">
-                      {% if tx.operation == 'borrow' %}lock_open{% elif tx.operation == 'return' %}assignment_turned_in{% else %}badge{% endif %}
-                    </span>
-                  </div>
-                  <span class="font-display font-bold text-xs uppercase tracking-wide {% if tx.operation == 'borrow' %}text-brand-navy{% elif tx.operation == 'return' %}text-emerald-700{% else %}text-slate-700{% endif %}">
-                    {{ tx.operation }}
-                  </span>
-                </div>
-                <span class="font-mono text-[9px] font-bold uppercase {% if tx.result == 'success' %}text-emerald-700 bg-emerald-50 border border-emerald-200{% else %}text-red-700 bg-red-50 border border-red-200{% endif %} px-1.5 py-0.5 rounded-full">
-                  {{ tx.result }}
-                </span>
-              </div>
-              <div class="text-[11px] font-semibold text-slate-800">
-                User: <span class="text-brand-navy">{{ tx.member_name or 'Employee' }}</span>
-                {% if tx.member_reg_no %}<span class="text-slate-400 text-[10px] font-mono">({{ tx.member_reg_no }})</span>{% endif %}
-              </div>
-              <p class="text-[11px] text-slate-600 font-medium leading-tight">
-                {{ tx.details }}
-              </p>
-              <div class="flex items-center justify-between text-[10px] text-slate-400 font-mono pt-1 border-t border-slate-200/50">
-                <span>{{ (tx.timestamp|string)[:10] }}</span>
-                <span>{{ (tx.timestamp|string)[11:16] }}</span>
-              </div>
-            </div>
-            {% endfor %}
-          </div>
-          {% else %}
-          <div class="py-4 px-2 text-center text-xs text-slate-400 italic">
-            No activity recorded yet.
-          </div>
-          {% endif %}
-        </div>
-
         <div class="pt-3 pb-1 px-4">
           <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Host Controls</span>
         </div>
         <a href="/users" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-display font-medium text-sm transition-all">
           <span class="material-symbols-outlined text-xl">manage_accounts</span>
           <span>Employee Directory</span>
+        </a>
+        <a href="/activity" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-display font-medium text-sm transition-all">
+          <span class="material-symbols-outlined text-xl">history</span>
+          <span>Activity History</span>
         </a>
         {% endif %}
       </nav>
@@ -815,23 +751,7 @@
       }
     }
 
-    // Host Controls: Toggle Activity Pane
-    function toggleSidebarActivity() {
-      const pane = document.getElementById('sidebarActivityPane');
-      const chevron = document.getElementById('activityChevron');
-      const btn = document.getElementById('activityNavBtn');
-      if (!pane) return;
-      const isHidden = pane.classList.contains('hidden');
-      if (isHidden) {
-        pane.classList.remove('hidden');
-        if (chevron) chevron.style.transform = 'rotate(180deg)';
-        if (btn) btn.classList.add('bg-blue-50/60', 'text-brand-accent');
-      } else {
-        pane.classList.add('hidden');
-        if (chevron) chevron.style.transform = 'rotate(0deg)';
-        if (btn) btn.classList.remove('bg-blue-50/60', 'text-brand-accent');
-      }
-    }
+
 
     // Host Controls: Edit Book Details
     function openEditBookModal(lockerId, currentLabel, currentAuthor) {

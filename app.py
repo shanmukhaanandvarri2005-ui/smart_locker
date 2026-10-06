@@ -110,21 +110,6 @@ def dashboard_page():
     all_lockers = [dict(row) for row in cursor.fetchall()]
     available_lockers = [l for l in all_lockers if l['occupancy_status'] == 'present']
 
-    # Role-based Recent Activity:
-    # "for the host, the data of the every person has to be seen. for the other employees there should be no recent activity to see."
-    if is_host:
-        cursor.execute('''
-        SELECT t.*, m.name as member_name, m.reg_no as member_reg_no, m.avatar_url as member_avatar,
-               b.book_label, b.locker_code
-        FROM transactions t
-        LEFT JOIN members m ON t.member_id = m.member_id
-        LEFT JOIN lockers b ON t.locker_id = b.locker_id
-        ORDER BY t.timestamp DESC LIMIT 30
-        ''')
-        recent_transactions = [dict(row) for row in cursor.fetchall()]
-    else:
-        recent_transactions = []
-
     conn.close()
 
     single_locker = all_lockers[0] if all_lockers else None
@@ -134,7 +119,6 @@ def dashboard_page():
                            available_lockers=available_lockers,
                            all_lockers=all_lockers,
                            single_locker=single_locker,
-                           recent_transactions=recent_transactions,
                            is_host=is_host)
 
 @app.route('/borrow')
@@ -179,6 +163,51 @@ def users_page():
     conn.close()
 
     return render_template('users.html', all_members=all_members)
+
+@app.route('/activity')
+def activity_page():
+    """All Member Activity History (Host Only) — Feature to see all activities of every person."""
+    if 'member_id' not in session:
+        return redirect(url_for('auth_page'))
+    if session.get('role') not in ('staff', 'admin', 'host'):
+        return redirect(url_for('dashboard_page'))
+    
+    conn = get_db()
+    cursor = conn.cursor()
+
+    cursor.execute('''
+    SELECT t.*, 
+           m.name as member_name, m.reg_no as member_reg_no, m.rfid_uid as member_rfid, 
+           m.avatar_url as member_avatar, m.role as member_role,
+           b.book_label, b.locker_code
+    FROM transactions t
+    LEFT JOIN members m ON t.member_id = m.member_id
+    LEFT JOIN lockers b ON t.locker_id = b.locker_id
+    ORDER BY t.timestamp DESC
+    ''')
+    all_activities = [dict(row) for row in cursor.fetchall()]
+
+    # Quick overview metrics for host
+    cursor.execute("SELECT COUNT(*) FROM transactions")
+    total_activities_count = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM transactions WHERE operation = 'borrow' AND result = 'success'")
+    total_borrows_count = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM transactions WHERE operation = 'return' AND result = 'success'")
+    total_returns_count = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(DISTINCT member_id) FROM loans WHERE status = 'active'")
+    active_borrowers_count = cursor.fetchone()[0]
+
+    conn.close()
+
+    return render_template('activity.html',
+                           all_activities=all_activities,
+                           total_activities_count=total_activities_count,
+                           total_borrows_count=total_borrows_count,
+                           total_returns_count=total_returns_count,
+                           active_borrowers_count=active_borrowers_count)
 
 @app.route('/logout')
 def logout():

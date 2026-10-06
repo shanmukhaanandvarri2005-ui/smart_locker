@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>SmartLocker — Activity History (Host Controls)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              navy: '#002549',
+              blue: '#123b67',
+              accent: '#2563eb',
+              light: '#f8f9ff',
+              surface: '#eef2f9',
+              success: '#15803d',
+              danger: '#b91c1c'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-brand-light font-sans text-slate-800 antialiased min-h-screen flex">
+
+  <!-- Sidebar Navigation -->
+  <aside class="w-64 bg-white border-r border-slate-200 flex flex-col justify-between hidden md:flex shrink-0 h-screen sticky top-0">
+    <div class="flex flex-col min-h-0 flex-1 overflow-y-auto">
+      <div class="p-6 flex items-center gap-3 border-b border-slate-100 shrink-0">
+        <div class="w-9 h-9 rounded-lg bg-brand-navy flex items-center justify-center text-white shadow">
+          <span class="material-symbols-outlined text-xl">corporate_fare</span>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-display font-bold text-base text-brand-navy leading-tight">SmartLocker</span>
+          <span class="text-[11px] text-slate-500">Host Management</span>
+        </div>
+      </div>
+
+      <nav class="p-4 flex flex-col gap-1.5">
+        <a href="/dashboard" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-display font-medium text-sm transition-all">
+          <span class="material-symbols-outlined text-xl">dashboard</span>
+          <span>Dashboard</span>
+        </a>
+
+        {% if current_user and current_user.role in ['staff', 'admin', 'host'] %}
+        <div class="pt-3 pb-1 px-4">
+          <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Host Controls</span>
+        </div>
+        <a href="/users" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-display font-medium text-sm transition-all">
+          <span class="material-symbols-outlined text-xl">manage_accounts</span>
+          <span>Employee Directory</span>
+        </a>
+        <a href="/activity" class="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-blue-50 text-brand-accent font-display font-semibold text-sm transition-all">
+          <span class="material-symbols-outlined text-xl">history</span>
+          <span>Activity History</span>
+        </a>
+        {% endif %}
+      </nav>
+    </div>
+
+    <!-- User Profile & Logout -->
+    <div class="p-4 border-t border-slate-100 flex flex-col gap-3">
+      <div class="flex items-center gap-3 p-2 bg-slate-50 rounded-xl">
+        <img src="{{ current_user.avatar_url if current_user and current_user.avatar_url else 'https://api.dicebear.com/7.x/initials/svg?seed=User&backgroundColor=123b67' }}" class="w-9 h-9 rounded-full object-cover shadow-sm bg-white" alt="Avatar"/>
+        <div class="flex flex-col min-w-0">
+          <span class="font-display font-semibold text-xs text-slate-800 truncate">{{ current_user.name if current_user else "Host" }}</span>
+          <span class="text-[10px] font-mono uppercase font-bold text-brand-accent">Host Control</span>
+        </div>
+      </div>
+      <a href="/logout" class="flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors">
+        <span class="material-symbols-outlined text-base">logout</span>
+        <span>Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+    
+    <!-- Top Header -->
+    <header class="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between shadow-sm sticky top-0 z-30">
+      <div class="flex items-center gap-3">
+        <span class="font-display font-bold text-base text-brand-navy">All Member Activity History</span>
+        <span class="bg-purple-50 text-purple-700 border border-purple-200 text-[10px] font-mono uppercase font-bold px-2.5 py-0.5 rounded-full">
+          Host View Only
+        </span>
+      </div>
+      <a href="/dashboard" class="text-xs font-semibold text-brand-accent hover:underline flex items-center gap-1">
+        <span>Back to Dashboard</span>
+        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+      </a>
+    </header>
+
+    <!-- Page Body -->
+    <main class="p-6 md:p-8 flex flex-col gap-6 max-w-7xl mx-auto w-full">
+      
+      <!-- Top Action Bar -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="flex flex-col gap-1">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-brand-accent text-2xl">history</span>
+            <h1 class="font-display font-extrabold text-xl sm:text-2xl text-brand-navy">
+              Personnel Activity Log
+            </h1>
+          </div>
+          <p class="text-xs text-slate-500">
+            Real-time audit log of all borrowing, returning, card scans, and system maintenance across every employee.
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button 
+            type="button" 
+            onclick="window.location.reload()" 
+            class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs px-3.5 py-2 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+          >
+            <span class="material-symbols-outlined text-sm">refresh</span>
+            <span>Refresh Logs</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Metrics Grid -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-blue-50 text-brand-accent flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-2xl">format_list_bulleted</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-xs text-slate-500 font-medium">Total Activities</span>
+            <span class="font-display font-extrabold text-xl text-brand-navy">{{ total_activities_count }}</span>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-2xl">lock_open</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-xs text-slate-500 font-medium">Books Borrowed</span>
+            <span class="font-display font-extrabold text-xl text-emerald-700">{{ total_borrows_count }}</span>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-2xl">assignment_turned_in</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-xs text-slate-500 font-medium">Books Returned</span>
+            <span class="font-display font-extrabold text-xl text-purple-700">{{ total_returns_count }}</span>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-2xl">group</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-xs text-slate-500 font-medium">Active Borrowers</span>
+            <span class="font-display font-extrabold text-xl text-amber-700">{{ active_borrowers_count }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search & Filters Bar -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex flex-col md:flex-row items-center justify-between gap-3">
+        <div class="relative w-full md:w-80">
+          <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+          <input 
+            type="text" 
+            id="activitySearchInput" 
+            oninput="filterActivities()" 
+            placeholder="Search employee name or card ID..." 
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-accent focus:bg-white"
+          />
+        </div>
+
+        <div class="flex items-center gap-2.5 w-full md:w-auto">
+          <!-- Action Filter -->
+          <select 
+            id="actionFilterSelect" 
+            onchange="filterActivities()" 
+            class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-accent"
+          >
+            <option value="ALL">All Actions</option>
+            <option value="borrow">Borrow</option>
+            <option value="return">Return</option>
+            <option value="auth">Card Tap / Login</option>
+            <option value="maintenance">Maintenance</option>
+          </select>
+
+          <!-- Status Filter -->
+          <select 
+            id="statusFilterSelect" 
+            onchange="filterActivities()" 
+            class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-accent"
+          >
+            <option value="ALL">All Status</option>
+            <option value="success">Success</option>
+            <option value="rejected">Denied / Error</option>
+          </select>
+
+          <span id="filteredCountBadge" class="font-mono text-xs bg-slate-100 text-slate-600 font-bold px-3 py-1.5 rounded-xl shrink-0">
+            {{ all_activities|length }} Records
+          </span>
+        </div>
+      </div>
+
+      <!-- Activities Table Card -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-sm" id="activityTable">
+            <thead>
+              <tr class="bg-slate-50 text-slate-500 font-display font-semibold text-xs border-b border-slate-200">
+                <th class="py-3.5 px-4">Employee</th>
+                <th class="py-3.5 px-4">Card ID</th>
+                <th class="py-3.5 px-4">Action</th>
+                <th class="py-3.5 px-4">Book &amp; Locker</th>
+                <th class="py-3.5 px-4">Status</th>
+                <th class="py-3.5 px-4">Date &amp; Time</th>
+                <th class="py-3.5 px-4">Details</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100" id="activityTableBody">
+              {% for act in all_activities %}
+              <tr 
+                class="hover:bg-slate-50/80 transition-colors activity-row"
+                data-name="{{ (act.member_name or '')|lower }}"
+                data-rfid="{{ (act.member_rfid or act.member_reg_no or '')|lower }}"
+                data-action="{{ (act.operation or '')|lower }}"
+                data-status="{{ (act.result or '')|lower }}"
+              >
+                <!-- Employee Column -->
+                <td class="py-3.5 px-4">
+                  <div class="flex items-center gap-3">
+                    <img 
+                      src="{{ act.member_avatar if act.member_avatar else 'https://api.dicebear.com/7.x/initials/svg?seed=' + (act.member_name or 'User') + '&backgroundColor=123b67' }}" 
+                      class="w-8 h-8 rounded-full border border-slate-200 bg-white object-cover" 
+                      alt="Avatar"
+                    />
+                    <div class="flex flex-col">
+                      <span class="font-display font-bold text-slate-800 text-xs">
+                        {{ act.member_name or 'System User' }}
+                      </span>
+                      <span class="text-[10px] uppercase font-bold text-slate-400 font-mono">
+                        {{ act.member_role or 'Personnel' }}
+                      </span>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Card ID Column -->
+                <td class="py-3.5 px-4 font-mono text-xs font-bold text-brand-accent">
+                  {{ act.member_rfid or act.member_reg_no or '—' }}
+                </td>
+
+                <!-- Action Column -->
+                <td class="py-3.5 px-4">
+                  {% if act.operation == 'borrow' %}
+                  <span class="inline-flex items-center gap-1 text-[11px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-0.5 rounded-full">
+                    <span class="material-symbols-outlined text-xs">lock_open</span>
+                    <span>BORROW</span>
+                  </span>
+                  {% elif act.operation == 'return' %}
+                  <span class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+                    <span class="material-symbols-outlined text-xs">assignment_turned_in</span>
+                    <span>RETURN</span>
+                  </span>
+                  {% elif act.operation == 'auth' %}
+                  <span class="inline-flex items-center gap-1 text-[11px] font-bold text-slate-700 bg-slate-100 border border-slate-200 px-2.5 py-0.5 rounded-full">
+                    <span class="material-symbols-outlined text-xs">badge</span>
+                    <span>LOGIN</span>
+                  </span>
+                  {% else %}
+                  <span class="inline-flex items-center gap-1 text-[11px] font-bold text-purple-700 bg-purple-50 border border-purple-200 px-2.5 py-0.5 rounded-full">
+                    <span class="material-symbols-outlined text-xs">tune</span>
+                    <span>{{ act.operation|upper }}</span>
+                  </span>
+                  {% endif %}
+                </td>
+
+                <!-- Book & Locker Column -->
+                <td class="py-3.5 px-4">
+                  {% if act.book_label %}
+                  <div class="flex flex-col">
+                    <span class="font-display font-semibold text-xs text-slate-800">{{ act.book_label }}</span>
+                    <span class="font-mono text-[10px] text-brand-accent font-bold">{{ act.locker_code }}</span>
+                  </div>
+                  {% else %}
+                  <span class="text-xs text-slate-400 font-mono">—</span>
+                  {% endif %}
+                </td>
+
+                <!-- Status Column -->
+                <td class="py-3.5 px-4">
+                  {% if act.result == 'success' %}
+                  <span class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Success
+                  </span>
+                  {% else %}
+                  <span class="inline-flex items-center gap-1 text-[11px] font-bold text-red-700 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full">
+                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Denied
+                  </span>
+                  {% endif %}
+                </td>
+
+                <!-- Date & Time Column -->
+                <td class="py-3.5 px-4 font-mono text-xs text-slate-600 whitespace-nowrap">
+                  {{ (act.timestamp|string)[:19] }}
+                </td>
+
+                <!-- Details Column -->
+                <td class="py-3.5 px-4 text-xs text-slate-600 max-w-xs truncate" title="{{ act.details }}">
+                  {{ act.details or '—' }}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+          <!-- Empty Search State -->
+          <div id="noMatchMessage" class="hidden py-12 text-center flex flex-col items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-slate-300 text-3xl">filter_list_off</span>
+            <span class="font-display font-bold text-slate-700 text-sm">No Matching Activities Found</span>
+            <p class="text-xs text-slate-400">Try adjusting your search terms or filters.</p>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto bg-white border-t border-slate-200 py-4 px-6 text-center text-xs text-slate-500">
+      SmartLocker Automated Station • Host Security Control
+    </footer>
+
+  </div>
+
+  <script>
+    function filterActivities() {
+      const q = document.getElementById('activitySearchInput').value.trim().toLowerCase();
+      const action = document.getElementById('actionFilterSelect').value.toLowerCase();
+      const status = document.getElementById('statusFilterSelect').value.toLowerCase();
+
+      const rows = document.querySelectorAll('.activity-row');
+      let visibleCount = 0;
+
+      rows.forEach(row => {
+        const rowName = row.getAttribute('data-name') || '';
+        const rowRfid = row.getAttribute('data-rfid') || '';
+        const rowAction = row.getAttribute('data-action') || '';
+        const rowStatus = row.getAttribute('data-status') || '';
+
+        const matchesQuery = !q || rowName.includes(q) || rowRfid.includes(q);
+        const matchesAction = (action === 'all') || (rowAction === action);
+        const matchesStatus = (status === 'all') || (rowStatus === status);
+
+        if (matchesQuery && matchesAction && matchesStatus) {
+          row.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          row.classList.add('hidden');
+        }
+      });
+
+      const badge = document.getElementById('filteredCountBadge');
+      if (badge) badge.textContent = visibleCount + ' Records';
+
+      const noMatch = document.getElementById('noMatchMessage');
+      if (noMatch) {
+        if (visibleCount === 0) {
+          noMatch.classList.remove('hidden');
+        } else {
+          noMatch.classList.add('hidden');
+        }
+      }
+    }
+  </script>
+
+  {% include 'inactivity_modal.html' %}
+</body>
+</html>
