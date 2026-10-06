@@ -114,10 +114,11 @@ http://127.0.0.1:5000
 
 | Role | Name | RFID UID | Permissions |
 | :--- | :--- | :--- | :--- |
+| **Host** | Manoj | `1244001510` | Full administrative control, system diagnostics, user management, edit locker books |
+| **Host** | Shanmukh | `3677855325` | Full administrative control, system diagnostics, user management, edit locker books |
 | **Host** | K. Ramesh | `E2:80:68:10` | Full administrative control, system diagnostics, user management, edit locker books |
-| **Employee** | Varri Shanmukha Anand | `12:5E:7B:44` | Borrow books, return books, view active loans and transaction history |
 
-*(You can simulate card taps on the login page by clicking the quick-select card chips or entering the RFID UID manually.)*
+*(You can simulate card taps on the login page by entering the RFID UID or ID manually.)*
 
 ---
 

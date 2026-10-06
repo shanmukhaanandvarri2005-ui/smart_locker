@@ -131,6 +131,12 @@ def init_db(force_reset=False):
         if os.path.exists(schema_path):
             conn = get_db()
             cursor = conn.cursor()
+            if not force_reset:
+                cursor.execute("SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'members'")
+                if cursor.fetchone():
+                    conn.close()
+                    print("Supabase PostgreSQL tables already exist. Skipping schema reset.")
+                    return
             with open(schema_path, 'r', encoding='utf-8') as f:
                 schema_sql = f.read()
             cursor.execute(schema_sql)
@@ -220,28 +226,28 @@ def seed_clean_data(conn):
     now = datetime.now()
     now_str = now.strftime('%Y-%m-%d %H:%M:%S')
 
-    # Production Registered Members (Employees & Hosts)
+    # Production Registered Members (Hosts)
     members = [
         (
-            'Varri Shanmukha Anand',
-            '12:5E:7B:44',
-            '21BEE1001',
+            'Manoj',
+            '1244001510',
+            '1244001510',
             'Electrical and Electronics Engineering',
             None,
-            'employee',
+            'host',
             'active',
-            'https://api.dicebear.com/7.x/initials/svg?seed=Shanmukha+Anand&backgroundColor=123b67',
+            'https://api.dicebear.com/7.x/initials/svg?seed=Manoj&backgroundColor=1e3a8a',
             now_str
         ),
         (
-            'Ananya Sharma',
-            '04:A2:8F:C9',
-            '21BEE1048',
+            'Shanmukh',
+            '3677855325',
+            '3677855325',
             'Electrical and Electronics Engineering',
             None,
-            'employee',
+            'host',
             'active',
-            'https://api.dicebear.com/7.x/initials/svg?seed=Ananya+Sharma&backgroundColor=2563eb',
+            'https://api.dicebear.com/7.x/initials/svg?seed=Shanmukh&backgroundColor=0284c7',
             now_str
         ),
         (

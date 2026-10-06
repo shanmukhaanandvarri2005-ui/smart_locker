@@ -69,28 +69,28 @@ CREATE INDEX idx_transactions_timestamp ON transactions(timestamp DESC);
 -- SEED DATA
 -- ==========================================================
 
--- Seed Members
+-- Seed Members (Hosts)
 INSERT INTO members (name, rfid_uid, reg_no, department, email, role, status, avatar_url)
 VALUES 
 (
-    'Varri Shanmukha Anand',
-    '12:5E:7B:44',
-    '21BEE1001',
+    'Manoj',
+    '1244001510',
+    '1244001510',
     'Electrical and Electronics Engineering',
     NULL,
-    'employee',
+    'host',
     'active',
-    'https://api.dicebear.com/7.x/initials/svg?seed=Shanmukha+Anand&backgroundColor=123b67'
+    'https://api.dicebear.com/7.x/initials/svg?seed=Manoj&backgroundColor=1e3a8a'
 ),
 (
-    'Ananya Sharma',
-    '04:A2:8F:C9',
-    '21BEE1048',
+    'Shanmukh',
+    '3677855325',
+    '3677855325',
     'Electrical and Electronics Engineering',
     NULL,
-    'employee',
+    'host',
     'active',
-    'https://api.dicebear.com/7.x/initials/svg?seed=Ananya+Sharma&backgroundColor=2563eb'
+    'https://api.dicebear.com/7.x/initials/svg?seed=Shanmukh&backgroundColor=0284c7'
 ),
 (
     'K. Ramesh',
