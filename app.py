@@ -86,16 +86,18 @@ def auth_page():
 
 @app.route('/dashboard')
 def dashboard_page():
-    """Member Dashboard."""
+    """Member Dashboard — Vending Machine Interface."""
     if 'member_id' not in session:
         return redirect(url_for('auth_page'))
     
     conn = get_db()
     cursor = conn.cursor()
 
+    is_host = session.get('role') in ('staff', 'admin', 'host')
+
     # Active loans for current member
     cursor.execute('''
-    SELECT l.*, b.book_label, b.book_author, b.book_isbn, b.locker_code, b.category
+    SELECT l.*, b.book_label, b.book_author, b.book_isbn, b.locker_code, b.category, b.cover_image
     FROM loans l
     JOIN lockers b ON l.locker_id = b.locker_id
     WHERE l.member_id = ? AND l.status = 'active'
@@ -103,20 +105,25 @@ def dashboard_page():
     ''', (session['member_id'],))
     active_loans = [dict(row) for row in cursor.fetchall()]
 
-    # Available books
+    # All lockers (5 vending books)
     cursor.execute('SELECT * FROM lockers ORDER BY locker_code ASC')
     all_lockers = [dict(row) for row in cursor.fetchall()]
     available_lockers = [l for l in all_lockers if l['occupancy_status'] == 'present']
 
-    # Recent transactions for current member
-    cursor.execute('''
-    SELECT t.*, b.book_label, b.locker_code
-    FROM transactions t
-    LEFT JOIN lockers b ON t.locker_id = b.locker_id
-    WHERE t.member_id = ?
-    ORDER BY t.timestamp DESC LIMIT 8
-    ''', (session['member_id'],))
-    recent_transactions = [dict(row) for row in cursor.fetchall()]
+    # Role-based Recent Activity:
+    # "for the host, the data of the every person has to be seen. for the other employees there should be no recent activity to see."
+    if is_host:
+        cursor.execute('''
+        SELECT t.*, m.name as member_name, m.reg_no as member_reg_no, m.avatar_url as member_avatar,
+               b.book_label, b.locker_code
+        FROM transactions t
+        LEFT JOIN members m ON t.member_id = m.member_id
+        LEFT JOIN lockers b ON t.locker_id = b.locker_id
+        ORDER BY t.timestamp DESC LIMIT 30
+        ''')
+        recent_transactions = [dict(row) for row in cursor.fetchall()]
+    else:
+        recent_transactions = []
 
     conn.close()
 
@@ -127,7 +134,8 @@ def dashboard_page():
                            available_lockers=available_lockers,
                            all_lockers=all_lockers,
                            single_locker=single_locker,
-                           recent_transactions=recent_transactions)
+                           recent_transactions=recent_transactions,
+                           is_host=is_host)
 
 @app.route('/borrow')
 def borrow_page():
@@ -319,15 +327,21 @@ def api_locker_unlock():
 
 @app.route('/api/locker/borrow', methods=['POST'])
 def api_locker_borrow():
-    """Executes verified borrow sequence according to SRS and SAD."""
+    """Executes verified multi-book or single-book borrow sequence."""
     if 'member_id' not in session:
         return jsonify({"success": False, "message": "Authentication required"}), 401
 
     data = request.get_json() or {}
-    locker_id = data.get('locker_id')
+    locker_ids = data.get('locker_ids')
+    if locker_ids is None:
+        single_id = data.get('locker_id')
+        if single_id is not None:
+            locker_ids = [single_id]
+        else:
+            locker_ids = []
 
-    if not locker_id:
-        return jsonify({"success": False, "message": "Locker ID is required"}), 400
+    if not locker_ids:
+        return jsonify({"success": False, "message": "Please select at least one book to borrow."}), 400
 
     conn = get_db()
     cursor = conn.cursor()
@@ -348,40 +362,56 @@ def api_locker_borrow():
         session.clear()
         return jsonify({"success": False, "message": "Session expired or user deleted. Please log in again."}), 401
 
-    cursor.execute("SELECT * FROM lockers WHERE locker_id = ?", (locker_id,))
-    locker = cursor.fetchone()
+    # Verify each requested locker
+    borrow_items = []
+    for lid in locker_ids:
+        try:
+            lid_int = int(lid)
+        except (ValueError, TypeError):
+            continue
+        cursor.execute("SELECT * FROM lockers WHERE locker_id = ?", (lid_int,))
+        locker = cursor.fetchone()
+        if not locker:
+            conn.close()
+            return jsonify({"success": False, "message": f"Locker compartment #{lid} was not found."}), 404
+        if locker['occupancy_status'] != 'present':
+            conn.close()
+            return jsonify({"success": False, "message": f"'{locker['book_label']}' ({locker['locker_code']}) is currently already borrowed."}), 400
+        borrow_items.append(locker)
 
-    if not locker:
+    if not borrow_items:
         conn.close()
-        return jsonify({"success": False, "message": "Locker not found"}), 404
+        return jsonify({"success": False, "message": "No valid lockers were selected for checkout."}), 400
 
-    if locker['occupancy_status'] != 'present':
-        conn.close()
-        return jsonify({"success": False, "message": "Book is already checked out of this locker."}), 400
-
-    now = datetime.now()
-    now_str = now.strftime('%Y-%m-%d %H:%M:%S')
+    now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     due_str = 'No Due Date'
+    dispensed_codes = []
+    dispensed_titles = []
 
     try:
-        # Trigger physical lock release & green indicator (ESP8266 + Solenoid)
-        hardware.unlock_solenoid(duration_sec=4, card_uid=session.get('rfid_uid'))
+        # Trigger physical lock release & green LED on ESP8266 controller
+        unlock_duration = max(4, 2 + len(borrow_items) * 2)
+        hardware.unlock_solenoid(duration_sec=unlock_duration, card_uid=session.get('rfid_uid'))
 
-        # Update database
-        cursor.execute('''
-        UPDATE lockers SET occupancy_status = 'absent', lock_status = 'unlocked', last_updated = ?
-        WHERE locker_id = ?
-        ''', (now_str, locker_id))
+        for locker in borrow_items:
+            lid = locker['locker_id']
+            dispensed_codes.append(locker['locker_code'])
+            dispensed_titles.append(locker['book_label'])
 
-        cursor.execute('''
-        INSERT INTO loans (member_id, locker_id, borrowed_at, due_date, status)
-        VALUES (?, ?, ?, ?, 'active')
-        ''', (session['member_id'], locker_id, now_str, due_str))
+            cursor.execute('''
+            UPDATE lockers SET occupancy_status = 'absent', lock_status = 'unlocked', last_updated = ?
+            WHERE locker_id = ?
+            ''', (now_str, lid))
 
-        cursor.execute('''
-        INSERT INTO transactions (member_id, locker_id, operation, result, timestamp, details)
-        VALUES (?, ?, 'borrow', 'success', ?, ?)
-        ''', (session['member_id'], locker_id, now_str, f"Dispensed {locker['book_label']} ({locker['locker_code']}) to {session.get('name')}"))
+            cursor.execute('''
+            INSERT INTO loans (member_id, locker_id, borrowed_at, due_date, status)
+            VALUES (?, ?, ?, ?, 'active')
+            ''', (session['member_id'], lid, now_str, due_str))
+
+            cursor.execute('''
+            INSERT INTO transactions (member_id, locker_id, operation, result, timestamp, details)
+            VALUES (?, ?, 'borrow', 'success', ?, ?)
+            ''', (session['member_id'], lid, now_str, f"Dispensed {locker['book_label']} ({locker['locker_code']}) to {session.get('name')}"))
 
         conn.commit()
     except Exception as e:
@@ -391,25 +421,33 @@ def api_locker_borrow():
 
     conn.close()
 
+    codes_str = ", ".join(dispensed_codes)
     return jsonify({
         "success": True,
-        "message": f"{locker['locker_code']} unlocked! Please collect '{locker['book_label']}' and close the compartment.",
-        "locker_code": locker['locker_code'],
-        "book_label": locker['book_label'],
+        "message": f"{codes_str} unlocked! Please collect your {len(dispensed_titles)} book(s) and close the doors.",
+        "count": len(dispensed_titles),
+        "locker_codes": dispensed_codes,
+        "book_labels": dispensed_titles,
         "due_date": "No Due Date"
     })
 
 @app.route('/api/locker/return', methods=['POST'])
 def api_locker_return():
-    """Executes verified return sequence according to SRS and SAD."""
+    """Executes verified multi-book or single-book return sequence."""
     if 'member_id' not in session:
         return jsonify({"success": False, "message": "Authentication required"}), 401
 
     data = request.get_json() or {}
-    loan_id = data.get('loan_id')
+    loan_ids = data.get('loan_ids')
+    if loan_ids is None:
+        single_id = data.get('loan_id')
+        if single_id is not None:
+            loan_ids = [single_id]
+        else:
+            loan_ids = []
 
-    if not loan_id:
-        return jsonify({"success": False, "message": "Loan ID is required"}), 400
+    if not loan_ids:
+        return jsonify({"success": False, "message": "Please select at least one borrowed book to return."}), 400
 
     conn = get_db()
     cursor = conn.cursor()
@@ -430,41 +468,55 @@ def api_locker_return():
         session.clear()
         return jsonify({"success": False, "message": "Session expired or user deleted. Please log in again."}), 401
 
-    cursor.execute('''
-    SELECT l.*, b.book_label, b.locker_id, b.locker_code 
-    FROM loans l
-    JOIN lockers b ON l.locker_id = b.locker_id
-    WHERE l.loan_id = ? AND l.member_id = ? AND l.status = 'active'
-    ''', (loan_id, session['member_id']))
-    loan = cursor.fetchone()
+    return_records = []
+    for lid in loan_ids:
+        try:
+            lid_int = int(lid)
+        except (ValueError, TypeError):
+            continue
+        cursor.execute('''
+        SELECT l.*, b.book_label, b.locker_id, b.locker_code 
+        FROM loans l
+        JOIN lockers b ON l.locker_id = b.locker_id
+        WHERE l.loan_id = ? AND l.member_id = ? AND l.status = 'active'
+        ''', (lid_int, session['member_id']))
+        loan = cursor.fetchone()
+        if not loan:
+            conn.close()
+            return jsonify({"success": False, "message": f"Active loan record #{lid} not found."}), 404
+        return_records.append(loan)
 
-    if not loan:
+    if not return_records:
         conn.close()
-        return jsonify({"success": False, "message": "Active loan record not found."}), 404
+        return jsonify({"success": False, "message": "No valid active loans were selected for return."}), 400
 
     now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    returned_codes = []
+    returned_titles = []
 
     try:
         # Trigger lock release (ESP8266 + Solenoid)
-        hardware.unlock_solenoid(duration_sec=4, card_uid=session.get('rfid_uid'))
+        unlock_duration = max(4, 2 + len(return_records) * 2)
+        hardware.unlock_solenoid(duration_sec=unlock_duration, card_uid=session.get('rfid_uid'))
 
-        # Update loan
-        cursor.execute('''
-        UPDATE loans SET returned_at = ?, status = 'returned'
-        WHERE loan_id = ?
-        ''', (now_str, loan_id))
+        for loan in return_records:
+            returned_codes.append(loan['locker_code'])
+            returned_titles.append(loan['book_label'])
 
-        # Update locker status
-        cursor.execute('''
-        UPDATE lockers SET occupancy_status = 'present', lock_status = 'locked', last_updated = ?
-        WHERE locker_id = ?
-        ''', (now_str, loan['locker_id']))
+            cursor.execute('''
+            UPDATE loans SET returned_at = ?, status = 'returned'
+            WHERE loan_id = ?
+            ''', (now_str, loan['loan_id']))
 
-        # Transaction audit log
-        cursor.execute('''
-        INSERT INTO transactions (member_id, locker_id, operation, result, timestamp, details)
-        VALUES (?, ?, 'return', 'success', ?, ?)
-        ''', (session['member_id'], loan['locker_id'], now_str, f"Returned {loan['book_label']} ({loan['locker_code']}) verified."))
+            cursor.execute('''
+            UPDATE lockers SET occupancy_status = 'present', lock_status = 'locked', last_updated = ?
+            WHERE locker_id = ?
+            ''', (now_str, loan['locker_id']))
+
+            cursor.execute('''
+            INSERT INTO transactions (member_id, locker_id, operation, result, timestamp, details)
+            VALUES (?, ?, 'return', 'success', ?, ?)
+            ''', (session['member_id'], loan['locker_id'], now_str, f"Returned {loan['book_label']} ({loan['locker_code']}) verified."))
 
         conn.commit()
     except Exception as e:
@@ -474,11 +526,13 @@ def api_locker_return():
 
     conn.close()
 
+    codes_str = ", ".join(returned_codes)
     return jsonify({
         "success": True,
-        "message": f"{loan['locker_code']} unlocked. '{loan['book_label']}' successfully returned.",
-        "locker_code": loan['locker_code'],
-        "book_label": loan['book_label']
+        "message": f"{codes_str} unlocked! Please return your {len(returned_titles)} book(s) and close the doors.",
+        "count": len(returned_titles),
+        "locker_codes": returned_codes,
+        "book_labels": returned_titles
     })
 
 @app.route('/api/lockers/<int:locker_id>/book', methods=['POST', 'PUT'])

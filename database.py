@@ -180,12 +180,18 @@ def init_db(force_reset=False):
         book_author TEXT NOT NULL,
         book_isbn TEXT,
         category TEXT DEFAULT 'Engineering',
+        cover_image TEXT,
         occupancy_status TEXT NOT NULL DEFAULT 'present', -- 'present', 'absent'
         door_status TEXT NOT NULL DEFAULT 'closed',       -- 'closed', 'open'
         lock_status TEXT NOT NULL DEFAULT 'locked',       -- 'locked', 'unlocked'
         last_updated TEXT NOT NULL
     )
     ''')
+
+    try:
+        cursor.execute("ALTER TABLE lockers ADD COLUMN cover_image TEXT")
+    except Exception:
+        pass
 
     # Loans Table
     cursor.execute('''
@@ -267,13 +273,17 @@ def seed_clean_data(conn):
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     ''', members)
 
-    # Single Physical Locker Prototype Unit (All sensors armed and locked)
+    # 5 Physical Locker Compartments with Book Covers
     lockers = [
-        ('Locker 01', 'Modern Control Engineering (5th Edition)', 'Katsuhiko Ogata', '978-0136156734', 'Control Systems', 'present', 'closed', 'locked', now_str)
+        ('Locker 01', 'Modern Control Engineering', 'Katsuhiko Ogata', '978-0136156734', 'Control Systems', 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&auto=format&fit=crop&q=80', 'present', 'closed', 'locked', now_str),
+        ('Locker 02', 'Electric Circuits & Networks', 'James W. Nilsson', '978-0134746968', 'Circuit Theory', 'https://images.unsplash.com/photo-1532012164546-f432f2e37b73?w=400&auto=format&fit=crop&q=80', 'present', 'closed', 'locked', now_str),
+        ('Locker 03', 'Signals and Systems', 'Alan V. Oppenheim', '978-0138147570', 'Signal Processing', 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&auto=format&fit=crop&q=80', 'present', 'closed', 'locked', now_str),
+        ('Locker 04', 'Power Electronics', 'Muhammad H. Rashid', '978-0133125900', 'Power Engineering', 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=400&auto=format&fit=crop&q=80', 'present', 'closed', 'locked', now_str),
+        ('Locker 05', 'Microelectronic Circuits', 'Adel S. Sedra', '978-0190853464', 'Electronics', 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=400&auto=format&fit=crop&q=80', 'present', 'closed', 'locked', now_str)
     ]
     cursor.executemany('''
-    INSERT INTO lockers (locker_code, book_label, book_author, book_isbn, category, occupancy_status, door_status, lock_status, last_updated)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO lockers (locker_code, book_label, book_author, book_isbn, category, cover_image, occupancy_status, door_status, lock_status, last_updated)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ''', lockers)
 
     conn.commit()

@@ -75,7 +75,7 @@
   <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
     <header class="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between shadow-sm sticky top-0 z-30">
       <div class="flex items-center gap-2">
-        <span class="font-display font-bold text-base text-brand-navy">Employee Directory &amp; RFID Credential Registry</span>
+        <span class="font-display font-bold text-base text-brand-navy">Employee Directory</span>
       </div>
       <a href="/dashboard" class="text-xs font-semibold text-brand-accent hover:underline flex items-center gap-1">
         <span>Back to Dashboard</span>
@@ -88,7 +88,8 @@
       <!-- Top Action Bar -->
       <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="flex flex-col">
-          <h1 class="font-display font-bold text-xl text-brand-navy">Company Personnel Directory</h1>
+          <h1 class="font-display font-bold text-xl text-brand-navy">Employee Directory</h1>
+          <p class="text-xs text-slate-500">Manage all registered employees, card access, and borrowed books.</p>
         </div>
         <button 
           type="button" 
@@ -96,7 +97,7 @@
           class="bg-brand-accent hover:bg-brand-blue text-white font-display font-semibold text-xs px-4 py-2.5 rounded-xl shadow-sm transition-all flex items-center gap-2 self-start sm:self-auto cursor-pointer"
         >
           <span class="material-symbols-outlined text-base">person_add</span>
-          <span>Enroll New Employee</span>
+          <span>Add New Employee</span>
         </button>
       </div>
 
@@ -106,12 +107,12 @@
           <table class="w-full text-left border-collapse text-sm">
             <thead>
               <tr class="bg-slate-50 text-slate-500 font-display font-semibold text-xs border-b border-slate-200">
-                <th class="py-3.5 px-4">Member Name</th>
-                <th class="py-3.5 px-4">RFID UID</th>
-                <th class="py-3.5 px-4">Active Loans</th>
+                <th class="py-3.5 px-4">Employee Name</th>
+                <th class="py-3.5 px-4">Card ID</th>
+                <th class="py-3.5 px-4">Borrowed books</th>
                 <th class="py-3.5 px-4">Role</th>
                 <th class="py-3.5 px-4">Status</th>
-                <th class="py-3.5 px-4 text-right">Action</th>
+                <th class="py-3.5 px-4 text-right">Actions</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
@@ -129,17 +130,17 @@
                   {{ m.rfid_uid }}
                 </td>
                 <td class="py-3.5 px-4 font-mono text-xs">
-                  <span class="px-2 py-0.5 rounded font-semibold {% if m.active_loans_count > 0 %}bg-blue-50 text-brand-accent{% else %}text-slate-400{% endif %}">
-                    {{ m.active_loans_count }} Active
+                  <span class="px-2.5 py-1 rounded-full font-semibold {% if m.active_loans_count > 0 %}bg-blue-50 text-brand-accent border border-blue-200{% else %}text-slate-400 bg-slate-100{% endif %}">
+                    {{ m.active_loans_count }} Borrowed
                   </span>
                 </td>
                 <td class="py-3.5 px-4">
-                  <span class="font-mono text-[10px] uppercase font-bold px-2 py-0.5 rounded {% if m.role in ['host', 'staff', 'admin'] %}bg-purple-50 text-purple-700 border border-purple-200{% else %}bg-slate-100 text-slate-600{% endif %}">
+                  <span class="font-mono text-[10px] uppercase font-bold px-2.5 py-0.5 rounded {% if m.role in ['host', 'staff', 'admin'] %}bg-purple-50 text-purple-700 border border-purple-200{% else %}bg-slate-100 text-slate-600{% endif %}">
                     {{ 'HOST' if m.role in ['host', 'staff', 'admin'] else 'EMPLOYEE' }}
                   </span>
                 </td>
                 <td class="py-3.5 px-4">
-                  <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                  <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Active
                   </span>
                 </td>
@@ -149,7 +150,7 @@
                       type="button" 
                       onclick="openEditMemberModal({{ m.member_id }}, '{{ m.name|escape }}', '{{ m.rfid_uid|escape }}', '{{ m.role|escape }}')" 
                       class="inline-flex items-center gap-1 text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-200 px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer"
-                      title="Edit member details and role"
+                      title="Edit employee details and role"
                     >
                       <span class="material-symbols-outlined text-sm">edit</span>
                       <span>Edit</span>
@@ -159,7 +160,7 @@
                       type="button" 
                       onclick="removeMember({{ m.member_id }}, '{{ m.name|escape }}', {{ m.active_loans_count }})" 
                       class="inline-flex items-center gap-1 text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer"
-                      title="Remove member from registry"
+                      title="Remove employee"
                     >
                       <span class="material-symbols-outlined text-sm">delete</span>
                       <span>Remove</span>
@@ -181,44 +182,44 @@
     </footer>
   </div>
 
-  <!-- Enroll Member Modal -->
+  <!-- Add New Employee Modal -->
   <div id="enrollModal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl border border-slate-100 max-w-md w-full p-6 flex flex-col gap-4">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-        <h2 class="font-display font-bold text-base text-brand-navy">Enroll New Employee</h2>
-        <button onclick="document.getElementById('enrollModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 text-lg">✕</button>
+        <h2 class="font-display font-bold text-base text-brand-navy">Add New Employee</h2>
+        <button onclick="document.getElementById('enrollModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 text-lg cursor-pointer">✕</button>
       </div>
 
       <form autocomplete="off" onsubmit="event.preventDefault(); submitEnrollment();" class="flex flex-col gap-3 text-xs">
         <div class="flex flex-col gap-1">
-          <label class="font-semibold text-slate-600">Full Name</label>
+          <label class="font-semibold text-slate-600">Employee Name</label>
           <input type="text" id="newName" autocomplete="off" spellcheck="false" required placeholder="e.g. Ramesh Varma" class="p-2.5 border rounded-lg bg-slate-50 focus:bg-white text-sm" />
         </div>
         <div class="flex flex-col gap-1">
-          <label class="font-semibold text-slate-600">RFID Card UID</label>
-          <input type="text" id="newRfid" autocomplete="off" spellcheck="false" required placeholder="e.g. 9A:88:B1:02" class="p-2.5 border rounded-lg bg-slate-50 focus:bg-white text-sm font-mono" />
+          <label class="font-semibold text-slate-600">Card ID (Tap or Type)</label>
+          <input type="text" id="newRfid" autocomplete="off" spellcheck="false" required placeholder="e.g. 1244001510" class="p-2.5 border rounded-lg bg-slate-50 focus:bg-white text-sm font-mono" />
         </div>
         <div class="flex flex-col gap-1">
-          <label class="font-semibold text-slate-600">Employee Role</label>
+          <label class="font-semibold text-slate-600">Role</label>
           <select id="newRole" class="p-2.5 border rounded-lg bg-slate-50 focus:bg-white text-sm">
             <option value="employee">Employee</option>
             <option value="host">Host</option>
           </select>
         </div>
         <button type="submit" class="mt-2 bg-brand-accent hover:bg-brand-blue text-white font-display font-bold text-sm py-2.5 rounded-lg shadow transition-all cursor-pointer">
-          Register Employee Credential
+          Add Employee
         </button>
       </form>
     </div>
   </div>
 
-  <!-- Edit Member Modal -->
+  <!-- Edit Employee Modal -->
   <div id="editMemberModal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl border border-slate-100 max-w-md w-full p-6 flex flex-col gap-4">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
         <div class="flex items-center gap-2">
           <span class="material-symbols-outlined text-purple-700 text-xl">manage_accounts</span>
-          <h2 class="font-display font-bold text-base text-brand-navy">Edit Member Details</h2>
+          <h2 class="font-display font-bold text-base text-brand-navy">Edit Employee Details</h2>
         </div>
         <button onclick="document.getElementById('editMemberModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 text-lg cursor-pointer">✕</button>
       </div>
@@ -226,18 +227,18 @@
       <form autocomplete="off" onsubmit="event.preventDefault(); submitMemberEdit();" class="flex flex-col gap-3 text-xs">
         <input type="hidden" id="editMemberId" />
         <div class="flex flex-col gap-1">
-          <label class="font-semibold text-slate-600">Full Name</label>
+          <label class="font-semibold text-slate-600">Employee Name</label>
           <input type="text" id="editMemberName" autocomplete="off" spellcheck="false" required placeholder="e.g. Ramesh Varma" class="p-2.5 border rounded-lg bg-slate-50 focus:bg-white text-sm" />
         </div>
         <div class="flex flex-col gap-1">
-          <label class="font-semibold text-slate-600">RFID Card UID / ID</label>
+          <label class="font-semibold text-slate-600">Card ID</label>
           <input type="text" id="editMemberRfid" autocomplete="off" spellcheck="false" required placeholder="e.g. 1244001510" class="p-2.5 border rounded-lg bg-slate-50 focus:bg-white text-sm font-mono" />
         </div>
         <div class="flex flex-col gap-1">
-          <label class="font-semibold text-slate-600">Access Role</label>
+          <label class="font-semibold text-slate-600">Role</label>
           <select id="editMemberRole" class="p-2.5 border rounded-lg bg-slate-50 focus:bg-white text-sm font-semibold">
-            <option value="employee">Employee (Borrow &amp; Return Only)</option>
-            <option value="host">Host (Full Administrative Control)</option>
+            <option value="employee">Employee</option>
+            <option value="host">Host</option>
           </select>
         </div>
         <div class="flex items-center justify-end gap-2 mt-2 pt-2 border-t border-slate-100">
@@ -245,7 +246,7 @@
             Cancel
           </button>
           <button type="submit" id="saveMemberBtn" class="bg-brand-accent hover:bg-brand-blue text-white font-display font-bold text-sm py-2 px-4 rounded-lg shadow transition-all cursor-pointer">
-            Save Permanent Changes
+            Save Changes
           </button>
         </div>
       </form>
@@ -285,17 +286,17 @@
         });
         const data = await res.json();
         if (data.success) {
-          alert('Member updated permanently!');
+          alert('Employee updated successfully!');
           window.location.reload();
         } else {
-          alert(data.message || 'Error updating member');
+          alert(data.message || 'Error updating employee');
           btn.disabled = false;
-          btn.textContent = 'Save Permanent Changes';
+          btn.textContent = 'Save Changes';
         }
       } catch (err) {
         alert('Communication error with server');
         btn.disabled = false;
-        btn.textContent = 'Save Permanent Changes';
+        btn.textContent = 'Save Changes';
       }
     }
 
@@ -312,10 +313,10 @@
         });
         const data = await res.json();
         if (data.success) {
-          alert('Member enrolled permanently!');
+          alert('Employee added successfully!');
           window.location.reload();
         } else {
-          alert(data.message || 'Error enrolling member');
+          alert(data.message || 'Error adding employee');
         }
       } catch (err) {
         alert('Communication error with server');
@@ -324,11 +325,11 @@
 
     async function removeMember(memberId, memberName, activeLoansCount) {
       if (activeLoansCount > 0) {
-        alert('Cannot remove employee "' + memberName + '". They currently have ' + activeLoansCount + ' active borrowed item(s) that must be returned first.');
+        alert('Cannot remove employee "' + memberName + '". They currently have ' + activeLoansCount + ' borrowed book(s) that must be returned first.');
         return;
       }
 
-      if (!confirm('Are you sure you want to permanently remove "' + memberName + '" from the registry?')) {
+      if (!confirm('Are you sure you want to remove employee "' + memberName + '"?')) {
         return;
       }
 
@@ -338,10 +339,10 @@
         });
         const data = await res.json();
         if (data.success) {
-          alert(data.message || 'Member removed permanently!');
+          alert(data.message || 'Employee removed successfully!');
           window.location.reload();
         } else {
-          alert(data.message || 'Error removing member');
+          alert(data.message || 'Error removing employee');
         }
       } catch (err) {
         alert('Communication error with server');

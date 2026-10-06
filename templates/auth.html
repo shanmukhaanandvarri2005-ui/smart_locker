@@ -64,14 +64,10 @@
         <span class="font-mono text-xs font-semibold text-slate-700">Station #01 Online</span>
       </div>
     </div>
-  </header>
-
-  <!-- Main Portal Stage -->
+  </header>  <!-- Main Portal Stage -->
   <main class="flex-1 flex items-center justify-center p-6">
-    <div class="max-w-xl w-full bg-white rounded-2xl shadow-xl border border-slate-100 p-8 sm:p-10 flex flex-col items-center text-center">
-      
-
-
+    <!-- Scan Stage -->
+    <div id="scanStage" class="max-w-xl w-full bg-white rounded-2xl shadow-xl border border-slate-100 p-8 sm:p-10 flex flex-col items-center text-center transition-all">
       <h1 class="font-display font-extrabold text-2xl sm:text-3xl text-brand-navy tracking-tight mb-6">
         Welcome to SmartLocker
       </h1>
@@ -90,7 +86,7 @@
           Ready for Card Tap
         </span>
         <span class="text-xs text-slate-500">
-          Accepts ISO/IEC 14443 Type A &amp; EM4100 RFID Cards
+          Tap your RFID card on the scanner to begin
         </span>
       </div>
 
@@ -123,9 +119,70 @@
           <span id="btnLabel">Access System</span>
         </button>
       </form>
+    </div>
+
+    <!-- Confirmation Frame (Revealed on card tap) -->
+    <div id="confirmStage" class="hidden max-w-md w-full bg-white rounded-2xl shadow-2xl border border-slate-100 p-8 sm:p-10 flex flex-col items-center text-center transition-all animate-in fade-in zoom-in-95 duration-200">
+      
+      <div class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-3.5 py-1 rounded-full mb-6">
+        <span class="material-symbols-outlined text-base text-emerald-600">verified</span>
+        <span>RFID Card Verified</span>
+      </div>
+
+      <!-- Employee Avatar & Details -->
+      <div class="relative mb-4">
+        <img 
+          id="confirmAvatar" 
+          src="https://api.dicebear.com/7.x/initials/svg?seed=User&backgroundColor=123b67" 
+          alt="Employee Photo" 
+          class="w-24 h-24 rounded-full border-4 border-emerald-500/30 shadow-lg object-cover bg-white"
+        />
+        <div class="absolute bottom-0 right-0 w-7 h-7 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center text-white shadow">
+          <span class="material-symbols-outlined text-sm font-bold">check</span>
+        </div>
+      </div>
+
+      <h2 id="confirmName" class="font-display font-extrabold text-2xl text-brand-navy tracking-tight mb-1">
+        Employee Name
+      </h2>
+
+      <div class="flex items-center gap-2 mt-1 mb-2">
+        <span class="font-mono text-xs font-bold text-brand-accent bg-blue-50 border border-blue-200/80 px-3 py-1 rounded-lg" id="confirmIdBadge">
+          Employee ID: <span id="confirmId">0000000000</span>
+        </span>
+      </div>
+
+      <div class="flex items-center gap-2 mb-6 text-xs text-slate-500 font-medium">
+        <span id="confirmRole" class="uppercase font-bold text-[10px] bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded-full">
+          Employee
+        </span>
+        <span>•</span>
+        <span id="confirmDept">Authorized Personnel</span>
+      </div>
+
+      <!-- Confirm Action Button -->
+      <button 
+        type="button" 
+        id="confirmBtn" 
+        onclick="proceedToVendingMachine()"
+        class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-display font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 cursor-pointer text-base transition-all"
+      >
+        <span>Confirm</span>
+        <span class="material-symbols-outlined text-xl">arrow_forward</span>
+      </button>
+
+      <!-- Scan Different Card Option -->
+      <button 
+        type="button" 
+        onclick="resetToScanner()"
+        class="mt-4 text-xs font-medium text-slate-500 hover:text-slate-800 hover:underline flex items-center gap-1 transition-colors cursor-pointer"
+      >
+        <span class="material-symbols-outlined text-sm">replay</span>
+        <span>Scan a different card</span>
+      </button>
 
     </div>
-  </main>
+  </main>n>
 
 
   <script>
@@ -185,6 +242,51 @@
       authenticate(val);
     }
 
+    let nextVendingUrl = '/dashboard';
+
+    async function proceedToVendingMachine() {
+      const btn = document.getElementById('confirmBtn');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span>Opening Vending Machine...</span><span class="material-symbols-outlined text-xl animate-spin">progress_activity</span>';
+      }
+      window.location.href = nextVendingUrl;
+    }
+
+    async function resetToScanner() {
+      try {
+        await fetch('/logout');
+      } catch (e) {}
+
+      document.getElementById('confirmStage').classList.add('hidden');
+      const scanStage = document.getElementById('scanStage');
+      scanStage.classList.remove('hidden');
+
+      const btn = document.getElementById('loginBtn');
+      const btnIcon = document.getElementById('btnIcon');
+      const btnLabel = document.getElementById('btnLabel');
+      const iconHolder = document.getElementById('scannerIconHolder');
+      const statusText = document.getElementById('scannerStatusText');
+      const input = document.getElementById('rfidInput');
+
+      if (iconHolder) {
+        iconHolder.className = 'relative z-10 w-24 h-24 rounded-full bg-brand-navy flex items-center justify-center text-white shadow-xl transition-all duration-300';
+      }
+      if (statusText) statusText.textContent = 'Ready for Card Tap';
+      if (btn) {
+        btn.disabled = false;
+        btn.classList.remove('opacity-75');
+      }
+      if (btnIcon) btnIcon.textContent = 'login';
+      if (btnLabel) btnLabel.textContent = 'Access System';
+      if (input) {
+        input.readOnly = false;
+        input.value = '';
+        input.focus();
+      }
+      isAuthenticating = false;
+    }
+
     async function authenticate(identifier) {
       const btn = document.getElementById('loginBtn');
       const btnIcon = document.getElementById('btnIcon');
@@ -211,12 +313,34 @@
 
         if (data.success) {
           iconHolder.className = 'relative z-10 w-24 h-24 rounded-full bg-emerald-600 flex items-center justify-center text-white shadow-xl transition-all duration-300';
-          statusText.textContent = 'Welcome, ' + data.member.name;
-          showToast('Access Granted', 'Welcome, ' + data.member.name + '.', 'success');
+          statusText.textContent = 'Card Verified!';
 
+          nextVendingUrl = data.redirect_url || '/dashboard';
+
+          // Populate Confirmation Frame with Employee details
+          const m = data.member;
+          const empName = m.name || 'Employee';
+          const empId = m.reg_no || m.rfid_uid || 'ID Registered';
+          const empRole = (m.role === 'host' || m.role === 'staff' || m.role === 'admin') ? 'Host' : 'Employee';
+          const empDept = m.department || 'Authorized Personnel';
+          const empAvatar = m.avatar_url || ('https://api.dicebear.com/7.x/initials/svg?seed=' + encodeURIComponent(empName) + '&backgroundColor=002549');
+
+          document.getElementById('confirmName').textContent = empName;
+          document.getElementById('confirmId').textContent = empId;
+          document.getElementById('confirmRole').textContent = empRole;
+          document.getElementById('confirmDept').textContent = empDept;
+          document.getElementById('confirmAvatar').src = empAvatar;
+
+          showToast('Employee Verified', 'Please confirm your identity to proceed to the vending machine.', 'success');
+
+          // Smooth transition to Confirmation Frame
           setTimeout(() => {
-            window.location.href = data.redirect_url;
-          }, 600);
+            document.getElementById('scanStage').classList.add('hidden');
+            const confirmStage = document.getElementById('confirmStage');
+            confirmStage.classList.remove('hidden');
+            const confirmBtn = document.getElementById('confirmBtn');
+            if (confirmBtn) confirmBtn.focus();
+          }, 450);
         } else {
           iconHolder.className = 'relative z-10 w-24 h-24 rounded-full bg-red-600 flex items-center justify-center text-white shadow-xl transition-all duration-300';
           statusText.textContent = 'Access Denied';
