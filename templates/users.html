@@ -184,14 +184,14 @@
         <button onclick="document.getElementById('enrollModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 text-lg">✕</button>
       </div>
 
-      <form onsubmit="event.preventDefault(); submitEnrollment();" class="flex flex-col gap-3 text-xs">
+      <form autocomplete="off" onsubmit="event.preventDefault(); submitEnrollment();" class="flex flex-col gap-3 text-xs">
         <div class="flex flex-col gap-1">
           <label class="font-semibold text-slate-600">Full Name</label>
-          <input type="text" id="newName" required placeholder="e.g. Ramesh Varma" class="p-2.5 border rounded-lg bg-slate-50 focus:bg-white text-sm" />
+          <input type="text" id="newName" autocomplete="off" spellcheck="false" required placeholder="e.g. Ramesh Varma" class="p-2.5 border rounded-lg bg-slate-50 focus:bg-white text-sm" />
         </div>
         <div class="flex flex-col gap-1">
           <label class="font-semibold text-slate-600">RFID Card UID</label>
-          <input type="text" id="newRfid" required placeholder="e.g. 9A:88:B1:02" class="p-2.5 border rounded-lg bg-slate-50 focus:bg-white text-sm font-mono" />
+          <input type="text" id="newRfid" autocomplete="off" spellcheck="false" required placeholder="e.g. 9A:88:B1:02" class="p-2.5 border rounded-lg bg-slate-50 focus:bg-white text-sm font-mono" />
         </div>
         <div class="flex flex-col gap-1">
           <label class="font-semibold text-slate-600">Employee Role</label>

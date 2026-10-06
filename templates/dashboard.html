@@ -346,13 +346,15 @@
         <button onclick="closeEditBookModal()" class="text-slate-400 hover:text-slate-600 text-lg cursor-pointer">✕</button>
       </div>
 
-      <form onsubmit="event.preventDefault(); submitBookEdit();" class="flex flex-col gap-3 text-xs">
+      <form autocomplete="off" onsubmit="event.preventDefault(); submitBookEdit();" class="flex flex-col gap-3 text-xs">
         <input type="hidden" id="editLockerId" value="{{ single_locker.locker_id if single_locker else 1 }}" />
         <div class="flex flex-col gap-1">
           <label class="font-semibold text-slate-700">Book Name / Title</label>
           <input 
             type="text" 
             id="editBookLabel" 
+            autocomplete="off"
+            spellcheck="false"
             required 
             placeholder="e.g. Modern Control Engineering" 
             class="p-2.5 border rounded-lg bg-slate-50 focus:bg-white text-sm font-medium focus:ring-2 focus:ring-brand-accent focus:outline-none" 
@@ -363,6 +365,8 @@
           <input 
             type="text" 
             id="editBookAuthor" 
+            autocomplete="off"
+            spellcheck="false"
             placeholder="e.g. Katsuhiko Ogata" 
             class="p-2.5 border rounded-lg bg-slate-50 focus:bg-white text-sm focus:ring-2 focus:ring-brand-accent focus:outline-none" 
           />
