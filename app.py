@@ -145,42 +145,10 @@ def return_page():
 
 @app.route('/status')
 def status_page():
-    """System Status & Hardware Diagnostics (Host Only)."""
+    """Redirect to dashboard."""
     if 'member_id' not in session:
         return redirect(url_for('auth_page'))
-    if session.get('role') not in ('staff', 'admin', 'host'):
-        return redirect(url_for('dashboard_page'))
-    
-    conn = get_db()
-    cursor = conn.cursor()
-    cursor.execute('''
-    SELECT t.*, m.name as member_name, b.book_label, b.locker_code
-    FROM transactions t
-    LEFT JOIN members m ON t.member_id = m.member_id
-    LEFT JOIN lockers b ON t.locker_id = b.locker_id
-    ORDER BY t.timestamp DESC LIMIT 15
-    ''')
-    recent_logs = [dict(row) for row in cursor.fetchall()]
-
-    cursor.execute('SELECT * FROM lockers ORDER BY locker_code ASC')
-    lockers = [dict(row) for row in cursor.fetchall()]
-    conn.close()
-
-    cpu_percent = psutil.cpu_percent(interval=None) if psutil else 12.4
-    mem = psutil.virtual_memory() if psutil else None
-    mem_used = f"{mem.used / (1024**3):.1f} GB / {mem.total / (1024**3):.1f} GB" if mem else "480 MB / 1024 MB"
-
-    sys_info = {
-        "os": platform.system() + " " + platform.release(),
-        "arch": platform.machine(),
-        "python_version": platform.python_version(),
-        "cpu_usage": cpu_percent,
-        "mem_usage": mem_used,
-        "controller": "Raspberry Pi 3 Model B+ (ARMv7 1.4GHz)",
-        "ip_address": "127.0.0.1:5000"
-    }
-
-    return render_template('status.html', recent_logs=recent_logs, sys_info=sys_info, lockers=lockers)
+    return redirect(url_for('dashboard_page'))
 
 @app.route('/users')
 def users_page():
