@@ -310,6 +310,7 @@ def api_auth_rfid():
     session['name'] = member['name']
     session['role'] = member['role']
     session['rfid_uid'] = member['rfid_uid']
+    session['reg_no'] = member.get('reg_no') or ''
     session['last_active'] = datetime.now().timestamp()
 
     cursor.execute('''
@@ -622,7 +623,9 @@ def api_add_user():
     name = data.get('name', '').strip()
     rfid_uid = data.get('rfid_uid', '').strip()
     # Default reg_no to rfid_uid to satisfy SQLite NOT NULL schema constraint
-    reg_no = data.get('reg_no', '').strip() or rfid_uid
+    reg_no = data.get('reg_no', '').strip()
+    if not reg_no:
+        reg_no = f"EMP-{rfid_uid[-4:]}" if len(rfid_uid) >= 4 else f"EMP-{rfid_uid}"
     email = data.get('email', '').strip()
     role = data.get('role', 'employee').strip().lower()
     if role not in ('host', 'employee'):
@@ -646,7 +649,7 @@ def api_add_user():
         cursor.execute('''
         INSERT INTO transactions (member_id, locker_id, operation, result, timestamp, details)
         VALUES (?, NULL, 'maintenance', 'success', ?, ?)
-        ''', (session.get('member_id'), now_str, f"Host registered new member {name} (Role: {role}, UID: {rfid_uid})"))
+        ''', (session.get('member_id'), now_str, f"Host registered new member {name} (ID: {reg_no}, Role: {role}, UID: {rfid_uid})"))
 
         conn.commit()
         conn.close()
@@ -664,18 +667,18 @@ def api_add_user():
             'created_at': now_str
         })
 
-        return jsonify({"success": True, "message": f"Member {name} registered successfully!"})
+        return jsonify({"success": True, "message": f"Member {name} (ID: {reg_no}) registered successfully!"})
     except Exception as e:
         conn.close()
         err_msg = str(e)
         if 'unique' in err_msg.lower() or 'integrity' in err_msg.lower():
-            return jsonify({"success": False, "message": "RFID UID is already enrolled."}), 409
+            return jsonify({"success": False, "message": "RFID UID or Employee ID is already enrolled."}), 409
         return jsonify({"success": False, "message": f"Could not enroll user: {err_msg}"}), 400
 
 @app.route('/api/users/<int:member_id>', methods=['PUT'])
 @app.route('/api/users/<int:member_id>/update', methods=['POST'])
 def api_update_user(member_id):
-    """Updates member details such as name, RFID UID, or role permanently (Host Only)."""
+    """Updates member details such as name, Employee ID, RFID UID, or role permanently (Host Only)."""
     if 'member_id' not in session or session.get('role') not in ('staff', 'admin', 'host'):
         return jsonify({"success": False, "message": "Host authorization required."}), 403
 
@@ -699,6 +702,8 @@ def api_update_user(member_id):
         conn.close()
         return jsonify({"success": False, "message": "Member not found."}), 404
 
+    reg_no = data.get('reg_no', '').strip() or member['reg_no'] or (f"EMP-{rfid_uid[-4:]}" if len(rfid_uid) >= 4 else f"EMP-{rfid_uid}")
+
     try:
         now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         avatar_url = f"https://api.dicebear.com/7.x/initials/svg?seed={name}&backgroundColor=123b67"
@@ -707,12 +712,12 @@ def api_update_user(member_id):
         UPDATE members 
         SET name = ?, rfid_uid = ?, reg_no = ?, role = ?, avatar_url = ?
         WHERE member_id = ?
-        ''', (name, rfid_uid, rfid_uid, role, avatar_url, member_id))
+        ''', (name, rfid_uid, reg_no, role, avatar_url, member_id))
 
         cursor.execute('''
         INSERT INTO transactions (member_id, locker_id, operation, result, timestamp, details)
         VALUES (?, NULL, 'maintenance', 'success', ?, ?)
-        ''', (session.get('member_id'), now_str, f"Host updated member {name} to Role: {role}, UID: {rfid_uid}"))
+        ''', (session.get('member_id'), now_str, f"Host updated member {name} (ID: {reg_no}, Role: {role}, UID: {rfid_uid})"))
 
         conn.commit()
         conn.close()
@@ -722,12 +727,13 @@ def api_update_user(member_id):
             session['name'] = name
             session['role'] = role
             session['rfid_uid'] = rfid_uid
+            session['reg_no'] = reg_no
 
         # Permanent sync to local SQLite
         sync_sqlite_member_upsert({
             'name': name,
             'rfid_uid': rfid_uid,
-            'reg_no': rfid_uid,
+            'reg_no': reg_no,
             'department': department or member.get('department', ''),
             'email': member.get('email', ''),
             'role': role,

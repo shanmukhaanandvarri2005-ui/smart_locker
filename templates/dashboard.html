@@ -90,8 +90,12 @@
         <img src="{{ current_user.avatar_url if current_user and current_user.avatar_url else 'https://api.dicebear.com/7.x/initials/svg?seed=User&backgroundColor=123b67' }}" class="w-9 h-9 rounded-full object-cover shadow-sm bg-white" alt="Avatar"/>
         <div class="flex flex-col min-w-0">
           <span class="font-display font-semibold text-xs text-slate-800 truncate">{{ current_user.name if current_user else "Employee" }}</span>
-          <span class="text-[11px] font-mono font-bold text-slate-500 truncate">ID: {{ current_user.reg_no or current_user.rfid_uid or '—' }}</span>
-          <span class="text-[9px] font-mono uppercase font-bold text-brand-accent">{{ 'Host' if is_host else 'Employee' }}</span>
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <span class="text-[10px] font-mono uppercase font-bold text-brand-accent">{{ 'Host' if is_host else 'Employee' }}</span>
+            {% if current_user and current_user.reg_no %}
+            <span class="text-[10px] font-mono text-slate-500 font-semibold">• ID: {{ current_user.reg_no }}</span>
+            {% endif %}
+          </div>
         </div>
       </div>
       <a href="/logout" class="flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors">
@@ -116,9 +120,11 @@
       <div class="flex items-center gap-4">
         <div class="flex flex-col text-right">
           <span class="font-display font-bold text-sm text-slate-800">{{ current_user.name if current_user else "Employee" }}</span>
-          <div class="flex items-center justify-end gap-1.5">
-            <span class="text-xs font-mono font-bold text-slate-500">ID: {{ current_user.reg_no or current_user.rfid_uid or '—' }}</span>
-            <span class="text-[9px] font-mono font-bold uppercase text-brand-accent bg-blue-50 px-1.5 py-0.2 rounded border border-blue-100">{{ 'HOST' if is_host else 'EMPLOYEE' }}</span>
+          <div class="flex items-center justify-end gap-1.5 text-[10px] font-mono">
+            <span class="font-semibold uppercase text-brand-accent">{{ 'HOST' if is_host else 'EMPLOYEE' }}</span>
+            {% if current_user and current_user.reg_no %}
+            <span class="text-slate-500 font-semibold">• ID: {{ current_user.reg_no }}</span>
+            {% endif %}
           </div>
         </div>
         <img src="{{ current_user.avatar_url if current_user and current_user.avatar_url else 'https://api.dicebear.com/7.x/initials/svg?seed=User&backgroundColor=123b67' }}" class="w-8 h-8 rounded-full border border-slate-200 shadow-sm" alt="User"/>
@@ -135,14 +141,12 @@
             <span class="material-symbols-outlined text-amber-400 text-2xl">stars</span>
             <span class="text-xs uppercase font-mono tracking-widest text-blue-200 font-bold">Automated Library Station</span>
           </div>
-          <div class="flex flex-wrap items-center gap-2.5">
-            <h1 class="font-display font-extrabold text-2xl sm:text-3xl text-white tracking-tight">
-              Welcome, {{ current_user.name if current_user else "Employee" }}
-            </h1>
-            <span class="font-mono text-xs font-bold bg-white/20 text-white px-2.5 py-0.5 rounded-full border border-white/30 backdrop-blur-sm">
-              Employee ID: {{ current_user.reg_no or current_user.rfid_uid }}
-            </span>
-          </div>
+          <h1 class="font-display font-extrabold text-2xl sm:text-3xl text-white tracking-tight flex items-center gap-2.5 flex-wrap">
+            <span>Welcome, {{ current_user.name if current_user else "Employee" }}</span>
+            {% if current_user and current_user.reg_no %}
+            <span class="text-xs sm:text-sm font-mono font-bold bg-white/15 px-3 py-1 rounded-xl border border-white/20">ID: {{ current_user.reg_no }}</span>
+            {% endif %}
+          </h1>
           <p class="text-xs sm:text-sm text-blue-100 max-w-xl">
             Select books below like a vending machine and press the green <strong>Borrow</strong> button. To return books, select them below and press the red <strong>Return</strong> button.
           </p>

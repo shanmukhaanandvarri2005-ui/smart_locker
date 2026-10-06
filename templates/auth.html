@@ -106,7 +106,7 @@
             data-lpignore="true"
             data-form-type="other"
             autofocus
-            placeholder="Scan RFID card or enter Employee ID..." 
+            placeholder="Scan RFID card or enter Card / Employee ID..." 
             class="w-full bg-slate-50 border border-slate-300 rounded-xl pl-11 pr-4 py-3 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-accent focus:bg-white font-mono transition-all"
           />
         </div>
@@ -142,13 +142,19 @@
         </div>
       </div>
 
-      <h2 id="confirmName" class="font-display font-extrabold text-2xl text-brand-navy tracking-tight mb-1">
+      <h2 id="confirmName" class="font-display font-extrabold text-2xl text-brand-navy tracking-tight mb-2">
         Employee Name
       </h2>
 
-      <div class="flex items-center gap-2 mt-1 mb-2">
-        <span class="font-mono text-xs font-bold text-brand-accent bg-blue-50 border border-blue-200/80 px-3 py-1 rounded-lg" id="confirmIdBadge">
-          Employee ID: <span id="confirmId">0000000000</span>
+      <!-- Separate Employee ID and Card ID Badges -->
+      <div class="flex flex-wrap items-center justify-center gap-2 mb-3">
+        <span class="inline-flex items-center gap-1.5 font-mono text-xs font-bold text-blue-700 bg-blue-50 border border-blue-200 px-3 py-1 rounded-lg shadow-sm" id="confirmIdBadge">
+          <span class="material-symbols-outlined text-sm text-blue-600">badge</span>
+          <span>Employee ID: <strong id="confirmId" class="text-blue-900">EMP-001</strong></span>
+        </span>
+        <span class="inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-slate-700 bg-slate-100 border border-slate-200 px-3 py-1 rounded-lg" id="confirmRfidBadge">
+          <span class="material-symbols-outlined text-sm text-slate-500">contactless</span>
+          <span>Card ID: <strong id="confirmRfid" class="text-slate-900">3677855325</strong></span>
         </span>
       </div>
 
@@ -182,7 +188,7 @@
       </button>
 
     </div>
-  </main>n>
+  </main>
 
 
   <script>
@@ -320,13 +326,16 @@
           // Populate Confirmation Frame with Employee details
           const m = data.member;
           const empName = m.name || 'Employee';
-          const empId = m.reg_no || m.rfid_uid || 'ID Registered';
+          const empId = m.reg_no || ('EMP-' + (m.member_id || '001'));
+          const empRfid = m.rfid_uid || identifier;
           const empRole = (m.role === 'host' || m.role === 'staff' || m.role === 'admin') ? 'Host' : 'Employee';
           const empDept = m.department || 'Authorized Personnel';
           const empAvatar = m.avatar_url || ('https://api.dicebear.com/7.x/initials/svg?seed=' + encodeURIComponent(empName) + '&backgroundColor=002549');
 
           document.getElementById('confirmName').textContent = empName;
           document.getElementById('confirmId').textContent = empId;
+          const confirmRfidEl = document.getElementById('confirmRfid');
+          if (confirmRfidEl) confirmRfidEl.textContent = empRfid;
           document.getElementById('confirmRole').textContent = empRole;
           document.getElementById('confirmDept').textContent = empDept;
           document.getElementById('confirmAvatar').src = empAvatar;
