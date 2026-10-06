@@ -279,6 +279,57 @@ def seed_clean_data(conn):
     conn.commit()
 
 
+def sync_sqlite_member_upsert(member_dict):
+    """Syncs member creation or update to local SQLite database if present."""
+    if not os.path.exists(DB_PATH):
+        return
+    try:
+        s_conn = sqlite3.connect(DB_PATH)
+        s_cur = s_conn.cursor()
+        s_cur.execute("""
+            INSERT INTO members (name, rfid_uid, reg_no, department, email, role, status, avatar_url, created_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(rfid_uid) DO UPDATE SET
+                name = excluded.name,
+                reg_no = excluded.reg_no,
+                department = excluded.department,
+                email = excluded.email,
+                role = excluded.role,
+                status = excluded.status,
+                avatar_url = excluded.avatar_url;
+        """, (
+            member_dict.get('name'),
+            member_dict.get('rfid_uid'),
+            member_dict.get('reg_no', member_dict.get('rfid_uid')),
+            member_dict.get('department', ''),
+            member_dict.get('email', ''),
+            member_dict.get('role', 'employee'),
+            member_dict.get('status', 'active'),
+            member_dict.get('avatar_url', ''),
+            member_dict.get('created_at', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        ))
+        s_conn.commit()
+        s_conn.close()
+    except Exception as e:
+        print(f"Notice: local SQLite sync error (non-fatal): {e}")
+
+
+def sync_sqlite_member_delete(rfid_uid):
+    """Syncs member deletion to local SQLite database if present."""
+    if not os.path.exists(DB_PATH):
+        return
+    try:
+        s_conn = sqlite3.connect(DB_PATH)
+        s_cur = s_conn.cursor()
+        s_cur.execute("DELETE FROM loans WHERE member_id IN (SELECT member_id FROM members WHERE rfid_uid = ?)", (rfid_uid,))
+        s_cur.execute("DELETE FROM transactions WHERE member_id IN (SELECT member_id FROM members WHERE rfid_uid = ?)", (rfid_uid,))
+        s_cur.execute("DELETE FROM members WHERE rfid_uid = ?", (rfid_uid,))
+        s_conn.commit()
+        s_conn.close()
+    except Exception as e:
+        print(f"Notice: local SQLite sync delete error (non-fatal): {e}")
+
+
 if __name__ == '__main__':
     init_db(force_reset=True)
     if is_postgres_configured():

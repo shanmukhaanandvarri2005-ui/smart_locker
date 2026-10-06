@@ -13,7 +13,7 @@ try:
 except ImportError:
     pass
 
-from database import get_db, init_db
+from database import get_db, init_db, sync_sqlite_member_upsert, sync_sqlite_member_delete
 from hardware import hardware
 
 app = Flask(__name__)
@@ -502,7 +502,7 @@ def api_edit_locker_book(locker_id):
 
 @app.route('/api/users', methods=['POST'])
 def api_add_user():
-    """Registers a new company employee (Host Only)."""
+    """Registers a new company employee or host (Host Only)."""
     if 'member_id' not in session or session.get('role') not in ('staff', 'admin', 'host'):
         return jsonify({"success": False, "message": "Host authorization required."}), 403
 
@@ -530,8 +530,28 @@ def api_add_user():
         INSERT INTO members (name, rfid_uid, reg_no, department, email, role, status, avatar_url, created_at)
         VALUES (?, ?, ?, ?, ?, ?, 'active', ?, ?)
         ''', (name, rfid_uid, reg_no, department, email, role, avatar_url, now_str))
+
+        cursor.execute('''
+        INSERT INTO transactions (member_id, locker_id, operation, result, timestamp, details)
+        VALUES (?, NULL, 'maintenance', 'success', ?, ?)
+        ''', (session.get('member_id'), now_str, f"Host registered new member {name} (Role: {role}, UID: {rfid_uid})"))
+
         conn.commit()
         conn.close()
+
+        # Permanent sync to local SQLite
+        sync_sqlite_member_upsert({
+            'name': name,
+            'rfid_uid': rfid_uid,
+            'reg_no': reg_no,
+            'department': department,
+            'email': email,
+            'role': role,
+            'status': 'active',
+            'avatar_url': avatar_url,
+            'created_at': now_str
+        })
+
         return jsonify({"success": True, "message": f"Member {name} registered successfully!"})
     except Exception as e:
         conn.close()
@@ -540,9 +560,82 @@ def api_add_user():
             return jsonify({"success": False, "message": "RFID UID is already enrolled."}), 409
         return jsonify({"success": False, "message": f"Could not enroll user: {err_msg}"}), 400
 
+@app.route('/api/users/<int:member_id>', methods=['PUT'])
+@app.route('/api/users/<int:member_id>/update', methods=['POST'])
+def api_update_user(member_id):
+    """Updates member details such as name, RFID UID, or role permanently (Host Only)."""
+    if 'member_id' not in session or session.get('role') not in ('staff', 'admin', 'host'):
+        return jsonify({"success": False, "message": "Host authorization required."}), 403
+
+    data = request.get_json() or {}
+    name = data.get('name', '').strip()
+    rfid_uid = data.get('rfid_uid', '').strip()
+    role = data.get('role', '').strip().lower()
+    if role not in ('host', 'employee'):
+        role = 'host' if role in ('staff', 'admin') else 'employee'
+
+    department = data.get('department', '').strip()
+
+    if not name or not rfid_uid:
+        return jsonify({"success": False, "message": "Name and RFID UID are required."}), 400
+
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM members WHERE member_id = ?", (member_id,))
+    member = cursor.fetchone()
+    if not member:
+        conn.close()
+        return jsonify({"success": False, "message": "Member not found."}), 404
+
+    try:
+        now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        avatar_url = f"https://api.dicebear.com/7.x/initials/svg?seed={name}&backgroundColor=123b67"
+
+        cursor.execute('''
+        UPDATE members 
+        SET name = ?, rfid_uid = ?, reg_no = ?, role = ?, avatar_url = ?
+        WHERE member_id = ?
+        ''', (name, rfid_uid, rfid_uid, role, avatar_url, member_id))
+
+        cursor.execute('''
+        INSERT INTO transactions (member_id, locker_id, operation, result, timestamp, details)
+        VALUES (?, NULL, 'maintenance', 'success', ?, ?)
+        ''', (session.get('member_id'), now_str, f"Host updated member {name} to Role: {role}, UID: {rfid_uid}"))
+
+        conn.commit()
+        conn.close()
+
+        # Update current session if the host updated themselves
+        if session.get('member_id') == member_id:
+            session['name'] = name
+            session['role'] = role
+            session['rfid_uid'] = rfid_uid
+
+        # Permanent sync to local SQLite
+        sync_sqlite_member_upsert({
+            'name': name,
+            'rfid_uid': rfid_uid,
+            'reg_no': rfid_uid,
+            'department': department or member.get('department', ''),
+            'email': member.get('email', ''),
+            'role': role,
+            'status': member.get('status', 'active'),
+            'avatar_url': avatar_url,
+            'created_at': now_str
+        })
+
+        return jsonify({"success": True, "message": f"Member '{name}' updated successfully."})
+    except Exception as e:
+        conn.close()
+        err_msg = str(e)
+        if 'unique' in err_msg.lower() or 'integrity' in err_msg.lower():
+            return jsonify({"success": False, "message": "RFID UID is already enrolled by another member."}), 409
+        return jsonify({"success": False, "message": f"Could not update member: {err_msg}"}), 400
+
 @app.route('/api/users/<int:member_id>', methods=['DELETE'])
+@app.route('/api/users/<int:member_id>/delete', methods=['POST'])
 def api_remove_user(member_id):
-    """Removes a member from the registry (Host Only)."""
+    """Removes a member from the registry permanently (Host Only)."""
     if 'member_id' not in session or session.get('role') not in ('staff', 'admin', 'host'):
         return jsonify({"success": False, "message": "Host authorization required."}), 403
 
@@ -568,12 +661,23 @@ def api_remove_user(member_id):
             "message": f"Cannot remove {member['name']}. They currently have an active borrowed book that must be returned first."
         }), 400
 
+    now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
     # Safe delete of past transactions, loans, and member record
     cursor.execute("DELETE FROM loans WHERE member_id = ?", (member_id,))
     cursor.execute("DELETE FROM transactions WHERE member_id = ?", (member_id,))
     cursor.execute("DELETE FROM members WHERE member_id = ?", (member_id,))
+
+    cursor.execute('''
+    INSERT INTO transactions (member_id, locker_id, operation, result, timestamp, details)
+    VALUES (?, NULL, 'maintenance', 'success', ?, ?)
+    ''', (session.get('member_id'), now_str, f"Host removed member {member['name']} ({member['rfid_uid']})"))
+
     conn.commit()
     conn.close()
+
+    # Permanent sync deletion to local SQLite
+    sync_sqlite_member_delete(member['rfid_uid'])
 
     return jsonify({"success": True, "message": f"Member '{member['name']}' has been removed successfully."})
 
