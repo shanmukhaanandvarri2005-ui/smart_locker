@@ -124,13 +124,26 @@ class HardwareController:
                     self.ser.close()
                 except Exception:
                     pass
-            self.ser = serial.Serial(port, self.serial_baud, timeout=1.0)
+            self.ser = serial.Serial()
+            self.ser.port = port
+            self.ser.baudrate = self.serial_baud
+            self.ser.timeout = 1.0
+            self.ser.dtr = False
+            self.ser.rts = False
+            self.ser.open()
             self.esp8266_connected = True
             self.serial_port_name = port
-            print(f"[Hardware] Connected to ESP8266 on {port} @ {self.serial_baud} baud.")
+            print(f"[Hardware] Connected to ESP8266 on {port} @ {self.serial_baud} baud.", flush=True)
+            time.sleep(1.0)
+        except serial.SerialException as e:
+            self.esp8266_connected = False
+            if "PermissionError" in str(e) or "Access is denied" in str(e):
+                print(f"[Hardware Alert] Port {port} is LOCKED by another program (e.g. Arduino IDE Serial Monitor)! Please close the Serial Monitor.", flush=True)
+            else:
+                print(f"[Hardware] ESP8266 serial connect skipped ({port}): {e}", flush=True)
         except Exception as e:
             self.esp8266_connected = False
-            print(f"[Hardware] ESP8266 serial connect skipped ({port}): {e}")
+            print(f"[Hardware] Serial connection error ({port}): {e}", flush=True)
 
     def _send_serial_command(self, cmd: str):
         """Sends a command to ESP8266 over USB Serial with auto-reconnect."""
@@ -143,19 +156,21 @@ class HardwareController:
 
             if self.ser and self.ser.is_open:
                 try:
-                    payload = (cmd.strip() + "\n").encode('utf-8')
+                    payload = (cmd.strip() + "\r\n").encode('utf-8')
                     self.ser.write(payload)
                     self.ser.flush()
-                    print(f"[Hardware -> ESP8266 Serial]: {cmd.strip()}")
+                    print(f"[Hardware -> ESP8266 Serial ({self.serial_port_name})]: {cmd.strip()}", flush=True)
                     return True
                 except Exception as e:
-                    print(f"[Hardware] Serial write failed: {e}")
+                    print(f"[Hardware] Serial write failed: {e}", flush=True)
                     try:
                         self.ser.close()
                     except Exception:
                         pass
                     self.ser = None
                     self.esp8266_connected = False
+            else:
+                print(f"[Hardware] Cannot send '{cmd}': {self.serial_port_name} is not connected or busy.", flush=True)
         return False
 
     def _send_wifi_command(self, path: str):
@@ -165,18 +180,18 @@ class HardwareController:
         try:
             url = f"http://{self.esp8266_ip}{path}"
             res = requests.get(url, timeout=2.0)
-            print(f"[Hardware -> ESP8266 WiFi ({url})]: status={res.status_code}")
+            print(f"[Hardware -> ESP8266 WiFi ({url})]: status={res.status_code}", flush=True)
             return res.status_code == 200
         except Exception as e:
-            print(f"[Hardware] WiFi command failed ({self.esp8266_ip}): {e}")
+            print(f"[Hardware] WiFi command failed ({self.esp8266_ip}): {e}", flush=True)
             return False
 
-    def unlock_solenoid(self, duration_sec=4):
+    def unlock_solenoid(self, duration_sec=4, card_uid=None):
         """
         Unlocks the 12V solenoid lock by energizing the relay.
         Controls:
           1. Raspberry Pi GPIO (if on Pi)
-          2. ESP8266 over USB Serial
+          2. ESP8266 over USB Serial (sends UNLOCK and card_uid)
           3. ESP8266 over WiFi (if configured)
         """
         self.solenoid_unlocked = True
@@ -190,8 +205,10 @@ class HardwareController:
             except Exception:
                 pass
 
-        # 2. ESP8266 USB Serial Command (e.g. UNLOCK:4)
+        # 2. ESP8266 USB Serial Command (sends "UNLOCK:4" and optional card UID for full compatibility)
         self._send_serial_command(f"UNLOCK:{duration_sec}")
+        if card_uid:
+            self._send_serial_command(str(card_uid))
 
         # 3. ESP8266 WiFi Webhook (if IP configured)
         if self.esp8266_ip:

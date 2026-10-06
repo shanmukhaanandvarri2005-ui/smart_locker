@@ -310,7 +310,7 @@ def api_locker_unlock():
     """Direct hardware unlock endpoint triggering ESP8266 relay and solenoid."""
     data = request.get_json() or {}
     duration = int(data.get('duration', 4))
-    hardware.unlock_solenoid(duration_sec=duration)
+    hardware.unlock_solenoid(duration_sec=duration, card_uid=session.get('rfid_uid'))
     return jsonify({
         "success": True,
         "message": f"Unlock signal sent to ESP8266 relay for {duration} seconds.",
@@ -364,8 +364,8 @@ def api_locker_borrow():
     due_str = 'No Due Date'
 
     try:
-        # Trigger physical lock release & green indicator
-        hardware.unlock_solenoid(duration_sec=20)
+        # Trigger physical lock release & green indicator (ESP8266 + Solenoid)
+        hardware.unlock_solenoid(duration_sec=4, card_uid=session.get('rfid_uid'))
 
         # Update database
         cursor.execute('''
@@ -445,8 +445,8 @@ def api_locker_return():
     now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     try:
-        # Trigger lock release
-        hardware.unlock_solenoid(duration_sec=20)
+        # Trigger lock release (ESP8266 + Solenoid)
+        hardware.unlock_solenoid(duration_sec=4, card_uid=session.get('rfid_uid'))
 
         # Update loan
         cursor.execute('''
