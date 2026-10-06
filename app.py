@@ -237,8 +237,14 @@ def api_auth_rfid():
 
     conn = get_db()
     cursor = conn.cursor()
-    # Check by RFID UID or Reg No
-    cursor.execute("SELECT * FROM members WHERE rfid_uid = ? OR reg_no = ?", (identifier, identifier))
+    clean_id = identifier.strip()
+    # Flexible matching: Case-insensitive and colon/hyphen-insensitive
+    cursor.execute("""
+        SELECT * FROM members 
+        WHERE LOWER(TRIM(rfid_uid)) = LOWER(?) 
+           OR LOWER(TRIM(reg_no)) = LOWER(?)
+           OR REPLACE(REPLACE(LOWER(rfid_uid), ':', ''), '-', '') = REPLACE(REPLACE(LOWER(?), ':', ''), '-', '')
+    """, (clean_id, clean_id, clean_id))
     member = cursor.fetchone()
 
     now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -493,9 +499,12 @@ def api_add_user():
         conn.commit()
         conn.close()
         return jsonify({"success": True, "message": f"Member {name} registered successfully!"})
-    except sqlite3.IntegrityError:
+    except Exception as e:
         conn.close()
-        return jsonify({"success": False, "message": "RFID UID is already enrolled."}), 409
+        err_msg = str(e)
+        if 'unique' in err_msg.lower() or 'integrity' in err_msg.lower():
+            return jsonify({"success": False, "message": "RFID UID is already enrolled."}), 409
+        return jsonify({"success": False, "message": f"Could not enroll user: {err_msg}"}), 400
 
 @app.route('/api/users/<int:member_id>', methods=['DELETE'])
 def api_remove_user(member_id):
