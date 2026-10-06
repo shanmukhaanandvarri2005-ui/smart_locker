@@ -231,23 +231,27 @@
           </div>
 
           <!-- Action Card Column -->
-          <div class="lg:col-span-5 flex flex-col justify-center">
+          <div class="lg:col-span-5 flex flex-col justify-center" id="lockerActionCol">
             {% if single_locker.occupancy_status == 'present' %}
-            <a 
-              href="/borrow" 
+            <button 
+              type="button" 
+              id="dashBorrowBtn"
+              onclick="executeDashboardBorrow({{ single_locker.locker_id }})" 
               class="w-full bg-brand-accent hover:bg-brand-blue text-white font-display font-bold py-3.5 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
             >
-              <span class="material-symbols-outlined text-xl">lock_open</span>
-              <span>Unlock Locker 01 &amp; Borrow</span>
-            </a>
+              <span class="material-symbols-outlined text-xl" id="dashBorrowIcon">lock_open</span>
+              <span id="dashBorrowLabel">Unlock {{ single_locker.locker_code }} &amp; Borrow</span>
+            </button>
             {% elif active_loans %}
-            <a 
-              href="/return" 
+            <button 
+              type="button" 
+              id="dashReturnBtn"
+              onclick="executeDashboardReturn({{ active_loans[0].loan_id }})" 
               class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-display font-bold py-3.5 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
             >
-              <span class="material-symbols-outlined text-xl">assignment_return</span>
-              <span>Unlock Locker 01 &amp; Return</span>
-            </a>
+              <span class="material-symbols-outlined text-xl" id="dashReturnIcon">assignment_return</span>
+              <span id="dashReturnLabel">Unlock {{ single_locker.locker_code }} &amp; Return</span>
+            </button>
             {% else %}
             <div class="w-full bg-slate-200 text-slate-500 font-display font-semibold py-3 px-4 rounded-xl text-center text-xs flex items-center justify-center gap-2">
               <span class="material-symbols-outlined text-base">lock</span>
@@ -306,10 +310,14 @@
                   </span>
                 </td>
                 <td class="py-3.5 px-4 text-right">
-                  <a href="/return" class="inline-flex items-center gap-1 bg-brand-accent hover:bg-brand-blue text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition-all">
+                  <button 
+                    type="button" 
+                    onclick="executeDashboardReturn({{ loan.loan_id }})" 
+                    class="inline-flex items-center gap-1 bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition-all cursor-pointer active:scale-[0.98]"
+                  >
                     <span class="material-symbols-outlined text-sm">assignment_return</span>
-                    <span>Return</span>
-                  </a>
+                    <span>Unlock &amp; Return</span>
+                  </button>
                 </td>
               </tr>
               {% endfor %}
@@ -461,7 +469,170 @@
         btn.innerHTML = '<span class="material-symbols-outlined text-base">save</span><span>Save Changes</span>';
       }
     }
+
+    async function executeDashboardBorrow(lockerId) {
+      const btn = document.getElementById('dashBorrowBtn');
+      const label = document.getElementById('dashBorrowLabel');
+      const icon = document.getElementById('dashBorrowIcon');
+
+      if (btn) {
+        btn.disabled = true;
+        btn.classList.add('opacity-75');
+      }
+      if (label) label.textContent = 'Unlocking Locker 01...';
+      if (icon) {
+        icon.textContent = 'hourglass_empty';
+        icon.classList.add('animate-spin');
+      }
+
+      try {
+        const res = await fetch('/api/locker/borrow', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ locker_id: lockerId })
+        });
+        const data = await res.json().catch(() => null);
+
+        if (res.ok && data && data.success) {
+          if (icon) {
+            icon.classList.remove('animate-spin');
+            icon.textContent = 'check_circle';
+          }
+          if (label) label.textContent = 'Unlocked Successfully!';
+          showToast('Locker 01 Unlocked!', 'Please collect "' + (data.book_label || 'the book') + '" and close the compartment.', 'success');
+          setTimeout(() => {
+            window.location.reload();
+          }, 1200);
+        } else {
+          showToast('Borrow Failed', (data && data.message) || 'Dispensing failed. Please try again.', 'error');
+          if (btn) {
+            btn.disabled = false;
+            btn.classList.remove('opacity-75');
+          }
+          if (label) label.textContent = 'Unlock Locker 01 & Borrow';
+          if (icon) {
+            icon.classList.remove('animate-spin');
+            icon.textContent = 'lock_open';
+          }
+        }
+      } catch (err) {
+        showToast('Communication Error', 'Network error connecting to locker controller.', 'error');
+        if (btn) {
+          btn.disabled = false;
+          btn.classList.remove('opacity-75');
+        }
+        if (label) label.textContent = 'Unlock Locker 01 & Borrow';
+        if (icon) {
+          icon.classList.remove('animate-spin');
+          icon.textContent = 'lock_open';
+        }
+      }
+    }
+
+    async function executeDashboardReturn(loanId) {
+      const btn = document.getElementById('dashReturnBtn');
+      const label = document.getElementById('dashReturnLabel');
+      const icon = document.getElementById('dashReturnIcon');
+
+      if (btn) {
+        btn.disabled = true;
+        btn.classList.add('opacity-75');
+      }
+      if (label) label.textContent = 'Unlocking for Return...';
+      if (icon) {
+        icon.textContent = 'hourglass_empty';
+        icon.classList.add('animate-spin');
+      }
+
+      try {
+        const res = await fetch('/api/locker/return', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ loan_id: loanId })
+        });
+        const data = await res.json().catch(() => null);
+
+        if (res.ok && data && data.success) {
+          if (icon) {
+            icon.classList.remove('animate-spin');
+            icon.textContent = 'verified';
+          }
+          if (label) label.textContent = 'Returned & Locked!';
+          showToast('Book Returned!', (data.locker_code || 'Locker 01') + ' verified & locked. Thank you!', 'success');
+          setTimeout(() => {
+            window.location.reload();
+          }, 1200);
+        } else {
+          showToast('Return Failed', (data && data.message) || 'Error processing book return.', 'error');
+          if (btn) {
+            btn.disabled = false;
+            btn.classList.remove('opacity-75');
+          }
+          if (label) label.textContent = 'Unlock Locker 01 & Return';
+          if (icon) {
+            icon.classList.remove('animate-spin');
+            icon.textContent = 'assignment_return';
+          }
+        }
+      } catch (err) {
+        showToast('Communication Error', 'Network error connecting to locker controller.', 'error');
+        if (btn) {
+          btn.disabled = false;
+          btn.classList.remove('opacity-75');
+        }
+        if (label) label.textContent = 'Unlock Locker 01 & Return';
+        if (icon) {
+          icon.classList.remove('animate-spin');
+          icon.textContent = 'assignment_return';
+        }
+      }
+    }
+
+    function showToast(title, subtitle, type) {
+      const toast = document.getElementById('statusToast');
+      const toastIcon = document.getElementById('toastIcon');
+      const toastTitle = document.getElementById('toastTitle');
+      const toastSubtitle = document.getElementById('toastSubtitle');
+      const toastContent = document.getElementById('toastContent');
+      if (!toast) return;
+
+      toastTitle.textContent = title;
+      toastSubtitle.textContent = subtitle;
+
+      if (type === 'success') {
+        toastIcon.textContent = 'check_circle';
+        toastIcon.className = 'material-symbols-outlined text-emerald-600 text-2xl';
+        toastContent.className = 'flex items-center gap-3 px-5 py-3.5 rounded-xl shadow-xl bg-white text-slate-800 border-l-4 border-emerald-500 max-w-md';
+      } else if (type === 'error') {
+        toastIcon.textContent = 'cancel';
+        toastIcon.className = 'material-symbols-outlined text-red-600 text-2xl';
+        toastContent.className = 'flex items-center gap-3 px-5 py-3.5 rounded-xl shadow-xl bg-white text-slate-800 border-l-4 border-red-500 max-w-md';
+      } else {
+        toastIcon.textContent = 'info';
+        toastIcon.className = 'material-symbols-outlined text-blue-600 text-2xl';
+        toastContent.className = 'flex items-center gap-3 px-5 py-3.5 rounded-xl shadow-xl bg-white text-slate-800 border-l-4 border-blue-500 max-w-md';
+      }
+
+      toast.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-4');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'pointer-events-none', '-translate-y-4');
+      }, 4000);
+    }
   </script>
+
+  <!-- Floating Toast Notification -->
+  <div id="statusToast" class="fixed top-6 right-6 z-50 transition-all duration-300 transform opacity-0 pointer-events-none -translate-y-4">
+    <div id="toastContent" class="flex items-center gap-3 px-5 py-3.5 rounded-xl shadow-xl bg-white text-slate-800 border-l-4 border-emerald-500 max-w-md">
+      <span class="material-symbols-outlined text-emerald-600 text-2xl" id="toastIcon">check_circle</span>
+      <div class="flex flex-col min-w-0">
+        <span class="font-display font-bold text-xs" id="toastTitle">Notification</span>
+        <span class="text-xs text-slate-600 font-medium leading-relaxed" id="toastSubtitle">Message</span>
+      </div>
+    </div>
+  </div>
 
   {% include 'inactivity_modal.html' %}
 </body>

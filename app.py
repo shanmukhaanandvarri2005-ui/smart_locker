@@ -131,38 +131,17 @@ def dashboard_page():
 
 @app.route('/borrow')
 def borrow_page():
-    """Borrow a Book Dispensing Workflow."""
+    """Redirect to dashboard where in-place unlocking and dispensing occurs."""
     if 'member_id' not in session:
         return redirect(url_for('auth_page'))
-    
-    conn = get_db()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM lockers WHERE occupancy_status = 'present' ORDER BY locker_code ASC")
-    available_books = [dict(row) for row in cursor.fetchall()]
-    conn.close()
-
-    selected_locker = available_books[0] if available_books else None
-    return render_template('borrow.html', available_books=available_books, selected_locker=selected_locker)
+    return redirect(url_for('dashboard_page'))
 
 @app.route('/return')
 def return_page():
-    """Return a Book Workflow."""
+    """Redirect to dashboard where in-place unlocking and returning occurs."""
     if 'member_id' not in session:
         return redirect(url_for('auth_page'))
-
-    conn = get_db()
-    cursor = conn.cursor()
-    cursor.execute('''
-    SELECT l.*, b.book_label, b.book_author, b.book_isbn, b.locker_code, b.category
-    FROM loans l
-    JOIN lockers b ON l.locker_id = b.locker_id
-    WHERE l.member_id = ? AND l.status = 'active'
-    ORDER BY l.borrowed_at DESC
-    ''', (session['member_id'],))
-    active_loans = [dict(row) for row in cursor.fetchall()]
-    conn.close()
-
-    return render_template('return.html', active_loans=active_loans)
+    return redirect(url_for('dashboard_page'))
 
 @app.route('/status')
 def status_page():
