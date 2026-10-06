@@ -49,7 +49,9 @@ class PostgresCursorWrapper:
 
     def _convert_query(self, query):
         # Translate SQLite '?' positional placeholders to PostgreSQL '%s'
-        return query.replace('?', '%s')
+        # while preserving literal '?' inside single-quoted strings
+        parts = query.split("'")
+        return "'".join(parts[i].replace('?', '%s') if i % 2 == 0 else parts[i] for i in range(len(parts)))
 
     def execute(self, query, params=None):
         sql = self._convert_query(query)
