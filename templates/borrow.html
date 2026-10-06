@@ -47,7 +47,10 @@
         </div>
       </div>
       <div class="flex items-center gap-3 text-xs">
-        <span class="font-display font-medium text-slate-600 hidden sm:inline">{{ current_user.name if current_user else "Member" }}</span>
+        <div class="flex flex-col text-right hidden sm:flex">
+          <span class="font-display font-medium text-slate-700">{{ current_user.name if current_user else "Member" }}</span>
+          <span class="text-[11px] font-mono font-bold text-slate-500">ID: {{ current_user.reg_no or current_user.rfid_uid or '—' }}</span>
+        </div>
         <a href="/dashboard" class="text-brand-accent font-semibold hover:underline">Dashboard</a>
       </div>
     </div>

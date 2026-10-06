@@ -75,7 +75,8 @@
         <img src="{{ current_user.avatar_url if current_user and current_user.avatar_url else 'https://api.dicebear.com/7.x/initials/svg?seed=User&backgroundColor=123b67' }}" class="w-9 h-9 rounded-full object-cover shadow-sm bg-white" alt="Avatar"/>
         <div class="flex flex-col min-w-0">
           <span class="font-display font-semibold text-xs text-slate-800 truncate">{{ current_user.name if current_user else "Host" }}</span>
-          <span class="text-[10px] font-mono uppercase font-bold text-brand-accent">Host Control</span>
+          <span class="text-[11px] font-mono font-bold text-slate-500 truncate">ID: {{ current_user.reg_no or current_user.rfid_uid or '—' }}</span>
+          <span class="text-[9px] font-mono uppercase font-bold text-brand-accent">Host Control</span>
         </div>
       </div>
       <a href="/logout" class="flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors">
@@ -96,10 +97,16 @@
           Host View Only
         </span>
       </div>
-      <a href="/dashboard" class="text-xs font-semibold text-brand-accent hover:underline flex items-center gap-1">
-        <span>Back to Dashboard</span>
-        <span class="material-symbols-outlined text-sm">arrow_forward</span>
-      </a>
+      <div class="flex items-center gap-4">
+        <div class="flex flex-col text-right">
+          <span class="font-display font-bold text-sm text-slate-800">{{ current_user.name if current_user else "Host" }}</span>
+          <span class="text-xs font-mono font-bold text-slate-500">ID: {{ current_user.reg_no or current_user.rfid_uid or '—' }}</span>
+        </div>
+        <a href="/dashboard" class="text-xs font-semibold text-brand-accent hover:underline flex items-center gap-1">
+          <span>Back to Dashboard</span>
+          <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </a>
+      </div>
     </header>
 
     <!-- Page Body -->
@@ -181,7 +188,7 @@
             type="text" 
             id="activitySearchInput" 
             oninput="filterActivities()" 
-            placeholder="Search employee name or card ID..." 
+            placeholder="Search employee name or Employee ID..." 
             class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-accent focus:bg-white"
           />
         </div>
@@ -224,7 +231,7 @@
             <thead>
               <tr class="bg-slate-50 text-slate-500 font-display font-semibold text-xs border-b border-slate-200">
                 <th class="py-3.5 px-4">Employee</th>
-                <th class="py-3.5 px-4">Card ID</th>
+                <th class="py-3.5 px-4">Employee ID</th>
                 <th class="py-3.5 px-4">Action</th>
                 <th class="py-3.5 px-4">Book &amp; Locker</th>
                 <th class="py-3.5 px-4">Status</th>
@@ -253,6 +260,7 @@
                       <span class="font-display font-bold text-slate-800 text-xs">
                         {{ act.member_name or 'System User' }}
                       </span>
+                      <span class="text-[10px] text-slate-400 font-mono">ID: {{ act.member_rfid or act.member_reg_no or '—' }}</span>
                       <span class="text-[10px] uppercase font-bold text-slate-400 font-mono">
                         {{ act.member_role or 'Personnel' }}
                       </span>
@@ -260,7 +268,7 @@
                   </div>
                 </td>
 
-                <!-- Card ID Column -->
+                <!-- Employee ID Column -->
                 <td class="py-3.5 px-4 font-mono text-xs font-bold text-brand-accent">
                   {{ act.member_rfid or act.member_reg_no or '—' }}
                 </td>
