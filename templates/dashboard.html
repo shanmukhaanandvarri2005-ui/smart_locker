@@ -138,7 +138,6 @@
         <img src="{{ current_user.avatar_url if current_user and current_user.avatar_url else 'https://api.dicebear.com/7.x/initials/svg?seed=User&backgroundColor=123b67' }}" class="w-9 h-9 rounded-full object-cover shadow-sm bg-white" alt="Avatar"/>
         <div class="flex flex-col min-w-0">
           <span class="font-display font-semibold text-xs text-slate-800 truncate">{{ current_user.name if current_user else "Member" }}</span>
-          <span class="font-mono text-[10px] text-slate-500">RFID: {{ current_user.rfid_uid if current_user else "—" }}</span>
         </div>
       </div>
       <a href="/logout" class="flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors">
@@ -159,8 +158,7 @@
 
       <div class="flex items-center gap-4">
         <div class="flex flex-col text-right">
-          <span class="font-display font-bold text-xs text-slate-800">{{ current_user.name if current_user else "Employee" }}</span>
-          <span class="font-mono text-[11px] text-slate-500">RFID: {{ current_user.rfid_uid if current_user else "00:00:00:00" }}</span>
+          <span class="font-display font-bold text-sm text-slate-800">{{ current_user.name if current_user else "Employee" }}</span>
         </div>
         <img src="{{ current_user.avatar_url if current_user and current_user.avatar_url else 'https://api.dicebear.com/7.x/initials/svg?seed=User&backgroundColor=123b67' }}" class="w-8 h-8 rounded-full border border-slate-200 shadow-sm" alt="User"/>
       </div>

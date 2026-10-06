@@ -47,7 +47,7 @@
         </div>
       </div>
       <div class="flex items-center gap-3 text-xs">
-        <span class="font-mono text-slate-500 hidden sm:inline">{{ current_user.name if current_user else "Member" }} (RFID: {{ current_user.rfid_uid if current_user else "—" }})</span>
+        <span class="font-display font-medium text-slate-600 hidden sm:inline">{{ current_user.name if current_user else "Member" }}</span>
         <a href="/dashboard" class="text-brand-accent font-semibold hover:underline">Dashboard</a>
       </div>
     </div>
