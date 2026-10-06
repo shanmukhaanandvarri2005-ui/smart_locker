@@ -42,7 +42,7 @@ CREATE TABLE loans (
     member_id INTEGER NOT NULL REFERENCES members(member_id) ON DELETE CASCADE,
     locker_id INTEGER NOT NULL REFERENCES lockers(locker_id) ON DELETE CASCADE,
     borrowed_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    due_date TIMESTAMP WITH TIME ZONE NOT NULL,
+    due_date TEXT,
     returned_at TIMESTAMP WITH TIME ZONE,
     status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'returned'))
 );

@@ -173,16 +173,16 @@
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({ loan_id: loanId })
         });
-        const data = await res.json();
+        const data = await res.json().catch(() => null);
 
-        if (data.success) {
+        if (res.ok && data && data.success) {
           document.getElementById('return-selection-block').classList.add('hidden');
           document.getElementById('return-success-block').classList.remove('hidden');
 
           document.getElementById('returnSuccessTitle').textContent = data.book_label + ' Returned!';
           document.getElementById('returnSuccessDesc').textContent = data.locker_code + ' compartment verified. Thank you for returning the book on time.';
         } else {
-          alert(data.message || 'Error processing book return.');
+          alert((data && data.message) || 'Error processing book return.');
           btn.disabled = false;
           btn.classList.remove('opacity-75');
           label.textContent = 'Unlock Locker Compartment';

@@ -34,9 +34,18 @@ def inject_global_data():
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM members WHERE member_id = ?", (session['member_id'],))
         row = cursor.fetchone()
+        if not row and 'rfid_uid' in session:
+            cursor.execute("SELECT * FROM members WHERE rfid_uid = ?", (session['rfid_uid'],))
+            row = cursor.fetchone()
+            if row:
+                session['member_id'] = row['member_id']
+                session['name'] = row['name']
+                session['role'] = row['role']
         conn.close()
         if row:
             current_user = dict(row)
+        else:
+            session.clear()
     return {
         "hardware_status": hw_status,
         "current_user": current_user,
@@ -314,6 +323,23 @@ def api_locker_borrow():
 
     conn = get_db()
     cursor = conn.cursor()
+
+    # Re-verify and self-heal session member_id if needed
+    cursor.execute("SELECT * FROM members WHERE member_id = ?", (session['member_id'],))
+    member = cursor.fetchone()
+    if not member and 'rfid_uid' in session:
+        cursor.execute("SELECT * FROM members WHERE rfid_uid = ?", (session['rfid_uid'],))
+        member = cursor.fetchone()
+        if member:
+            session['member_id'] = member['member_id']
+            session['name'] = member['name']
+            session['role'] = member['role']
+
+    if not member:
+        conn.close()
+        session.clear()
+        return jsonify({"success": False, "message": "Session expired or user deleted. Please log in again."}), 401
+
     cursor.execute("SELECT * FROM lockers WHERE locker_id = ?", (locker_id,))
     locker = cursor.fetchone()
 
@@ -329,26 +355,32 @@ def api_locker_borrow():
     now_str = now.strftime('%Y-%m-%d %H:%M:%S')
     due_str = 'No Due Date'
 
-    # Trigger physical lock release & green indicator
-    hardware.unlock_solenoid(duration_sec=20)
+    try:
+        # Trigger physical lock release & green indicator
+        hardware.unlock_solenoid(duration_sec=20)
 
-    # Update database
-    cursor.execute('''
-    UPDATE lockers SET occupancy_status = 'absent', lock_status = 'unlocked', last_updated = ?
-    WHERE locker_id = ?
-    ''', (now_str, locker_id))
+        # Update database
+        cursor.execute('''
+        UPDATE lockers SET occupancy_status = 'absent', lock_status = 'unlocked', last_updated = ?
+        WHERE locker_id = ?
+        ''', (now_str, locker_id))
 
-    cursor.execute('''
-    INSERT INTO loans (member_id, locker_id, borrowed_at, due_date, status)
-    VALUES (?, ?, ?, ?, 'active')
-    ''', (session['member_id'], locker_id, now_str, due_str))
+        cursor.execute('''
+        INSERT INTO loans (member_id, locker_id, borrowed_at, due_date, status)
+        VALUES (?, ?, ?, ?, 'active')
+        ''', (session['member_id'], locker_id, now_str, due_str))
 
-    cursor.execute('''
-    INSERT INTO transactions (member_id, locker_id, operation, result, timestamp, details)
-    VALUES (?, ?, 'borrow', 'success', ?, ?)
-    ''', (session['member_id'], locker_id, now_str, f"Dispensed {locker['book_label']} ({locker['locker_code']}) to {session.get('name')}"))
+        cursor.execute('''
+        INSERT INTO transactions (member_id, locker_id, operation, result, timestamp, details)
+        VALUES (?, ?, 'borrow', 'success', ?, ?)
+        ''', (session['member_id'], locker_id, now_str, f"Dispensed {locker['book_label']} ({locker['locker_code']}) to {session.get('name')}"))
 
-    conn.commit()
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        conn.close()
+        return jsonify({"success": False, "message": f"Borrow transaction error: {str(e)}"}), 500
+
     conn.close()
 
     return jsonify({
@@ -373,6 +405,23 @@ def api_locker_return():
 
     conn = get_db()
     cursor = conn.cursor()
+
+    # Re-verify and self-heal session member_id if needed
+    cursor.execute("SELECT * FROM members WHERE member_id = ?", (session['member_id'],))
+    member = cursor.fetchone()
+    if not member and 'rfid_uid' in session:
+        cursor.execute("SELECT * FROM members WHERE rfid_uid = ?", (session['rfid_uid'],))
+        member = cursor.fetchone()
+        if member:
+            session['member_id'] = member['member_id']
+            session['name'] = member['name']
+            session['role'] = member['role']
+
+    if not member:
+        conn.close()
+        session.clear()
+        return jsonify({"success": False, "message": "Session expired or user deleted. Please log in again."}), 401
+
     cursor.execute('''
     SELECT l.*, b.book_label, b.locker_id, b.locker_code 
     FROM loans l
@@ -387,28 +436,34 @@ def api_locker_return():
 
     now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-    # Trigger lock release
-    hardware.unlock_solenoid(duration_sec=20)
+    try:
+        # Trigger lock release
+        hardware.unlock_solenoid(duration_sec=20)
 
-    # Update loan
-    cursor.execute('''
-    UPDATE loans SET returned_at = ?, status = 'returned'
-    WHERE loan_id = ?
-    ''', (now_str, loan_id))
+        # Update loan
+        cursor.execute('''
+        UPDATE loans SET returned_at = ?, status = 'returned'
+        WHERE loan_id = ?
+        ''', (now_str, loan_id))
 
-    # Update locker status
-    cursor.execute('''
-    UPDATE lockers SET occupancy_status = 'present', lock_status = 'locked', last_updated = ?
-    WHERE locker_id = ?
-    ''', (now_str, loan['locker_id']))
+        # Update locker status
+        cursor.execute('''
+        UPDATE lockers SET occupancy_status = 'present', lock_status = 'locked', last_updated = ?
+        WHERE locker_id = ?
+        ''', (now_str, loan['locker_id']))
 
-    # Transaction audit log
-    cursor.execute('''
-    INSERT INTO transactions (member_id, locker_id, operation, result, timestamp, details)
-    VALUES (?, ?, 'return', 'success', ?, ?)
-    ''', (session['member_id'], loan['locker_id'], now_str, f"Returned {loan['book_label']} ({loan['locker_code']}) verified."))
+        # Transaction audit log
+        cursor.execute('''
+        INSERT INTO transactions (member_id, locker_id, operation, result, timestamp, details)
+        VALUES (?, ?, 'return', 'success', ?, ?)
+        ''', (session['member_id'], loan['locker_id'], now_str, f"Returned {loan['book_label']} ({loan['locker_code']}) verified."))
 
-    conn.commit()
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        conn.close()
+        return jsonify({"success": False, "message": f"Return transaction error: {str(e)}"}), 500
+
     conn.close()
 
     return jsonify({

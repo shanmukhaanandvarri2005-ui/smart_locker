@@ -214,9 +214,9 @@
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({ locker_id: lockerId })
         });
-        const data = await res.json();
+        const data = await res.json().catch(() => null);
 
-        if (data.success) {
+        if (res.ok && data && data.success) {
           document.getElementById('selection-block').classList.add('hidden');
           document.getElementById('unlocked-block').classList.remove('hidden');
 
@@ -227,7 +227,7 @@
           document.getElementById('successDesc').textContent = 'Please retrieve "' + data.book_label + '" from ' + data.locker_code + ' and securely close the locker door.';
           document.getElementById('successDueDate').textContent = 'No due date. Return the book to ' + data.locker_code + ' whenever you finish.';
         } else {
-          alert(data.message || 'Dispensing failed. Please try again.');
+          alert((data && data.message) || 'Dispensing failed. Please try again.');
           btn.disabled = false;
           btn.classList.remove('opacity-75');
           label.textContent = 'Unlock Locker Compartment';
