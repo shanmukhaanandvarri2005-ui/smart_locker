@@ -237,7 +237,7 @@ def seed_clean_data(conn):
         (
             'Manoj',
             '1244001510',
-            'EMP-002',
+            '002',
             'Electrical and Electronics Engineering',
             None,
             'employee',
@@ -248,7 +248,7 @@ def seed_clean_data(conn):
         (
             'Shanmukh',
             '3677855325',
-            'EMP-001',
+            '001',
             'Electrical and Electronics Engineering',
             None,
             'host',

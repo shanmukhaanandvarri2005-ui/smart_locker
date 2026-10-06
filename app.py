@@ -625,7 +625,7 @@ def api_add_user():
     # Default reg_no to rfid_uid to satisfy SQLite NOT NULL schema constraint
     reg_no = data.get('reg_no', '').strip()
     if not reg_no:
-        reg_no = f"EMP-{rfid_uid[-4:]}" if len(rfid_uid) >= 4 else f"EMP-{rfid_uid}"
+        reg_no = rfid_uid[-4:] if len(rfid_uid) >= 4 else rfid_uid
     email = data.get('email', '').strip()
     role = data.get('role', 'employee').strip().lower()
     if role not in ('host', 'employee'):
@@ -702,7 +702,7 @@ def api_update_user(member_id):
         conn.close()
         return jsonify({"success": False, "message": "Member not found."}), 404
 
-    reg_no = data.get('reg_no', '').strip() or member['reg_no'] or (f"EMP-{rfid_uid[-4:]}" if len(rfid_uid) >= 4 else f"EMP-{rfid_uid}")
+    reg_no = data.get('reg_no', '').strip() or member['reg_no'] or (rfid_uid[-4:] if len(rfid_uid) >= 4 else rfid_uid)
 
     try:
         now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
