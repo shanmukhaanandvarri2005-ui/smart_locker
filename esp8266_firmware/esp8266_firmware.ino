@@ -1,16 +1,22 @@
 /*
- * SmartLocker ESP8266 Controller Firmware (Locker 1 Only)
- * --------------------------------------------------------
- * Hardware:
- *   - ESP8266 (NodeMCU / Wemos D1 Mini)
- *   - Relay Module connected to Pin D1 (GPIO 5), Active LOW
- *   - Controls ONLY Locker 1 (Solenoid Lock 1)
+ * SmartLocker ESP8266 Multi-Locker Controller Firmware (5 Lockers)
+ * -----------------------------------------------------------------
+ * Hardware Configuration:
+ *   - ESP8266 (NodeMCU v2/v3 or Wemos D1 Mini)
+ *   - Locker 1 (Existing Physical Prototype): Pin D1 (GPIO 5) -> 12V Solenoid Lock
+ *   - Locker 2: Pin D2 (GPIO 4)  -> [Virtual / Ready for future hardware]
+ *   - Locker 3: Pin D5 (GPIO 14) -> [Virtual / Ready for future hardware]
+ *   - Locker 4: Pin D6 (GPIO 12) -> [Virtual / Ready for future hardware]
+ *   - Locker 5: Pin D7 (GPIO 13) -> [Virtual / Ready for future hardware]
  *
- * Behavior:
- *   - Only requests for Locker 1 will energize the relay on Pin D1.
- *   - Requests for Locker 2, 3, 4, 5 are ignored and Locker 1 stays locked.
+ * Prototype Behavior:
+ *   - Borrowing Book 1 (Locker 1): Activates physical relay on Pin D1.
+ *   - Borrowing Books 2, 3, 4, 5: Marked as Virtual (no hardware attached),
+ *     so Locker 1 solenoid will NEVER open for other books!
+ *   - When you add more physical relays later, simply set HAS_PHYSICAL_HARDWARE
+ *     to true for that locker!
  *
- * Wiring:
+ * Wiring (Locker 1):
  *   - ESP8266 D1  -> Relay IN
  *   - ESP8266 GND -> Relay GND
  *   - ESP8266 VIN -> Relay VCC (5V)
@@ -28,56 +34,138 @@
 const char* WIFI_SSID     = "";  
 const char* WIFI_PASSWORD = "";  
 
-#define RELAY_PIN         D1      // Relay Signal Pin (GPIO 5 on NodeMCU)
-#define THIS_LOCKER_ID    1       // This hardware is assigned ONLY to Locker 1
-#define DEFAULT_UNLOCK_MS 4000    // Auto-lock duration: 4 seconds
+#define TOTAL_LOCKERS     5
+#define DEFAULT_UNLOCK_MS 4000  // Default unlock duration: 4 seconds
 
-// Active-LOW relay definitions (Standard 5V relay module)
+// Active-LOW relay definitions (standard Arduino/ESP relay modules)
 #define RELAY_ON          LOW
 #define RELAY_OFF         HIGH
+
+// GPIO Pin mappings for all 5 lockers
+#define PIN_LOCKER_1      D1   // GPIO 5  -> Locker 1 (PHYSICAL SOLENOID)
+#define PIN_LOCKER_2      D2   // GPIO 4  -> Locker 2 (Virtual / Future)
+#define PIN_LOCKER_3      D5   // GPIO 14 -> Locker 3 (Virtual / Future)
+#define PIN_LOCKER_4      D6   // GPIO 12 -> Locker 4 (Virtual / Future)
+#define PIN_LOCKER_5      D7   // GPIO 13 -> Locker 5 (Virtual / Future)
+
+// Hardware presence toggle:
+// Only Locker 1 has a physical solenoid attached right now!
+const bool HAS_PHYSICAL_HARDWARE[TOTAL_LOCKERS] = {
+  true,   // Locker 1: TRUE  (Physical solenoid on Pin D1)
+  false,  // Locker 2: FALSE (Virtual locker - no solenoid)
+  false,  // Locker 3: FALSE (Virtual locker - no solenoid)
+  false,  // Locker 4: FALSE (Virtual locker - no solenoid)
+  false   // Locker 5: FALSE (Virtual locker - no solenoid)
+};
+
+const uint8_t LOCKER_PINS[TOTAL_LOCKERS] = {
+  PIN_LOCKER_1,
+  PIN_LOCKER_2,
+  PIN_LOCKER_3,
+  PIN_LOCKER_4,
+  PIN_LOCKER_5
+};
+
 // ======================================================
 
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 
-bool isUnlocked = false;
-unsigned long unlockStartTime = 0;
-unsigned long currentUnlockDuration = DEFAULT_UNLOCK_MS;
+bool isLockerUnlocked[TOTAL_LOCKERS] = {false, false, false, false, false};
+unsigned long unlockStartTime[TOTAL_LOCKERS] = {0, 0, 0, 0, 0};
+unsigned long unlockDuration[TOTAL_LOCKERS] = {DEFAULT_UNLOCK_MS, DEFAULT_UNLOCK_MS, DEFAULT_UNLOCK_MS, DEFAULT_UNLOCK_MS, DEFAULT_UNLOCK_MS};
 String serialInput = "";
-String authorizedCard = "";
 
 ESP8266WebServer server(80);
 bool wifiEnabled = false;
 
-// Hardware control functions (defined first so no prototype errors occur)
-void unlockLocker(unsigned long durationMs = DEFAULT_UNLOCK_MS) {
-  digitalWrite(RELAY_PIN, RELAY_ON); // Energize relay (pulls solenoid open)
-  isUnlocked = true;
-  unlockStartTime = millis();
-  currentUnlockDuration = durationMs;
-  Serial.println(">> [HARDWARE]: Relay ON (Solenoid retracted / Door 1 Unlocked)");
+// Hardware Control Functions
+void unlockSingleLocker(int lockerIndex, unsigned long durationMs = DEFAULT_UNLOCK_MS) {
+  if (lockerIndex < 0 || lockerIndex >= TOTAL_LOCKERS) return;
+
+  int lockerNum = lockerIndex + 1;
+
+  if (HAS_PHYSICAL_HARDWARE[lockerIndex]) {
+    // Physical hardware exists for this locker!
+    digitalWrite(LOCKER_PINS[lockerIndex], RELAY_ON);
+    isLockerUnlocked[lockerIndex] = true;
+    unlockStartTime[lockerIndex] = millis();
+    unlockDuration[lockerIndex] = durationMs;
+
+    Serial.print(">> [LOCKER ");
+    Serial.print(lockerNum);
+    Serial.print("]: PHYSICAL RELAY ACTIVATED on Pin ");
+    Serial.print(lockerIndex == 0 ? "D1" : String(LOCKER_PINS[lockerIndex]));
+    Serial.print(" for ");
+    Serial.print(durationMs / 1000);
+    Serial.println(" seconds!");
+  } else {
+    // Virtual locker - no physical solenoid attached
+    isLockerUnlocked[lockerIndex] = false;
+    Serial.print(">> [LOCKER ");
+    Serial.print(lockerNum);
+    Serial.println("]: VIRTUAL COMPARTMENT (No physical solenoid installed yet).");
+    Serial.println(">> [PROTECTION]: Locker 1 physical solenoid stays safely LOCKED.");
+  }
 }
 
-void lockLocker() {
-  digitalWrite(RELAY_PIN, RELAY_OFF); // De-energize relay (locks solenoid)
-  isUnlocked = false;
-  Serial.println(">> [HARDWARE]: Relay OFF (Solenoid engaged / Door 1 Locked)");
+void lockSingleLocker(int lockerIndex) {
+  if (lockerIndex < 0 || lockerIndex >= TOTAL_LOCKERS) return;
+  if (HAS_PHYSICAL_HARDWARE[lockerIndex]) {
+    digitalWrite(LOCKER_PINS[lockerIndex], RELAY_OFF);
+  }
+  isLockerUnlocked[lockerIndex] = false;
 }
 
-// Checks if Locker 1 is targeted in a locker string (e.g. "1", "01", "1,2", "3,1")
-bool isLocker1Targeted(String target) {
-  target.trim();
-  target.toUpperCase();
-  if (target == "1" || target == "01" || target == "LOCKER 1" || target == "LOCKER 01" || target == "LOCKER1") {
-    return true;
+void lockAllLockers() {
+  for (int i = 0; i < TOTAL_LOCKERS; i++) {
+    lockSingleLocker(i);
   }
-  if (target.startsWith("1,") || target.endsWith(",1") || target.indexOf(",1,") != -1) {
-    return true;
+  Serial.println(">> [HARDWARE]: All lockers securely LOCKED.");
+}
+
+// Parses list of lockers (e.g. "1", "2", "1,2", "3,5") and triggers each
+void handleUnlockRequest(String lockerTargetStr, unsigned long durationMs) {
+  lockerTargetStr.trim();
+  lockerTargetStr.toUpperCase();
+
+  Serial.println("==========================================");
+  Serial.print(">> [COMMAND RECEIVED]: UNLOCK request for: [ ");
+  Serial.print(lockerTargetStr);
+  Serial.print(" ] Duration: ");
+  Serial.print(durationMs / 1000);
+  Serial.println("s");
+
+  // Check which lockers (1 to 5) are requested
+  bool anyLockerMatched = false;
+  for (int num = 1; num <= TOTAL_LOCKERS; num++) {
+    String numStr = String(num);
+    String numPadded = (num < 10) ? ("0" + numStr) : numStr;
+    String nameStr = "LOCKER " + numStr;
+    String namePadded = "LOCKER " + numPadded;
+
+    bool isTargeted = false;
+    if (lockerTargetStr == numStr || lockerTargetStr == numPadded ||
+        lockerTargetStr == nameStr || lockerTargetStr == namePadded) {
+      isTargeted = true;
+    } else if (lockerTargetStr.startsWith(numStr + ",") || lockerTargetStr.endsWith("," + numStr) || lockerTargetStr.indexOf("," + numStr + ",") != -1) {
+      isTargeted = true;
+    } else if (lockerTargetStr.startsWith(numPadded + ",") || lockerTargetStr.endsWith("," + numPadded) || lockerTargetStr.indexOf("," + numPadded + ",") != -1) {
+      isTargeted = true;
+    }
+
+    if (isTargeted) {
+      anyLockerMatched = true;
+      unlockSingleLocker(num - 1, durationMs);
+    }
   }
-  if (target.startsWith("01,") || target.endsWith(",01") || target.indexOf(",01,") != -1) {
-    return true;
+
+  // If no specific locker matched but command was generic "UNLOCK"
+  if (!anyLockerMatched && (lockerTargetStr == "" || lockerTargetStr == "ALL" || lockerTargetStr == "1 (DEFAULT)")) {
+    unlockSingleLocker(0, durationMs); // Default prototype Locker 1
   }
-  return false;
+
+  Serial.println("==========================================\n");
 }
 
 void processCommand(String cmd) {
@@ -85,84 +173,75 @@ void processCommand(String cmd) {
   String upperCmd = cmd;
   upperCmd.toUpperCase();
 
-  // Command 1: UNLOCK
+  // Command 1: UNLOCK Commands
+  // Accepted formats:
+  //   - UNLOCK:1:4        -> Unlock Locker 1 (Physical opens!)
+  //   - UNLOCK:2:4        -> Target Locker 2 (Virtual - Locker 1 stays locked!)
+  //   - UNLOCK:1,3:6      -> Multiple lockers (Locker 1 opens, Locker 3 is virtual)
+  //   - UNLOCK:2,4:6      -> Locker 1 stays completely locked!
+  //   - UNLOCK:1          -> Unlock Locker 1 (default 4s)
+  //   - UNLOCK            -> Manual test trigger for Locker 1
   if (upperCmd.startsWith("UNLOCK")) {
     unsigned long duration = DEFAULT_UNLOCK_MS;
-    bool targetLocker1 = false;
     String lockerPart = "";
 
     int firstColon = upperCmd.indexOf(':');
     if (firstColon == -1) {
-      // Standalone "UNLOCK" (e.g. manual Serial test) -> unlock Locker 1
-      targetLocker1 = true;
+      // Standalone "UNLOCK"
       lockerPart = "1 (Default)";
     } else {
       int secondColon = upperCmd.indexOf(':', firstColon + 1);
       if (secondColon != -1) {
-        // Format: UNLOCK:<locker>:<duration> (e.g. UNLOCK:1:4 or UNLOCK:2:4)
+        // Format: UNLOCK:<lockers>:<duration>
         lockerPart = upperCmd.substring(firstColon + 1, secondColon);
-        lockerPart.trim();
         int sec = upperCmd.substring(secondColon + 1).toInt();
         if (sec > 0) duration = (unsigned long)sec * 1000;
-        targetLocker1 = isLocker1Targeted(lockerPart);
       } else {
-        // Format with 1 colon: UNLOCK:<arg>
+        // Format: UNLOCK:<arg>
         String arg = upperCmd.substring(firstColon + 1);
         arg.trim();
-        if (isLocker1Targeted(arg)) {
-          targetLocker1 = true;
-          lockerPart = arg;
-        } else if (arg == "2" || arg == "3" || arg == "4" || arg == "5" || arg.startsWith("LOCKER")) {
-          targetLocker1 = false;
-          lockerPart = arg;
-        } else {
-          int sec = arg.toInt();
-          if (sec > 0) duration = (unsigned long)sec * 1000;
-          targetLocker1 = true;
+        int sec = arg.toInt();
+        // If arg is a pure number greater than TOTAL_LOCKERS, it's duration (e.g. UNLOCK:4)
+        if (sec > TOTAL_LOCKERS) {
+          duration = (unsigned long)sec * 1000;
           lockerPart = "1 (Default)";
+        } else {
+          lockerPart = arg;
         }
       }
     }
 
-    Serial.println("------------------------------------------");
-    if (targetLocker1) {
-      Serial.print(">> [COMMAND]: UNLOCK request for LOCKER 1 (Duration: ");
-      Serial.print(duration / 1000);
-      Serial.println("s)");
-      Serial.println(">> [MATCH]: Activating Relay Pin D1 for Solenoid Lock 1!");
-      unlockLocker(duration);
-    } else {
-      Serial.print(">> [COMMAND]: UNLOCK request for Locker: [ ");
-      Serial.print(lockerPart);
-      Serial.println(" ]");
-      Serial.println(">> [NOTICE]: Physical relay on Pin D1 is wired ONLY for Locker 1.");
-      Serial.println(">> [ACTION]: Locker 1 solenoid will NOT activate (IGNORED).");
-    }
-    Serial.println("------------------------------------------\n");
+    handleUnlockRequest(lockerPart, duration);
     return;
   }
 
   // Command 2: LOCK
   if (upperCmd == "LOCK") {
-    Serial.println(">> [COMMAND]: LOCK signal received.");
-    lockLocker();
+    Serial.println(">> [COMMAND]: Manual LOCK signal received.");
+    lockAllLockers();
     return;
   }
 
   // Command 3: STATUS / PING
   if (upperCmd == "STATUS" || upperCmd == "PING") {
     Serial.print("STATUS: ");
-    Serial.println(isUnlocked ? "UNLOCKED" : "LOCKED");
+    for (int i = 0; i < TOTAL_LOCKERS; i++) {
+      Serial.print("L");
+      Serial.print(i + 1);
+      Serial.print("=");
+      Serial.print(isLockerUnlocked[i] ? "UNLOCKED" : "LOCKED");
+      if (i < TOTAL_LOCKERS - 1) Serial.print(", ");
+    }
+    Serial.println();
     return;
   }
 
-  // Command 4: Non-command input (Card UIDs or unrecognized text)
-  // Ignored so that raw scans or UIDs never trigger Locker 1 by accident
+  // Any raw card UID or unrecognized text is safely IGNORED
   Serial.println("------------------------------------------");
-  Serial.print(">> [IGNORED]: Non-command input received: [ ");
+  Serial.print(">> [IGNORED]: Input received: [ ");
   Serial.print(cmd);
   Serial.println(" ]");
-  Serial.println(">> [NOTICE]: Physical relay on Pin D1 triggers ONLY on explicit UNLOCK:1 commands.");
+  Serial.println(">> [NOTICE]: Relays trigger only on explicit 'UNLOCK:<id>' commands.");
   Serial.println("------------------------------------------\n");
 }
 
@@ -179,38 +258,47 @@ void handleHttpUnlock() {
     locker = server.arg("locker");
   }
 
-  bool targetLocker1 = isLocker1Targeted(locker);
-  if (targetLocker1) {
-    unlockLocker(duration);
-    server.send(200, "application/json", "{\"success\":true,\"locker\":1,\"state\":\"unlocked\",\"duration_ms\":" + String(duration) + "}");
-  } else {
-    server.send(200, "application/json", "{\"success\":true,\"locker\":\"" + locker + "\",\"state\":\"ignored_not_locker_1\"}");
-  }
+  handleUnlockRequest(locker, duration);
+  server.send(200, "application/json", "{\"success\":true,\"locker\":\"" + locker + "\",\"duration_ms\":" + String(duration) + "}");
 }
 
 void handleHttpLock() {
-  lockLocker();
-  server.send(200, "application/json", "{\"success\":true,\"state\":\"locked\"}");
+  lockAllLockers();
+  server.send(200, "application/json", "{\"success\":true,\"state\":\"all_locked\"}");
 }
 
 void handleHttpStatus() {
-  server.send(200, "application/json", "{\"state\":\"" + String(isUnlocked ? "unlocked" : "locked") + "\"}");
+  String json = "{\"lockers\":{";
+  for (int i = 0; i < TOTAL_LOCKERS; i++) {
+    json += "\"" + String(i + 1) + "\":\"" + (isLockerUnlocked[i] ? "unlocked" : "locked") + "\"";
+    if (i < TOTAL_LOCKERS - 1) json += ",";
+  }
+  json += "}}";
+  server.send(200, "application/json", json);
 }
 
 void setup() {
   Serial.begin(115200);
   delay(500);
 
-  pinMode(RELAY_PIN, OUTPUT);
-  digitalWrite(RELAY_PIN, RELAY_OFF); // Start safely locked
+  // Initialize all 5 locker output pins safely locked
+  for (int i = 0; i < TOTAL_LOCKERS; i++) {
+    pinMode(LOCKER_PINS[i], OUTPUT);
+    digitalWrite(LOCKER_PINS[i], RELAY_OFF);
+  }
 
-  Serial.println("\n==========================================");
-  Serial.println("   SMARTLOCKER ESP8266 CONTROLLER READY   ");
-  Serial.println("==========================================");
-  Serial.println("Assigned Physical Locker: LOCKER 1 ONLY (Pin D1)");
-  Serial.println("Protocol: USB Serial @ 115200 baud");
-  Serial.println("Commands: UNLOCK:<locker>:<sec>, UNLOCK:1, LOCK, STATUS");
-  Serial.println("Note: Commands for Locker 2, 3, 4, 5 will NOT open Locker 1.");
+  Serial.println("\n==================================================");
+  Serial.println("   SMARTLOCKER 5-COMPARTMENT CONTROLLER READY    ");
+  Serial.println("==================================================");
+  Serial.println("Compartment Hardware Map:");
+  Serial.println("  - Locker 1: Pin D1 [ACTIVE PHYSICAL SOLENOID]");
+  Serial.println("  - Locker 2: Pin D2 [VIRTUAL - Hardware Not Installed]");
+  Serial.println("  - Locker 3: Pin D5 [VIRTUAL - Hardware Not Installed]");
+  Serial.println("  - Locker 4: Pin D6 [VIRTUAL - Hardware Not Installed]");
+  Serial.println("  - Locker 5: Pin D7 [VIRTUAL - Hardware Not Installed]");
+  Serial.println("Communication: USB Serial @ 115200 baud");
+  Serial.println("Commands: UNLOCK:<id>:<sec>, UNLOCK:1, LOCK, STATUS");
+  Serial.println("Behavior: Books 2, 3, 4, 5 will NEVER open Locker 1!");
 
   if (WIFI_SSID != NULL && strlen(WIFI_SSID) > 0) {
     WiFi.mode(WIFI_STA);
@@ -253,9 +341,13 @@ void loop() {
     }
   }
 
-  // Non-blocking auto-relock
-  if (isUnlocked && (millis() - unlockStartTime >= currentUnlockDuration)) {
-    lockLocker();
-    Serial.println(">> [AUTO-LOCK]: Solenoid de-energized. Locker 1 is now LOCKED.\n");
+  // Non-blocking auto-relock timers for each locker independently
+  for (int i = 0; i < TOTAL_LOCKERS; i++) {
+    if (isLockerUnlocked[i] && (millis() - unlockStartTime[i] >= unlockDuration[i])) {
+      lockSingleLocker(i);
+      Serial.print(">> [AUTO-LOCK]: Locker ");
+      Serial.print(i + 1);
+      Serial.println(" re-locked.\n");
+    }
   }
 }
