@@ -186,27 +186,53 @@ class HardwareController:
             print(f"[Hardware] WiFi command failed ({self.esp8266_ip}): {e}", flush=True)
             return False
 
-    def unlock_solenoid(self, duration_sec=4, card_uid=None):
+    def unlock_solenoid(self, duration_sec=4, card_uid=None, locker_ids=None):
         """
         Unlocks the 12V solenoid lock by energizing the relay.
+        Only triggers physical Relay Pin D1 if Locker 1 is targeted!
         Controls:
-          1. Raspberry Pi GPIO (if on Pi)
-          2. ESP8266 over USB Serial (sends UNLOCK and card_uid)
-          3. ESP8266 over WiFi (if configured)
+          1. ESP8266 over USB Serial (sends UNLOCK:<lockers>:<duration>)
+          2. ESP8266 over WiFi (if configured)
+          3. Raspberry Pi GPIO (if on Pi)
         """
-        self.solenoid_unlocked = True
-        self.set_led('GREEN')
+        if locker_ids is None:
+            lockers_list = [1]
+        elif isinstance(locker_ids, (int, str)):
+            lockers_list = [locker_ids]
+        else:
+            lockers_list = list(locker_ids)
 
-        # 1. RPi GPIO
-        if self.is_rpi:
+        cleaned_ids = []
+        for lid in lockers_list:
+            s = str(lid).strip()
+            digits = ''.join(c for c in s if c.isdigit())
+            if digits:
+                cleaned_ids.append(str(int(digits)))
+            else:
+                cleaned_ids.append(s)
+
+        lockers_str = ",".join(cleaned_ids) if cleaned_ids else "1"
+        is_locker_1_targeted = any(x == "1" for x in cleaned_ids)
+
+        if is_locker_1_targeted:
+            self.solenoid_unlocked = True
+            self.set_led('GREEN')
+            print(f"[Hardware] Locker 1 TARGETED ({lockers_str}). Solenoid Relay will activate.", flush=True)
+        else:
+            print(f"[Hardware] Locker 1 NOT targeted ({lockers_str}). Solenoid Relay on Pin D1 will remain LOCKED.", flush=True)
+
+        # 1. RPi GPIO (if on Pi)
+        if self.is_rpi and is_locker_1_targeted:
             try:
                 import RPi.GPIO as GPIO
                 GPIO.output(PIN_SOLENOID, GPIO.HIGH)
             except Exception:
                 pass
 
-        # 2. ESP8266 USB Serial Command (sends "UNLOCK:4" and optional card UID for full compatibility)
-        self._send_serial_command(f"UNLOCK:{duration_sec}")
+        # 2. ESP8266 USB Serial Command:
+        # Formatted as: UNLOCK:<lockers>:<duration_sec> (e.g. UNLOCK:1:4 or UNLOCK:2:4)
+        serial_cmd = f"UNLOCK:{lockers_str}:{duration_sec}"
+        self._send_serial_command(serial_cmd)
         if card_uid:
             self._send_serial_command(str(card_uid))
 
@@ -214,12 +240,12 @@ class HardwareController:
         if self.esp8266_ip:
             threading.Thread(
                 target=self._send_wifi_command, 
-                args=(f"/unlock?duration={duration_sec}",), 
+                args=(f"/unlock?locker={lockers_str}&duration={duration_sec}",), 
                 daemon=True
             ).start()
 
         # Non-blocking auto-relock timer for software state
-        if duration_sec:
+        if duration_sec and is_locker_1_targeted:
             def auto_relock():
                 time.sleep(duration_sec)
                 self.lock_solenoid()

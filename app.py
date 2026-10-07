@@ -348,10 +348,11 @@ def api_locker_unlock():
     """Direct hardware unlock endpoint triggering ESP8266 relay and solenoid."""
     data = request.get_json() or {}
     duration = int(data.get('duration', 4))
-    hardware.unlock_solenoid(duration_sec=duration, card_uid=session.get('rfid_uid'))
+    locker_id = data.get('locker_id', 1)
+    hardware.unlock_solenoid(duration_sec=duration, card_uid=session.get('rfid_uid'), locker_ids=[locker_id])
     return jsonify({
         "success": True,
-        "message": f"Unlock signal sent to ESP8266 relay for {duration} seconds.",
+        "message": f"Unlock signal sent to ESP8266 relay for Locker {locker_id} ({duration} seconds).",
         "status": hardware.read_sensors()
     })
 
@@ -420,8 +421,9 @@ def api_locker_borrow():
 
     try:
         # Trigger physical lock release & green LED on ESP8266 controller
+        borrow_locker_ids = [locker['locker_id'] for locker in borrow_items]
         unlock_duration = max(4, 2 + len(borrow_items) * 2)
-        hardware.unlock_solenoid(duration_sec=unlock_duration, card_uid=session.get('rfid_uid'))
+        hardware.unlock_solenoid(duration_sec=unlock_duration, card_uid=session.get('rfid_uid'), locker_ids=borrow_locker_ids)
 
         for locker in borrow_items:
             lid = locker['locker_id']
@@ -526,8 +528,9 @@ def api_locker_return():
 
     try:
         # Trigger lock release (ESP8266 + Solenoid)
+        return_locker_ids = [loan['locker_id'] for loan in return_records]
         unlock_duration = max(4, 2 + len(return_records) * 2)
-        hardware.unlock_solenoid(duration_sec=unlock_duration, card_uid=session.get('rfid_uid'))
+        hardware.unlock_solenoid(duration_sec=unlock_duration, card_uid=session.get('rfid_uid'), locker_ids=return_locker_ids)
 
         for loan in return_records:
             returned_codes.append(loan['locker_code'])
