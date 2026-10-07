@@ -1,139 +1,133 @@
 #include <Arduino.h>
 #include <stdint.h>
+#include <SPI.h>
+#include <MFRC522.h>
+#include <Adafruit_NeoPixel.h>
+#include <ESP8266WiFi.h>
+#include <ESP8266WebServer.h>
 
-#ifndef D1
+#ifndef D0
+#define D0 16
 #define D1 5
 #define D2 4
+#define D3 0
+#define D4 2
 #define D5 14
 #define D6 12
 #define D7 13
+#define D8 15
 #endif
 
 const char* WIFI_SSID     = "";
 const char* WIFI_PASSWORD = "";
 
-#define TOTAL_LOCKERS     5
+#define PIN_RELAY         D1
+#define PIN_RGB_DIN       D2
+#define PIN_IR_SHELF      D3
+#define PIN_IR_ENTRANCE   D4
+#define PIN_DOOR_SENSOR   D0
+#define PIN_RFID_SS       D8
+#define PIN_RFID_RST      UINT8_MAX
+
+#define NUM_LEDS          1
 #define DEFAULT_UNLOCK_MS 4000
 
 #define RELAY_ON          LOW
 #define RELAY_OFF         HIGH
 
-#define PIN_LOCKER_1      D1
-#define PIN_LOCKER_2      D2
-#define PIN_LOCKER_3      D5
-#define PIN_LOCKER_4      D6
-#define PIN_LOCKER_5      D7
-
-const bool HAS_PHYSICAL_HARDWARE[TOTAL_LOCKERS] = {
-  true,
-  false,
-  false,
-  false,
-  false
-};
-
-const uint8_t LOCKER_PINS[TOTAL_LOCKERS] = {
-  PIN_LOCKER_1,
-  PIN_LOCKER_2,
-  PIN_LOCKER_3,
-  PIN_LOCKER_4,
-  PIN_LOCKER_5
-};
-
-#include <ESP8266WiFi.h>
-#include <ESP8266WebServer.h>
-
-bool isLockerUnlocked[TOTAL_LOCKERS] = {false, false, false, false, false};
-unsigned long unlockStartTime[TOTAL_LOCKERS] = {0, 0, 0, 0, 0};
-unsigned long unlockDuration[TOTAL_LOCKERS] = {DEFAULT_UNLOCK_MS, DEFAULT_UNLOCK_MS, DEFAULT_UNLOCK_MS, DEFAULT_UNLOCK_MS, DEFAULT_UNLOCK_MS};
-String serialInput = "";
-
+Adafruit_NeoPixel rgb(NUM_LEDS, PIN_RGB_DIN, NEO_GRB + NEO_KHZ800);
+MFRC522 rfid(PIN_RFID_SS, PIN_RFID_RST);
 ESP8266WebServer server(80);
+
 bool wifiEnabled = false;
+bool isUnlocked = false;
+unsigned long unlockStartTime = 0;
+unsigned long unlockDuration = DEFAULT_UNLOCK_MS;
 
-void unlockSingleLocker(int lockerIndex, unsigned long durationMs = DEFAULT_UNLOCK_MS) {
-  if (lockerIndex < 0 || lockerIndex >= TOTAL_LOCKERS) return;
+bool lastDoorOpen = false;
+bool lastBookPresent = false;
+bool lastPassage = false;
 
-  int lockerNum = lockerIndex + 1;
+enum LedMode {
+  LED_MODE_AUTO,
+  LED_MODE_MANUAL_BLUE,
+  LED_MODE_MANUAL_GREEN,
+  LED_MODE_MANUAL_RED
+};
 
-  if (HAS_PHYSICAL_HARDWARE[lockerIndex]) {
+LedMode currentLedMode = LED_MODE_AUTO;
+String serialBuffer = "";
 
-    digitalWrite(LOCKER_PINS[lockerIndex], RELAY_ON);
-    isLockerUnlocked[lockerIndex] = true;
-    unlockStartTime[lockerIndex] = millis();
-    unlockDuration[lockerIndex] = durationMs;
+void setRgbColor(uint8_t r, uint8_t g, uint8_t b) {
+  rgb.setPixelColor(0, rgb.Color(r, g, b));
+  rgb.show();
+}
 
-    Serial.print(">> [LOCKER ");
-    Serial.print(lockerNum);
-    Serial.print("]: PHYSICAL RELAY ACTIVATED on Pin ");
-    Serial.print(lockerIndex == 0 ? "D1" : String(LOCKER_PINS[lockerIndex]));
-    Serial.print(" for ");
-    Serial.print(durationMs / 1000);
-    Serial.println(" seconds!");
+bool readDoorOpen() {
+  return digitalRead(PIN_DOOR_SENSOR) == HIGH;
+}
+
+bool readBookPresent() {
+  return digitalRead(PIN_IR_SHELF) == LOW;
+}
+
+bool readEntrancePassage() {
+  return digitalRead(PIN_IR_ENTRANCE) == LOW;
+}
+
+void updateLedState() {
+  if (isUnlocked || currentLedMode == LED_MODE_MANUAL_BLUE) {
+    setRgbColor(0, 0, 255);
+  } else if (currentLedMode == LED_MODE_MANUAL_GREEN) {
+    setRgbColor(0, 255, 0);
+  } else if (currentLedMode == LED_MODE_MANUAL_RED) {
+    setRgbColor(255, 0, 0);
   } else {
-
-    isLockerUnlocked[lockerIndex] = false;
-    Serial.print(">> [LOCKER ");
-    Serial.print(lockerNum);
-    Serial.println("]: VIRTUAL COMPARTMENT (No physical solenoid installed yet).");
-    Serial.println(">> [PROTECTION]: Locker 1 physical solenoid stays safely LOCKED.");
+    bool present = readBookPresent();
+    if (present) {
+      setRgbColor(0, 255, 0);
+    } else {
+      setRgbColor(255, 0, 0);
+    }
   }
 }
 
-void lockSingleLocker(int lockerIndex) {
-  if (lockerIndex < 0 || lockerIndex >= TOTAL_LOCKERS) return;
-  if (HAS_PHYSICAL_HARDWARE[lockerIndex]) {
-    digitalWrite(LOCKER_PINS[lockerIndex], RELAY_OFF);
-  }
-  isLockerUnlocked[lockerIndex] = false;
-}
-
-void lockAllLockers() {
-  for (int i = 0; i < TOTAL_LOCKERS; i++) {
-    lockSingleLocker(i);
-  }
-  Serial.println(">> [HARDWARE]: All lockers securely LOCKED.");
-}
-
-void handleUnlockRequest(String lockerTargetStr, unsigned long durationMs) {
-  lockerTargetStr.trim();
-  lockerTargetStr.toUpperCase();
-
-  Serial.println("==========================================");
-  Serial.print(">> [COMMAND RECEIVED]: UNLOCK request for: [ ");
-  Serial.print(lockerTargetStr);
-  Serial.print(" ] Duration: ");
+void unlockLocker(unsigned long durationMs = DEFAULT_UNLOCK_MS) {
+  digitalWrite(PIN_RELAY, RELAY_ON);
+  isUnlocked = true;
+  unlockStartTime = millis();
+  unlockDuration = durationMs;
+  updateLedState();
+  Serial.print(">> [RELAY]: UNLOCKED for ");
   Serial.print(durationMs / 1000);
-  Serial.println("s");
+  Serial.println("s | LED: BLUE");
+}
 
-  bool anyLockerMatched = false;
-  for (int num = 1; num <= TOTAL_LOCKERS; num++) {
-    String numStr = String(num);
-    String numPadded = (num < 10) ? ("0" + numStr) : numStr;
-    String nameStr = "LOCKER " + numStr;
-    String namePadded = "LOCKER " + numPadded;
+void lockLocker() {
+  digitalWrite(PIN_RELAY, RELAY_OFF);
+  isUnlocked = false;
+  currentLedMode = LED_MODE_AUTO;
+  updateLedState();
+  Serial.println(">> [RELAY]: LOCKED");
+}
 
-    bool isTargeted = false;
-    if (lockerTargetStr == numStr || lockerTargetStr == numPadded ||
-        lockerTargetStr == nameStr || lockerTargetStr == namePadded) {
-      isTargeted = true;
-    } else if (lockerTargetStr.startsWith(numStr + ",") || lockerTargetStr.endsWith("," + numStr) || lockerTargetStr.indexOf("," + numStr + ",") != -1) {
-      isTargeted = true;
-    } else if (lockerTargetStr.startsWith(numPadded + ",") || lockerTargetStr.endsWith("," + numPadded) || lockerTargetStr.indexOf("," + numPadded + ",") != -1) {
-      isTargeted = true;
-    }
-
-    if (isTargeted) {
-      anyLockerMatched = true;
-      unlockSingleLocker(num - 1, durationMs);
-    }
-  }
-
-  if (!anyLockerMatched && (lockerTargetStr == "" || lockerTargetStr == "ALL" || lockerTargetStr == "1 (DEFAULT)")) {
-    unlockSingleLocker(0, durationMs);
-  }
-
-  Serial.println("==========================================\n");
+void sendFullStatus() {
+  bool door = readDoorOpen();
+  bool book = readBookPresent();
+  bool passage = readEntrancePassage();
+  Serial.print("STATUS:DOOR=");
+  Serial.print(door ? "OPEN" : "CLOSED");
+  Serial.print(",BOOK=");
+  Serial.print(book ? "PRESENT" : "EMPTY");
+  Serial.print(",PASSAGE=");
+  Serial.print(passage ? "DETECTED" : "CLEAR");
+  Serial.print(",LOCK=");
+  Serial.print(isUnlocked ? "UNLOCKED" : "LOCKED");
+  Serial.print(",LED=");
+  if (isUnlocked || currentLedMode == LED_MODE_MANUAL_BLUE) Serial.print("BLUE");
+  else if (book) Serial.print("GREEN");
+  else Serial.print("RED");
+  Serial.println();
 }
 
 void processCommand(String cmd) {
@@ -142,94 +136,81 @@ void processCommand(String cmd) {
   upperCmd.toUpperCase();
 
   if (upperCmd.startsWith("UNLOCK")) {
-    unsigned long duration = DEFAULT_UNLOCK_MS;
-    String lockerPart = "";
-
+    unsigned long dur = DEFAULT_UNLOCK_MS;
     int firstColon = upperCmd.indexOf(':');
-    if (firstColon == -1) {
-
-      lockerPart = "1 (Default)";
-    } else {
+    if (firstColon != -1) {
       int secondColon = upperCmd.indexOf(':', firstColon + 1);
       if (secondColon != -1) {
-
-        lockerPart = upperCmd.substring(firstColon + 1, secondColon);
-        int sec = upperCmd.substring(secondColon + 1).toInt();
-        if (sec > 0) duration = (unsigned long)sec * 1000;
+        int s = upperCmd.substring(secondColon + 1).toInt();
+        if (s > 0) dur = (unsigned long)s * 1000;
       } else {
-
-        String arg = upperCmd.substring(firstColon + 1);
-        arg.trim();
-        int sec = arg.toInt();
-
-        if (sec > TOTAL_LOCKERS) {
-          duration = (unsigned long)sec * 1000;
-          lockerPart = "1 (Default)";
-        } else {
-          lockerPart = arg;
-        }
+        int s = upperCmd.substring(firstColon + 1).toInt();
+        if (s > 0) dur = (unsigned long)s * 1000;
       }
     }
-
-    handleUnlockRequest(lockerPart, duration);
+    unlockLocker(dur);
     return;
   }
 
   if (upperCmd == "LOCK") {
-    Serial.println(">> [COMMAND]: Manual LOCK signal received.");
-    lockAllLockers();
+    lockLocker();
+    return;
+  }
+
+  if (upperCmd == "LED:BLUE") {
+    currentLedMode = LED_MODE_MANUAL_BLUE;
+    updateLedState();
+    return;
+  }
+
+  if (upperCmd == "LED:GREEN") {
+    currentLedMode = LED_MODE_MANUAL_GREEN;
+    updateLedState();
+    return;
+  }
+
+  if (upperCmd == "LED:RED") {
+    currentLedMode = LED_MODE_MANUAL_RED;
+    updateLedState();
+    return;
+  }
+
+  if (upperCmd == "LED:AUTO") {
+    currentLedMode = LED_MODE_AUTO;
+    updateLedState();
     return;
   }
 
   if (upperCmd == "STATUS" || upperCmd == "PING") {
-    Serial.print("STATUS: ");
-    for (int i = 0; i < TOTAL_LOCKERS; i++) {
-      Serial.print("L");
-      Serial.print(i + 1);
-      Serial.print("=");
-      Serial.print(isLockerUnlocked[i] ? "UNLOCKED" : "LOCKED");
-      if (i < TOTAL_LOCKERS - 1) Serial.print(", ");
-    }
-    Serial.println();
+    sendFullStatus();
     return;
   }
-
-  Serial.println("------------------------------------------");
-  Serial.print(">> [IGNORED]: Input received: [ ");
-  Serial.print(cmd);
-  Serial.println(" ]");
-  Serial.println(">> [NOTICE]: Relays trigger only on explicit 'UNLOCK:<id>' commands.");
-  Serial.println("------------------------------------------\n");
 }
 
 void handleHttpUnlock() {
   unsigned long duration = DEFAULT_UNLOCK_MS;
   if (server.hasArg("duration")) {
-    int sec = server.arg("duration").toInt();
-    if (sec > 0) duration = (unsigned long)sec * 1000;
+    int s = server.arg("duration").toInt();
+    if (s > 0) duration = (unsigned long)s * 1000;
   }
-
-  String locker = "1";
-  if (server.hasArg("locker")) {
-    locker = server.arg("locker");
-  }
-
-  handleUnlockRequest(locker, duration);
-  server.send(200, "application/json", "{\"success\":true,\"locker\":\"" + locker + "\",\"duration_ms\":" + String(duration) + "}");
+  unlockLocker(duration);
+  server.send(200, "application/json", "{\"success\":true,\"state\":\"unlocked\"}");
 }
 
 void handleHttpLock() {
-  lockAllLockers();
-  server.send(200, "application/json", "{\"success\":true,\"state\":\"all_locked\"}");
+  lockLocker();
+  server.send(200, "application/json", "{\"success\":true,\"state\":\"locked\"}");
 }
 
 void handleHttpStatus() {
-  String json = "{\"lockers\":{";
-  for (int i = 0; i < TOTAL_LOCKERS; i++) {
-    json += "\"" + String(i + 1) + "\":\"" + (isLockerUnlocked[i] ? "unlocked" : "locked") + "\"";
-    if (i < TOTAL_LOCKERS - 1) json += ",";
-  }
-  json += "}}";
+  bool door = readDoorOpen();
+  bool book = readBookPresent();
+  bool passage = readEntrancePassage();
+  String json = "{";
+  json += "\"lock\":\"" + String(isUnlocked ? "unlocked" : "locked") + "\",";
+  json += "\"door\":\"" + String(door ? "open" : "closed") + "\",";
+  json += "\"book\":\"" + String(book ? "present" : "empty") + "\",";
+  json += "\"passage\":\"" + String(passage ? "detected" : "clear") + "\"}";
   server.send(200, "application/json", json);
 }
 
@@ -237,23 +218,26 @@ void setup() {
   Serial.begin(115200);
   delay(500);
 
-  for (int i = 0; i < TOTAL_LOCKERS; i++) {
-    pinMode(LOCKER_PINS[i], OUTPUT);
-    digitalWrite(LOCKER_PINS[i], RELAY_OFF);
-  }
+  pinMode(PIN_RELAY, OUTPUT);
+  digitalWrite(PIN_RELAY, RELAY_OFF);
 
-  Serial.println("\n==================================================");
-  Serial.println("   SMARTLOCKER 5-COMPARTMENT CONTROLLER READY    ");
-  Serial.println("==================================================");
-  Serial.println("Compartment Hardware Map:");
-  Serial.println("  - Locker 1: Pin D1 [ACTIVE PHYSICAL SOLENOID]");
-  Serial.println("  - Locker 2: Pin D2 [VIRTUAL - Hardware Not Installed]");
-  Serial.println("  - Locker 3: Pin D5 [VIRTUAL - Hardware Not Installed]");
-  Serial.println("  - Locker 4: Pin D6 [VIRTUAL - Hardware Not Installed]");
-  Serial.println("  - Locker 5: Pin D7 [VIRTUAL - Hardware Not Installed]");
-  Serial.println("Communication: USB Serial @ 115200 baud");
-  Serial.println("Commands: UNLOCK:<id>:<sec>, UNLOCK:1, LOCK, STATUS");
-  Serial.println("Behavior: Books 2, 3, 4, 5 will NEVER open Locker 1!");
+  pinMode(PIN_DOOR_SENSOR, INPUT_PULLUP);
+  pinMode(PIN_IR_SHELF, INPUT);
+  pinMode(PIN_IR_ENTRANCE, INPUT);
+
+  rgb.begin();
+  rgb.setBrightness(180);
+  setRgbColor(0, 0, 255);
+  delay(300);
+
+  SPI.begin();
+  rfid.PCD_Init();
+
+  updateLedState();
+
+  Serial.println("\n=============================================");
+  Serial.println("  SMARTLOCKER INTEGRATED CONTROLLER ONLINE   ");
+  Serial.println("=============================================");
 
   if (WIFI_SSID != NULL && strlen(WIFI_SSID) > 0) {
     WiFi.mode(WIFI_STA);
@@ -275,7 +259,11 @@ void setup() {
     }
   }
 
-  Serial.println(">> System Armed. Ready for commands from Website...\n");
+  lastDoorOpen = readDoorOpen();
+  lastBookPresent = readBookPresent();
+  lastPassage = readEntrancePassage();
+
+  sendFullStatus();
 }
 
 void loop() {
@@ -286,22 +274,55 @@ void loop() {
   while (Serial.available() > 0) {
     char c = Serial.read();
     if (c == '\n' || c == '\r') {
-      if (serialInput.length() > 0) {
-        serialInput.trim();
-        processCommand(serialInput);
-        serialInput = "";
+      if (serialBuffer.length() > 0) {
+        serialBuffer.trim();
+        processCommand(serialBuffer);
+        serialBuffer = "";
       }
     } else {
-      serialInput += c;
+      serialBuffer += c;
     }
   }
 
-  for (int i = 0; i < TOTAL_LOCKERS; i++) {
-    if (isLockerUnlocked[i] && (millis() - unlockStartTime[i] >= unlockDuration[i])) {
-      lockSingleLocker(i);
-      Serial.print(">> [AUTO-LOCK]: Locker ");
-      Serial.print(i + 1);
-      Serial.println(" re-locked.\n");
+  if (isUnlocked && (millis() - unlockStartTime >= unlockDuration)) {
+    lockLocker();
+  }
+
+  bool curDoorOpen = readDoorOpen();
+  if (curDoorOpen != lastDoorOpen) {
+    lastDoorOpen = curDoorOpen;
+    Serial.print("DOOR:");
+    Serial.println(curDoorOpen ? "OPEN" : "CLOSED");
+  }
+
+  bool curBookPresent = readBookPresent();
+  if (curBookPresent != lastBookPresent) {
+    lastBookPresent = curBookPresent;
+    Serial.print("BOOK:");
+    Serial.println(curBookPresent ? "PRESENT" : "EMPTY");
+    updateLedState();
+  }
+
+  bool curPassage = readEntrancePassage();
+  if (curPassage != lastPassage) {
+    lastPassage = curPassage;
+    if (curPassage) {
+      Serial.println("PASSAGE:DETECTED");
     }
   }
+
+  if (rfid.PICC_IsNewCardPresent() && rfid.PICC_ReadCardSerial()) {
+    String uidStr = "";
+    for (byte i = 0; i < rfid.uid.size; i++) {
+      if (rfid.uid.uidByte[i] < 0x10) uidStr += "0";
+      uidStr += String(rfid.uid.uidByte[i], HEX);
+    }
+    uidStr.toUpperCase();
+    Serial.print("RFID:");
+    Serial.println(uidStr);
+    rfid.PICC_HaltA();
+    rfid.PCD_StopCrypto1();
+  }
+
+  delay(25);
 }
