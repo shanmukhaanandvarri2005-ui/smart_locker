@@ -1,13 +1,12 @@
 CompileFlags:
+  CompilationDatabase: "esp8266_firmware/build"
   Add:
-    - -xc++
     - -w
-    - -std=gnu++17
-    - -DARDUINO=10819
-    - -DARDUINO_ESP8266_NODEMCU_ESP12E
-    - -DESP8266
 
 Diagnostics:
   Suppress:
+    - pp_file_not_found
+    - undeclared_var_use
+    - unknown_typename
     - drv_compilation_fail
     - drv_unknown_argument

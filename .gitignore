@@ -41,6 +41,11 @@ local_settings.py
 *.swo
 .agents/
 
+# Arduino build
+compile_commands.json
+**/build/
+
 # OS generated
 .DS_Store
 Thumbs.db
+
