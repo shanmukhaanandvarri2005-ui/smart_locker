@@ -1,61 +1,26 @@
-/*
- * SmartLocker ESP8266 Multi-Locker Controller Firmware (5 Lockers)
- * -----------------------------------------------------------------
- * Hardware Configuration:
- *   - ESP8266 (NodeMCU v2/v3 or Wemos D1 Mini)
- *   - Locker 1 (Existing Physical Prototype): Pin D1 (GPIO 5) -> 12V Solenoid Lock
- *   - Locker 2: Pin D2 (GPIO 4)  -> [Virtual / Ready for future hardware]
- *   - Locker 3: Pin D5 (GPIO 14) -> [Virtual / Ready for future hardware]
- *   - Locker 4: Pin D6 (GPIO 12) -> [Virtual / Ready for future hardware]
- *   - Locker 5: Pin D7 (GPIO 13) -> [Virtual / Ready for future hardware]
- *
- * Prototype Behavior:
- *   - Borrowing Book 1 (Locker 1): Activates physical relay on Pin D1.
- *   - Borrowing Books 2, 3, 4, 5: Marked as Virtual (no hardware attached),
- *     so Locker 1 solenoid will NEVER open for other books!
- *   - When you add more physical relays later, simply set HAS_PHYSICAL_HARDWARE
- *     to true for that locker!
- *
- * Wiring (Locker 1):
- *   - ESP8266 D1  -> Relay IN
- *   - ESP8266 GND -> Relay GND
- *   - ESP8266 VIN -> Relay VCC (5V)
- *   - Solenoid (+) -> 12V DC Supply (+)
- *   - Solenoid (-) -> Relay COM
- *   - Relay NO     -> 12V DC Supply (-)
- *   - 1N4007 Diode across Solenoid (+) & (-):
- *       Cathode (silver band) to (+), Anode to (-)
- */
-
 #include <Arduino.h>
 
-// ================= USER CONFIGURATION =================
-// Leave WiFi credentials blank ("") for USB Serial mode (Plug-and-play with Laptop)
-const char* WIFI_SSID     = "";  
-const char* WIFI_PASSWORD = "";  
+const char* WIFI_SSID     = "";
+const char* WIFI_PASSWORD = "";
 
 #define TOTAL_LOCKERS     5
-#define DEFAULT_UNLOCK_MS 4000  // Default unlock duration: 4 seconds
+#define DEFAULT_UNLOCK_MS 4000
 
-// Active-LOW relay definitions (standard Arduino/ESP relay modules)
 #define RELAY_ON          LOW
 #define RELAY_OFF         HIGH
 
-// GPIO Pin mappings for all 5 lockers
-#define PIN_LOCKER_1      D1   // GPIO 5  -> Locker 1 (PHYSICAL SOLENOID)
-#define PIN_LOCKER_2      D2   // GPIO 4  -> Locker 2 (Virtual / Future)
-#define PIN_LOCKER_3      D5   // GPIO 14 -> Locker 3 (Virtual / Future)
-#define PIN_LOCKER_4      D6   // GPIO 12 -> Locker 4 (Virtual / Future)
-#define PIN_LOCKER_5      D7   // GPIO 13 -> Locker 5 (Virtual / Future)
+#define PIN_LOCKER_1      D1
+#define PIN_LOCKER_2      D2
+#define PIN_LOCKER_3      D5
+#define PIN_LOCKER_4      D6
+#define PIN_LOCKER_5      D7
 
-// Hardware presence toggle:
-// Only Locker 1 has a physical solenoid attached right now!
 const bool HAS_PHYSICAL_HARDWARE[TOTAL_LOCKERS] = {
-  true,   // Locker 1: TRUE  (Physical solenoid on Pin D1)
-  false,  // Locker 2: FALSE (Virtual locker - no solenoid)
-  false,  // Locker 3: FALSE (Virtual locker - no solenoid)
-  false,  // Locker 4: FALSE (Virtual locker - no solenoid)
-  false   // Locker 5: FALSE (Virtual locker - no solenoid)
+  true,
+  false,
+  false,
+  false,
+  false
 };
 
 const uint8_t LOCKER_PINS[TOTAL_LOCKERS] = {
@@ -65,8 +30,6 @@ const uint8_t LOCKER_PINS[TOTAL_LOCKERS] = {
   PIN_LOCKER_4,
   PIN_LOCKER_5
 };
-
-// ======================================================
 
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
@@ -79,14 +42,13 @@ String serialInput = "";
 ESP8266WebServer server(80);
 bool wifiEnabled = false;
 
-// Hardware Control Functions
 void unlockSingleLocker(int lockerIndex, unsigned long durationMs = DEFAULT_UNLOCK_MS) {
   if (lockerIndex < 0 || lockerIndex >= TOTAL_LOCKERS) return;
 
   int lockerNum = lockerIndex + 1;
 
   if (HAS_PHYSICAL_HARDWARE[lockerIndex]) {
-    // Physical hardware exists for this locker!
+
     digitalWrite(LOCKER_PINS[lockerIndex], RELAY_ON);
     isLockerUnlocked[lockerIndex] = true;
     unlockStartTime[lockerIndex] = millis();
@@ -100,7 +62,7 @@ void unlockSingleLocker(int lockerIndex, unsigned long durationMs = DEFAULT_UNLO
     Serial.print(durationMs / 1000);
     Serial.println(" seconds!");
   } else {
-    // Virtual locker - no physical solenoid attached
+
     isLockerUnlocked[lockerIndex] = false;
     Serial.print(">> [LOCKER ");
     Serial.print(lockerNum);
@@ -124,7 +86,6 @@ void lockAllLockers() {
   Serial.println(">> [HARDWARE]: All lockers securely LOCKED.");
 }
 
-// Parses list of lockers (e.g. "1", "2", "1,2", "3,5") and triggers each
 void handleUnlockRequest(String lockerTargetStr, unsigned long durationMs) {
   lockerTargetStr.trim();
   lockerTargetStr.toUpperCase();
@@ -136,7 +97,6 @@ void handleUnlockRequest(String lockerTargetStr, unsigned long durationMs) {
   Serial.print(durationMs / 1000);
   Serial.println("s");
 
-  // Check which lockers (1 to 5) are requested
   bool anyLockerMatched = false;
   for (int num = 1; num <= TOTAL_LOCKERS; num++) {
     String numStr = String(num);
@@ -160,9 +120,8 @@ void handleUnlockRequest(String lockerTargetStr, unsigned long durationMs) {
     }
   }
 
-  // If no specific locker matched but command was generic "UNLOCK"
   if (!anyLockerMatched && (lockerTargetStr == "" || lockerTargetStr == "ALL" || lockerTargetStr == "1 (DEFAULT)")) {
-    unlockSingleLocker(0, durationMs); // Default prototype Locker 1
+    unlockSingleLocker(0, durationMs);
   }
 
   Serial.println("==========================================\n");
@@ -173,35 +132,27 @@ void processCommand(String cmd) {
   String upperCmd = cmd;
   upperCmd.toUpperCase();
 
-  // Command 1: UNLOCK Commands
-  // Accepted formats:
-  //   - UNLOCK:1:4        -> Unlock Locker 1 (Physical opens!)
-  //   - UNLOCK:2:4        -> Target Locker 2 (Virtual - Locker 1 stays locked!)
-  //   - UNLOCK:1,3:6      -> Multiple lockers (Locker 1 opens, Locker 3 is virtual)
-  //   - UNLOCK:2,4:6      -> Locker 1 stays completely locked!
-  //   - UNLOCK:1          -> Unlock Locker 1 (default 4s)
-  //   - UNLOCK            -> Manual test trigger for Locker 1
   if (upperCmd.startsWith("UNLOCK")) {
     unsigned long duration = DEFAULT_UNLOCK_MS;
     String lockerPart = "";
 
     int firstColon = upperCmd.indexOf(':');
     if (firstColon == -1) {
-      // Standalone "UNLOCK"
+
       lockerPart = "1 (Default)";
     } else {
       int secondColon = upperCmd.indexOf(':', firstColon + 1);
       if (secondColon != -1) {
-        // Format: UNLOCK:<lockers>:<duration>
+
         lockerPart = upperCmd.substring(firstColon + 1, secondColon);
         int sec = upperCmd.substring(secondColon + 1).toInt();
         if (sec > 0) duration = (unsigned long)sec * 1000;
       } else {
-        // Format: UNLOCK:<arg>
+
         String arg = upperCmd.substring(firstColon + 1);
         arg.trim();
         int sec = arg.toInt();
-        // If arg is a pure number greater than TOTAL_LOCKERS, it's duration (e.g. UNLOCK:4)
+
         if (sec > TOTAL_LOCKERS) {
           duration = (unsigned long)sec * 1000;
           lockerPart = "1 (Default)";
@@ -215,14 +166,12 @@ void processCommand(String cmd) {
     return;
   }
 
-  // Command 2: LOCK
   if (upperCmd == "LOCK") {
     Serial.println(">> [COMMAND]: Manual LOCK signal received.");
     lockAllLockers();
     return;
   }
 
-  // Command 3: STATUS / PING
   if (upperCmd == "STATUS" || upperCmd == "PING") {
     Serial.print("STATUS: ");
     for (int i = 0; i < TOTAL_LOCKERS; i++) {
@@ -236,7 +185,6 @@ void processCommand(String cmd) {
     return;
   }
 
-  // Any raw card UID or unrecognized text is safely IGNORED
   Serial.println("------------------------------------------");
   Serial.print(">> [IGNORED]: Input received: [ ");
   Serial.print(cmd);
@@ -245,7 +193,6 @@ void processCommand(String cmd) {
   Serial.println("------------------------------------------\n");
 }
 
-// HTTP Webhook Handlers (Optional WiFi mode)
 void handleHttpUnlock() {
   unsigned long duration = DEFAULT_UNLOCK_MS;
   if (server.hasArg("duration")) {
@@ -281,7 +228,6 @@ void setup() {
   Serial.begin(115200);
   delay(500);
 
-  // Initialize all 5 locker output pins safely locked
   for (int i = 0; i < TOTAL_LOCKERS; i++) {
     pinMode(LOCKER_PINS[i], OUTPUT);
     digitalWrite(LOCKER_PINS[i], RELAY_OFF);
@@ -341,7 +287,6 @@ void loop() {
     }
   }
 
-  // Non-blocking auto-relock timers for each locker independently
   for (int i = 0; i < TOTAL_LOCKERS; i++) {
     if (isLockerUnlocked[i] && (millis() - unlockStartTime[i] >= unlockDuration[i])) {
       lockSingleLocker(i);

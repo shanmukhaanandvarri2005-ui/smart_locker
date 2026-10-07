@@ -1,0 +1,13 @@
+CompileFlags:
+  Add:
+    - -xc++
+    - -w
+    - -std=gnu++17
+    - -DARDUINO=10819
+    - -DARDUINO_ESP8266_NODEMCU_ESP12E
+    - -DESP8266
+
+Diagnostics:
+  Suppress:
+    - drv_compilation_fail
+    - drv_unknown_argument
