@@ -233,8 +233,6 @@ class HardwareController:
         # Formatted as: UNLOCK:<lockers>:<duration_sec> (e.g. UNLOCK:1:4 or UNLOCK:2:4)
         serial_cmd = f"UNLOCK:{lockers_str}:{duration_sec}"
         self._send_serial_command(serial_cmd)
-        if card_uid:
-            self._send_serial_command(str(card_uid))
 
         # 3. ESP8266 WiFi Webhook (if IP configured)
         if self.esp8266_ip:

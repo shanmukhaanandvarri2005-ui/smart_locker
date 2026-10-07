@@ -168,7 +168,7 @@
       <button 
         type="button" 
         id="confirmBtn" 
-        onclick="proceedToVendingMachine()"
+        onclick="proceedToLibrary()"
         class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-display font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 cursor-pointer text-base transition-all"
       >
         <span>Confirm</span>
@@ -246,15 +246,15 @@
       authenticate(val);
     }
 
-    let nextVendingUrl = '/dashboard';
+    let nextLibraryUrl = '/dashboard';
 
-    async function proceedToVendingMachine() {
+    function proceedToLibrary() {
       const btn = document.getElementById('confirmBtn');
       if (btn) {
         btn.disabled = true;
-        btn.innerHTML = '<span>Opening Vending Machine...</span><span class="material-symbols-outlined text-xl animate-spin">progress_activity</span>';
+        btn.innerHTML = '<span>Opening Library...</span><span class="material-symbols-outlined text-xl animate-spin">progress_activity</span>';
       }
-      window.location.href = nextVendingUrl;
+      window.location.replace(nextLibraryUrl);
     }
 
     async function resetToScanner() {
@@ -319,7 +319,7 @@
           iconHolder.className = 'relative z-10 w-24 h-24 rounded-full bg-emerald-600 flex items-center justify-center text-white shadow-xl transition-all duration-300';
           statusText.textContent = 'Card Verified!';
 
-          nextVendingUrl = data.redirect_url || '/dashboard';
+          nextLibraryUrl = data.redirect_url || '/dashboard';
 
           // Populate Confirmation Frame with Employee details
           const m = data.member;
@@ -336,7 +336,7 @@
           document.getElementById('confirmRole').textContent = empRole;
           document.getElementById('confirmAvatar').src = empAvatar;
 
-          showToast('Employee Verified', 'Please confirm your identity to proceed to the vending machine.', 'success');
+          showToast('Employee Verified', 'Please confirm your identity to enter the library.', 'success');
 
           // Smooth transition to Confirmation Frame
           setTimeout(() => {

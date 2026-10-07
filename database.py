@@ -81,10 +81,30 @@ class PostgresCursorWrapper:
         return getattr(self._cursor, name)
 
 
+_pg_pool = None
+
+def _get_pg_pool():
+    global _pg_pool
+    if _pg_pool is None:
+        db_url = os.environ.get('DATABASE_URL') or os.environ.get('SUPABASE_DB_URL')
+        if db_url and psycopg2:
+            if db_url.startswith('postgres://'):
+                db_url = db_url.replace('postgres://', 'postgresql://', 1)
+            try:
+                from psycopg2.pool import ThreadedConnectionPool
+                _pg_pool = ThreadedConnectionPool(1, 15, db_url)
+                print("[Database] Initialized PostgreSQL connection pool.")
+            except Exception as e:
+                print(f"[Database] Could not initialize connection pool: {e}")
+    return _pg_pool
+
+
 class PostgresConnectionWrapper:
-    """Wraps a psycopg2 connection to mimic SQLite connection behavior."""
-    def __init__(self, conn):
+    """Wraps a psycopg2 connection to mimic SQLite connection behavior and return to pool on close."""
+    def __init__(self, conn, pool=None):
         self._conn = conn
+        self._pool = pool
+        self._closed = False
 
     def cursor(self):
         return PostgresCursorWrapper(self._conn.cursor(cursor_factory=DictCursor))
@@ -96,7 +116,19 @@ class PostgresConnectionWrapper:
         return self._conn.rollback()
 
     def close(self):
-        return self._conn.close()
+        if not self._closed:
+            self._closed = True
+            if self._pool:
+                try:
+                    self._conn.rollback()
+                    self._pool.putconn(self._conn)
+                    return
+                except Exception:
+                    pass
+            try:
+                self._conn.close()
+            except Exception:
+                pass
 
     def __getattr__(self, name):
         return getattr(self._conn, name)
@@ -109,10 +141,17 @@ def is_postgres_configured():
 
 
 def get_db():
-    """Returns an active database connection (Supabase PostgreSQL if configured, otherwise local SQLite)."""
+    """Returns an active database connection (Supabase PostgreSQL pool if configured, otherwise local SQLite)."""
+    pool = _get_pg_pool()
+    if pool:
+        try:
+            raw_conn = pool.getconn()
+            return PostgresConnectionWrapper(raw_conn, pool=pool)
+        except Exception as e:
+            print(f"[Database] Pool getconn fallback: {e}")
+
     db_url = os.environ.get('DATABASE_URL') or os.environ.get('SUPABASE_DB_URL')
     if db_url and psycopg2:
-        # Handle Supabase pooler / standard URL (convert postgres:// to postgresql:// if needed)
         if db_url.startswith('postgres://'):
             db_url = db_url.replace('postgres://', 'postgresql://', 1)
         raw_conn = psycopg2.connect(db_url)

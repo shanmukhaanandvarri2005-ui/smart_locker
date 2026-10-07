@@ -26,26 +26,17 @@ init_db()
 
 @app.context_processor
 def inject_global_data():
-    """Injects current hardware status and session info into all templates."""
+    """Injects current hardware status and session info into all templates without redundant DB queries."""
     hw_status = hardware.read_sensors()
     current_user = None
     if 'member_id' in session:
-        conn = get_db()
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM members WHERE member_id = ?", (session['member_id'],))
-        row = cursor.fetchone()
-        if not row and 'rfid_uid' in session:
-            cursor.execute("SELECT * FROM members WHERE rfid_uid = ?", (session['rfid_uid'],))
-            row = cursor.fetchone()
-            if row:
-                session['member_id'] = row['member_id']
-                session['name'] = row['name']
-                session['role'] = row['role']
-        conn.close()
-        if row:
-            current_user = dict(row)
-        else:
-            session.clear()
+        current_user = {
+            'member_id': session.get('member_id'),
+            'name': session.get('name', 'User'),
+            'role': session.get('role', 'employee'),
+            'rfid_uid': session.get('rfid_uid', ''),
+            'reg_no': session.get('reg_no', '')
+        }
     return {
         "hardware_status": hw_status,
         "current_user": current_user,

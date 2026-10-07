@@ -156,22 +156,13 @@ void processCommand(String cmd) {
     return;
   }
 
-  // Command 4: Direct RFID UID
+  // Command 4: Non-command input (Card UIDs or unrecognized text)
+  // Ignored so that raw scans or UIDs never trigger Locker 1 by accident
   Serial.println("------------------------------------------");
-  Serial.print("Scanned Card UID: [ ");
+  Serial.print(">> [IGNORED]: Non-command input received: [ ");
   Serial.print(cmd);
   Serial.println(" ]");
-
-  if (authorizedCard == "") {
-    authorizedCard = cmd;
-    Serial.println(">> [SUCCESS]: Card registered as Authorized Card!");
-    unlockLocker(DEFAULT_UNLOCK_MS);
-  } else if (cmd.equalsIgnoreCase(authorizedCard)) {
-    Serial.println("STATUS: [ACCESS GRANTED] - Card Matched!");
-    unlockLocker(DEFAULT_UNLOCK_MS);
-  } else {
-    Serial.println("STATUS: [ACCESS DENIED] - Unauthorized Card!");
-  }
+  Serial.println(">> [NOTICE]: Physical relay on Pin D1 triggers ONLY on explicit UNLOCK:1 commands.");
   Serial.println("------------------------------------------\n");
 }
 
