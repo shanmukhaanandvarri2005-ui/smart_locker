@@ -1,21 +1,15 @@
 #include <Arduino.h>
 #include <stdint.h>
-#include <SPI.h>
-#include <MFRC522.h>
 #include <Adafruit_NeoPixel.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 
-#ifndef D0
-#define D0 16
+#ifndef D1
 #define D1 5
 #define D2 4
-#define D3 0
-#define D4 2
 #define D5 14
 #define D6 12
 #define D7 13
-#define D8 15
 #endif
 
 const char* WIFI_SSID     = "";
@@ -23,11 +17,9 @@ const char* WIFI_PASSWORD = "";
 
 #define PIN_RELAY         D1
 #define PIN_RGB_DIN       D2
-#define PIN_IR_SHELF      D3
-#define PIN_IR_ENTRANCE   D4
-#define PIN_DOOR_SENSOR   D0
-#define PIN_RFID_SS       D8
-#define PIN_RFID_RST      UINT8_MAX
+#define PIN_IR_SHELF      D5
+#define PIN_IR_ENTRANCE   D6
+#define PIN_DOOR_SENSOR   D7
 
 #define NUM_LEDS          1
 #define DEFAULT_UNLOCK_MS 4000
@@ -36,7 +28,6 @@ const char* WIFI_PASSWORD = "";
 #define RELAY_OFF         HIGH
 
 Adafruit_NeoPixel rgb(NUM_LEDS, PIN_RGB_DIN, NEO_GRB + NEO_KHZ800);
-MFRC522 rfid(PIN_RFID_SS, PIN_RFID_RST);
 ESP8266WebServer server(80);
 
 bool wifiEnabled = false;
@@ -230,13 +221,10 @@ void setup() {
   setRgbColor(0, 0, 255);
   delay(300);
 
-  SPI.begin();
-  rfid.PCD_Init();
-
   updateLedState();
 
   Serial.println("\n=============================================");
-  Serial.println("  SMARTLOCKER INTEGRATED CONTROLLER ONLINE   ");
+  Serial.println("  SMARTLOCKER CONTROLLER ONLINE (USB RFID)  ");
   Serial.println("=============================================");
 
   if (WIFI_SSID != NULL && strlen(WIFI_SSID) > 0) {
@@ -309,19 +297,6 @@ void loop() {
     if (curPassage) {
       Serial.println("PASSAGE:DETECTED");
     }
-  }
-
-  if (rfid.PICC_IsNewCardPresent() && rfid.PICC_ReadCardSerial()) {
-    String uidStr = "";
-    for (byte i = 0; i < rfid.uid.size; i++) {
-      if (rfid.uid.uidByte[i] < 0x10) uidStr += "0";
-      uidStr += String(rfid.uid.uidByte[i], HEX);
-    }
-    uidStr.toUpperCase();
-    Serial.print("RFID:");
-    Serial.println(uidStr);
-    rfid.PICC_HaltA();
-    rfid.PCD_StopCrypto1();
   }
 
   delay(25);
