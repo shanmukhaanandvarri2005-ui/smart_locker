@@ -213,8 +213,8 @@ void setup() {
   digitalWrite(PIN_RELAY, RELAY_OFF);
 
   pinMode(PIN_DOOR_SENSOR, INPUT_PULLUP);
-  pinMode(PIN_IR_SHELF, INPUT);
-  pinMode(PIN_IR_ENTRANCE, INPUT);
+  pinMode(PIN_IR_SHELF, INPUT_PULLUP);
+  pinMode(PIN_IR_ENTRANCE, INPUT_PULLUP);
 
   rgb.begin();
   rgb.setBrightness(180);
