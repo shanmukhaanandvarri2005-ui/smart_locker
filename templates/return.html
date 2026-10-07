@@ -35,8 +35,8 @@
 <body class="bg-brand-light font-sans text-slate-800 antialiased min-h-screen flex flex-col justify-between">
 
   <!-- Header -->
-  <header class="w-full bg-white border-b border-slate-200 px-6 py-4 shadow-sm">
-    <div class="max-w-5xl mx-auto flex items-center justify-between">
+  <header class="w-full bg-white border-b border-slate-200 px-6 py-4 shadow-sm relative">
+    <div class="max-w-5xl mx-auto flex items-center justify-between relative">
       <div class="flex items-center gap-3">
         <a href="/dashboard" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 transition-colors">
           <span class="material-symbols-outlined text-xl">arrow_back</span>
@@ -46,6 +46,14 @@
           <span class="text-xs text-slate-500">SmartLocker Automated Station • Return Portal</span>
         </div>
       </div>
+
+      <!-- Center: Nokia Logo -->
+      <div class="absolute left-1/2 -translate-x-1/2 flex items-center justify-center">
+        <a href="/dashboard">
+          <img src="/static/img/nokia_logo.png" alt="Nokia" class="h-6 sm:h-7 object-contain hover:opacity-90 transition-opacity"/>
+        </a>
+      </div>
+
       <div class="flex items-center gap-3 text-xs">
         <span class="font-display font-medium text-slate-600 hidden sm:inline">
           {{ current_user.name if current_user else "Member" }}

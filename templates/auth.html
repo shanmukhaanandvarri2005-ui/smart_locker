@@ -46,8 +46,8 @@
   </div>
 
   <!-- Header -->
-  <header class="w-full bg-white border-b border-slate-200 px-6 py-4 shadow-sm">
-    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+  <header class="w-full bg-white border-b border-slate-200 px-6 py-4 shadow-sm relative">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 relative">
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-xl bg-brand-navy flex items-center justify-center text-white shadow-md">
           <span class="material-symbols-outlined text-2xl">inventory_2</span>
@@ -56,6 +56,12 @@
           <span class="font-display font-bold text-lg text-brand-navy leading-tight">SmartLocker Automated Station</span>
         </div>
       </div>
+
+      <!-- Center: Nokia Logo -->
+      <div class="sm:absolute sm:left-1/2 sm:-translate-x-1/2 flex items-center justify-center my-1 sm:my-0">
+        <img src="/static/img/nokia_logo.png" alt="Nokia" class="h-6 sm:h-7 object-contain"/>
+      </div>
+
       <div class="flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200">
         <span class="relative flex h-2 w-2">
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
